@@ -63,7 +63,7 @@ Tpの最大不動点 Gfp(Tp) = Tp↓(ω+1) ⊆Bp を次のようにもとめる�
 
     {} ⊆ Tp↑ω ⊆ Gfp(Tp) ⊆ Tp↓ω ⊆ Bp
 
-![エルブラン・ベースの部分集合](https://github.com/suharahiromichi/doc/blob/master/cs_prolog_denotational_semantics.png "エルブラン・ベースの部分集合")
+![エルブラン・ベースの部分集合](https://raw.github.com/suharahiromichi/doc/master/cs_prolog_denotational_semantics.png "エルブラン・ベースの部分集合")
 
 それぞれに含まれる原始論理式は、以下の意味をもつ(「-」は差集合）。
 
