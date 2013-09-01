@@ -45,6 +45,14 @@ https://gforge.inria.fr/frs/?group_id=401 から ssreflect-1.4-coq8.4.tar.gz
     GNU Emacs     23.3.1
     ProofGeneral  4.2 
 
+## 注意
+
+ + BSD系のOSも同様の手順で可能だが、gmakeでGNU Makeを使う。
+
+ + ビルドの過程で coqtop がメモリをかなり(〜1GB)消費するため、
+主記憶が小さいマシンでは時間がかかる。
+VMwareなどの仮想マシンを使っている場合に注意が必要である。
+
 
 # 設置手順
 
@@ -54,7 +62,7 @@ Coq本体の配布物を展開し、以下をおこなう。
     cd coq-8.4pl2
     ./configure
     make world
-    make install
+    sudo make install
 
 configureは、省略時解釈（ディフォルト）で/usr/localに設置になる。
 
@@ -71,13 +79,13 @@ SSReflectの配布物を展開して、以下をおこなう。
 
     cd ssreflect-1.4
     make
-    make install
+    sudo make install
   
 最初のmakeでエラーが出たら、次のようにやり直す。
 
     make clean
     make
-    make install
+    sudo make install
 
 
 ## ProofGeneral for ssreflect syntax
