@@ -1,6 +1,7 @@
 SSReflectのインストール
 ========
 2013/08/26 @suharahiromichi
+2013/10/26 @suharahiromichi 追記
 
 SSReflectの設置（インストール）は、
 SSReflectの配布物にある INSTALL ファイルに基づいておこなってください。
@@ -21,8 +22,8 @@ SSReflectの配布物にある INSTALL ファイルに基づいておこなっ�
 
     /usr/local/bin
 
-Coqは既にUbuntuパッケージで /usr/bin に設置しているが、
-指示通りソースコードから入れ直す。
+バイナリパッケージなどでCoqを既に /usr/bin に設置している場合(Ubuntuなど)であっても、
+それはそのままにして、指示通りソースコードから入れ直すことにする。
 
 
 ## 入手元
@@ -31,7 +32,7 @@ Coqは既にUbuntuパッケージで /usr/bin に設置しているが、
 
 http://coq.inria.fr/download から coq-8.4pl2.tar.gz (ソースコード)
 
- + ssreflect-1.4
+ + ssreflect-1.4 (for Coq 8.4)
 
 https://gforge.inria.fr/frs/?group_id=401 から ssreflect-1.4-coq8.4.tar.gz
 
@@ -44,6 +45,12 @@ https://gforge.inria.fr/frs/?group_id=401 から ssreflect-1.4-coq8.4.tar.gz
     Ubuntu        12.04 LTS   (i386)
     GNU Emacs     23.3.1
     ProofGeneral  4.2 
+
+## 追記 (2013/10/26)
+
+Coq、SSReflectに加えて、Camlp5 も同一のバージョンのOCamlでコンパイルするべきである。
+今回は、Camlp5は、信頼の置けるバイナリパッケージ(Ubutu、FreeBSD)から設置したが、
+Camlp5もソースコードからコンパイルするとよいようだ。
 
 ## 注意
 
@@ -91,7 +98,8 @@ SSReflectの配布物を展開して、以下をおこなう。
 ## ProofGeneral for ssreflect syntax
 
 ProofGeneral自体の設置方法は省略する。
-SSReflectの配布物に含まれる、pg-ssr.el を $HOME/lisp/ にコピーする。
+SSReflectの配布物に含まれる、pg-ssr.el を
+emacs lispのパスを通ったところ(例：$HOME/lisp/)にコピーする。
 
 ~/.emacsなどに以下の行を追加する。
 
