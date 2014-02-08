@@ -1,0 +1,69 @@
+"p ~ 0" := (xO p) (at level 7, left associativity, format "p '~' '0'") : positive_scope.
+"p ~ 1" := (xI p) (at level 7, left associativity, format "p '~' '1'") : positive_scope.
+
+" ' x " := (Zpos x) (at level 20, no associativity) : Z_scope.
+
+"x ^ y" (at level 30, right associativity).
+
+"- x" (at level 35, right associativity).
+"/ x" (at level 35, right associativity).
+
+"x && y" (at level 40, left associativity).
+"x * y" (at level 40, left associativity).
+"x / y" (at level 40, left associativity).
+" g ∘ f " := (compose g f) (at level 40, left associativity) : program_scope.
+"a &&& b" := (if a then b else false) (at level 40, left associativity) : lazy_bool_scope.
+
+"x + y" (at level 50, left associativity).
+"x - y" (at level 50, left associativity).
+"x || y" (at level 50, left associativity).
+"a ||| b" := (if a then true else b) (at level 50, left associativity) : lazy_bool_scope.
+
+"a # b" := (Qmake a b) (at level 55, no associativity) : Q_scope.
+
+"h :: t" := (h :: t) (at level 60, right associativity) : vector_scope.
+"x ++ y" (right associativity, at level 60).
+
+"x < y" (at level 70, no associativity).
+"x <= y" (at level 70, no associativity).
+"x <> y" (at level 70, no associativity).
+"x = y" (at level 70, no associativity).
+"x > y" (at level 70, no associativity).
+"x >= y" (at level 70, no associativity).
+" x =/= y " := (complement equiv x y) (at level 70, no associativity) : equiv_scope.
+" x =/= y " := (complement equiv x y) (at level 70, no associativity) : type_scope.
+" x == y " := (equiv x y) (at level 70, no associativity) : type_scope.
+" x == y " := (equiv_dec (x :>) (y :>)) (no associativity, at level 70) : equiv_scope.
+" x == y " := (equiv_dec (x :>) (y :>)) (no associativity, at level 70).
+" x === y " := (equiv x y) (at level 70, no associativity) : equiv_scope.
+" x ~= y " := (@JMeq _ x _ y) (at level 70, no associativity).
+"x ≤ y" := (Z.le x y) (at level 70, no associativity).
+"x ≥ y" := (ge x y) (at level 70, no associativity).
+"x ≤ y" := (le x y) (at level 70, no associativity).
+"x <> y :> T"(at level 70, y at next level, no associativity).
+"x = y :> T"(at level 70, y at next level, no associativity).
+"x = y = z"(at level 70, no associativity, y at next level).
+
+"~ x" (at level 75, right associativity).
+"¬ x" := (~x) (at level 75, right associativity) : type_scope.
+
+"x /\ y" (at level 80, right associativity).
+"x ∧ y" := (x /\ y) (at level 80, right associativity) : type_scope.
+
+"x \/ y" (at level 85, right associativity).
+"x ∨ y" := (x \/ y) (at level 85, right associativity) : type_scope.
+
+"x → y" := (x -> y) (at level 90, y at level 200, right associativity): type_scope.
+
+"x <-> y" (at level 95, no associativity).
+"x ↔ y" := (x <-> y) (at level 95, no associativity): type_scope.
+
+"'IF' c1 'then' c2 'else' c3" := (IF_then_else c1 c2 c3) (at level 200, right associativity) : type_scope.
+"'exists' x .. y , p" := (ex (fun x => .. (ex (fun y => p)) ..)) (at level 200, x binder, right associativity,  format "'[' 'exists' '/ ' x .. y , '/ ' p ']'") : type_scope.
+"'exists2' x , p & q" := (ex2 (fun x => p) (fun x => q)) (at level 200, x ident, p at level 200, right associativity) : type_scope.
+"'exists2' x : t , p & q" := (ex2 (fun x:t => p) (fun x:t => q)) (at level 200, x ident, t at level 200, p at level 200, right associativity,  format "'[' 'exists2' '/ ' x : t , '/ ' '[' p & '/' q ']' ']'") : type_scope.
+"'exists' ! x .. y , p" := (ex (unique (fun x => .. (ex (unique (fun y => p))) ..))) (at level 200, x binder, right associativity,  format "'[' 'exists' ! '/ ' x .. y , '/ ' p ']'") : type_scope.
+"∀ x .. y , P" := (forall x, .. (forall y, P) ..) (at level 200, x binder, y binder, right associativity) : type_scope.
+"∃ x .. y , P" := (exists x, .. (exists y, P) ..) (at level 200, x binder, y binder, right associativity) : type_scope.
+"x → y" := (x -> y) (at level 90, y at level 200, right associativity): type_scope.
+"'λ' x .. y , t" := (fun x => .. (fun y => t) ..) (at level 200, x binder, y binder, right associativity).

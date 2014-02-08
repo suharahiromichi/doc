@@ -1,0 +1,109 @@
+"n %:Q" := ((n : int)%:~R : rat) (at level 2, left associativity, format "n %:Q") : ring_scope.
+"n %:Z" := (Posz n) (at level 2, left associativity, format "n %:Z", only parsing) : int_scope.
+"n %:Z" := (Posz n) (at level 2, left associativity, format "n %:Z", only parsing) : ring_scope.
+"n %:~R" := (1 *~ n)%R (at level 2, left associativity, format "n %:~R") : ring_scope.
+"n .+1" := (succn n) (at level 2, left associativity, format "n .+1") : nat_scope.
+"n .-1" := (predn n) (at level 2, left associativity, format "n .-1") : nat_scope.
+"p .1" := (fst p) (at level 2, left associativity, format "p .1") : pair_scope.
+"p .2" := (snd p) (at level 2, left associativity, format "p .2") : pair_scope.
+"e .[ x ]" (at level 2, left associativity, format "e .[ x ]").
+"e .[ x1 , x2 , .. , xn ]" (at level 2, left associativity, format "e '[ ' .[ x1 , '/' x2 , '/' .. , '/' xn ] ']'").
+"k %:A" (at level 2, left associativity, format "k %:A").
+"n %:R" (at level 2, left associativity, format "n %:R").
+"x ^f" (at level 2, left associativity, format "x ^f").
+"x %:T" (at level 2, left associativity, format "x %:T").
+"n .+2" := n.+1.+1 (at level 2, left associativity, format "n .+2") : nat_scope.
+"n .+3" := n.+2.+1 (at level 2, left associativity, format "n .+3") : nat_scope.
+"n .+4" := n.+2.+2 (at level 2, left associativity, format "n .+4") : nat_scope.
+"n .-2" := n.-1.-1 (at level 2, left associativity, format "n .-2") : nat_scope.
+
+"x ^-1" (at level 3, left associativity, format "x ^-1").
+"s `_ i" (at level 3, i at level 2, left associativity, format "s `_ i").
+
+"f ^~ y" := (fun x => f x y) (at level 10, y at level 8, no associativity, format "f ^~ y") : fun_scope.
+"@^~ x" := (fun f => f x) (at level 10, x at level 8, no associativity, format "@^~ x") : fun_scope.
+
+
+"x ^+ n" (at level 29, left associativity).
+"x ^- n" (at level 29, left associativity).
+
+"n ^_ m" := (falling_factorial n m) (at level 30, right associativity) : nat_scope.
+
+"u ^@ x" (at level 31, left associativity).
+
+"A :^ x" (at level 35, right associativity).
+"A :^: B" (at level 35, right associativity).
+"x ^: B" (at level 35, right associativity).
+"~: A" := (setC A) (at level 35, right associativity) : set_scope.
+"~~ b" (at level 35, right associativity).
+
+"\big [ op / idx ]_ i F" (at level 36, F at level 36, op, idx at level 10, i at level 0, right associativity, format "'[' \big [ op / idx ]_ i '/ ' F ']'").
+
+"m %% d" (at level 40, no associativity). 
+"m %/ d" (at level 40, no associativity). 
+
+"A *m B" (at level 40, left associativity, format "A *m B").
+"A <*> B" (at level 40, left associativity).
+"x *+ n" (at level 40, left associativity).
+"x *- n" (at level 40, left associativity).
+"G ><| H" := (sdprod G H)%g (at level 40, left associativity).
+"G \* H" := (cprod G H)%g (at level 40, left associativity).
+"G \x H" := (dprod G H)%g (at level 40, left associativity).
+"x *~ n" := (intmul x n) (at level 40, left associativity, format "x *~ n") : ring_scope.
+
+"\sum_ i F" (at level 41, F at level 41, i at level 0, right associativity, format "'[' \sum_ i '/ ' F ']'").
+
+"A :&: B" (at level 48, left associativity).
+
+"A :\ b" (at level 50, left associativity).
+"A :\: B" (at level 50, left associativity).
+"b1 (+) b2" (at level 50, left associativity).
+"f \+ g" (at level 50, left associativity).
+"f \- g" (at level 50, left associativity).
+
+"A :|: B" (at level 52, left associativity).
+"a |: A" (at level 52, left associativity).
+
+"b ==> c" (at level 55, right associativity).
+"b ==> c" (at level 55, right associativity).
+
+"f1 \; f2" := (catcomp tt f1 f2) (at level 60, right associativity, format "f1 \; '/ ' f2") : fun_scope.
+
+"x != y %[mod_eq e ]" (at level 70, y at next level, no associativity, format "'[hv ' x '/' != y '/' %[mod_eq e ] ']'").
+"x <> y %[mod_eq e ]" (at level 70, y at next level, no associativity, format "'[hv ' x '/' <> y '/' %[mod_eq e ] ']'").
+"x = y %[mod_eq e ]" (at level 70, y at next level, no associativity, format "'[hv ' x '/' = y '/' %[mod_eq e ] ']'").
+"x == y %[mod_eq e ]" (at level 70, y at next level, no associativity, format "'[hv ' x '/' == y '/' %[mod_eq e ] ']'").
+"G \homg H" := (homg G H) (at level 70, no associativity) : group_scope.
+"A :!=: B" := (A != B :> {set _}) (at level 70, no associativity, only parsing) : set_scope.
+"A :<>: B" := (A <> B :> {set _}) (at level 70, no associativity, only parsing) : set_scope.
+"A :=: B" := (A = B :> {set _}) (at level 70, no associativity, only parsing) : set_scope.
+"A :==: B" := (A == B :> {set _}) (at level 70, no associativity, only parsing) : set_scope.
+"A :=P: B" := (A =P B :> {set _}) (at level 70, no associativity, only parsing) : set_scope.
+"A \proper B" := (proper (mem A) (mem B)) (at level 70, no associativity) : bool_scope.
+"A \subset B" := (subset (mem A) (mem B)) (at level 70, no associativity) : bool_scope.
+"H <|<| G" := (subnormal H G) (at level 70, no associativity) : group_scope.
+"f1 =1 f2" := (eqfun f1 f2) (at level 70, no associativity) : fun_scope.
+"f1 =2 f2" := (eqrel f1 f2) (at level 70, no associativity) : fun_scope.
+"x != y" := (~~ (x == y)) (at level 70, no associativity) : bool_scope.
+"x == y" := (eq_op x y) (at level 70, no associativity) : bool_scope.
+"x =P y :> T" := (eqP : reflect (x = y :> T) (x == y :> T)) (at level 70, y at next level, no associativity) : eq_scope.
+"x =P y" := (eqP : reflect (x = y) (x == y)) (at level 70, no associativity) : eq_scope.
+"x \is 'a' A" := (x \in has_quality 1 A) (at level 70, no associativity, format "'[hv' x '/ ' \is 'a' A ']'") : bool_scope.
+"x \is 'an' A" := (x \in has_quality 2 A) (at level 70, no associativity, format "'[hv' x '/ ' \is 'an' A ']'") : bool_scope.
+"x \is A" := (x \in has_quality 0 A) (at level 70, no associativity, format "'[hv' x '/ ' \is A ']'") : bool_scope.
+"x \isn't 'a' A" := (x \notin has_quality 1 A) (at level 70, no associativity, format "'[hv' x '/ ' \isn't 'a' A ']'") : bool_scope.
+"x \isn't 'an' A" := (x \notin has_quality 2 A) (at level 70, no associativity, format "'[hv' x '/ ' \isn't 'an' A ']'") : bool_scope.
+"x \isn't A" := (x \notin has_quality 0 A) (at level 70, no associativity, format "'[hv' x '/ ' \isn't A ']'") : bool_scope.
+"A <| B" (at level 70, no associativity).
+"m %| d" (at level 70, no associativity). 
+"p %= q" (at level 70, no associativity).
+"p1 =i p2" (at level 70, format "'[hv' p1 '/ ' =i p2 ']'", no associativity).
+"x \in A" (at level 70, format "'[hv' x '/ ' \in A ']'", no associativity).
+"x \notin A" (at level 70, format "'[hv' x '/ ' \notin A ']'", no associativity).
+
+"x : T" := (x : T) (at level 100, right associativity, format "'[hv' x '/ ' : T ']'") : core_scope.
+
+"x |-> y" := (FunDelta x y) (at level 190, no associativity, format "'[hv' x '/ ' |-> y ']'") : fun_delta_scope.
+
+"''exists' ''X_' i , f" (at level 199, i at level 2, right associativity, format "'[hv' ''exists' ''X_' i , '/ ' f ']'").
+"''forall' ''X_' i , f" (at level 199, i at level 2, right associativity, format "'[hv' ''forall' ''X_' i , '/ ' f ']'").
