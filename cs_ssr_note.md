@@ -21,6 +21,7 @@ SSReflectノート
 | case:  x y => a b    | move: x y; case;  move=> a b     |                       |
 | elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
+| rewrite p q => a b   | rewrite p q; move => a b         |                       |
 
 
 ## move=>[]と、caseの関係。
@@ -123,8 +124,10 @@ case; case=> l m n.
 
 ## Selector
 
-   + first
-   + last
+| 例                   | 意味                                | 備考                |
+|:---------------------|:-----------------------------------|:--------------------|
+| first                |                                    | 6.3 p.29            |
+| last                 |                                    | 6.3 p.29            |
 
 ## Iteration
 
@@ -144,8 +147,25 @@ case; case=> l m n.
 |  tactic in H.        |                                 | 前提Hに適用する。        |
 |  tactic in H *.      |                                 | ゴールと前提Hに適用する。 |
 
-# Structure (haveとwlog)
+# Structure
+
+| 例                         | 意味                                   | 備考                    |
+|:---------------------------|:---------------------------------------|:-----------------------|
+| have : t.                  | assert t.                              | 6.6 p.32 (だいたい同じ) |
+| have H : t by tactics.     | have: t; first by tactics. move=> H.   |                        |
+| have H := t.               | 直接証明を与える。                      | 6.6 p.33 (半ば)        |
+| suff                       |                                        | 6.6 p.33               |
+| wlong:                     |                                        | 6.6 p.33               |
 
 # Gallinaの拡張
+
+| 例                                       | 意味                                                    | 備考                      |
+|:-----------------------------------------|:--------------------------------------------------------|:-------------------------|
+| let: p      := t1 in t2.                 | match t1          with p      => t2 end.                |                          |
+| let: p as i := t1 return t in t2.        | match t1 return t with p as i => t2 end.                | iはpの別名、tはt2とt3の型 |
+| if t1 is p               then t2 else t3 | match t1          with p      => t2 &#124; _ => t3 end  |                          |
+| if t1 is p as i return t then t2 else t3 | match t1 return t with p as i => t2 &#124; _ => t3 end  | iはpの別名、tはt2とt3の型 |
+| pose t := x.                             |                                                         | 4.1 p.12                 |
+| set t := x.                              |                                                         | 4.2 p.13                 |
 
 以上
