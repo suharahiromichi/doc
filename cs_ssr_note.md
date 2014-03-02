@@ -77,8 +77,8 @@ case; case=> l m n.
 | move: x.             | revert x.             | (†)                             |
 | move: (x).           | generalize x.         | (†)                             |
 | move: {+}x.          | generalize x.         | (†)                             |
-| move H.              | Hは、Hは、option item | 5.5 p.25                         |
-| case H.              | Hは、Hは、option item | 5.5 p.25                         |
+| move H.              | Hは、option item      | 5.5 p.25                         |
+| case H.              | Hは、option item      | 5.5 p.25                         |
 | case: y/x.           | y/は、type families   | 5.5 p.26                         |
 
 (†) 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
@@ -123,19 +123,18 @@ case; case=> l m n.
 
 ## Selector
 
-   first
-   last
+   + first
+   + last
 
 ## Iteration
 
 | 例                    | 意味                  | 備考                             |
 |:----------------------|:---------------------|:---------------------------------|
-| do    [t1 &#0x7C; t2 &#0x7C; t3]. |                      | 1回だけt1,t2,t3のどれかを試す。   |
-| do 3! [t1 &#0x7C; t2 &#0x7C; t3]. |                      | 3回だけt1,t2,t3のどれかを試す。   |
-| do !  [t1 &#0x7C; t2 &#0x7C; t3]. |                      | 1回以上t1,t2,t3のどれかを試す。   |
-| do ?  [t1 &#0x7C; t2 &#0x7C; t3]. |                      | 0回以上t1,t2,t3のどれかを試す。   |
-| do 3? [t1 &#0x7C; t2 &#0x7C; t3]. |                      | 3回以下t1,t2,t3のどれかを試す。   |
-\ 「&#0x7C;」は縦棒。
+| do    [t1 &#124; t2 &#124; t3]. | (回数指定)            | 1回だけt1,t2,t3のどれかを試す。   |
+| do 3! [t1 &#124; t2 &#124; t3]. |                      | 3回だけt1,t2,t3のどれかを試す。   |
+| do !  [t1 &#124; t2 &#124; t3]. |                      | 1回以上t1,t2,t3のどれかを試す。   |
+| do ?  [t1 &#124; t2 &#124; t3]. |                      | 0回以上t1,t2,t3のどれかを試す。   |
+| do 3? [t1 &#124; t2 &#124; t3]. |                      | 3回以下t1,t2,t3のどれかを試す。   |
 
 ## Localisation
 
