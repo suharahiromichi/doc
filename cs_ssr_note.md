@@ -8,9 +8,16 @@ SSReflectノート
 
 | 例                   | 意味                              | 備考            |
 |:---------------------|:---------------------------------|:----------------|
+| rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
 | move=> a b c.        | move=> a; move=> b; move=> c.    |                 |
 | move: x y z.         | move: x; move: y; move: z.       |                 |
-| rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
+
+例外として、clear-switchのとき「:」は付かない。
+```Coq
+move: x {y}.
+move: x; move {y}.
+move: x; clear y.
+```
 
 ## 「:」と「=>」はmoveを略した書き方。
 
@@ -21,7 +28,7 @@ SSReflectノート
 | case:  x y => a b    | move: x y; case;  move=> a b     |                       |
 | elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
-| rewrite p q => a b   | rewrite p q; move => a b         |                       |
+| rewrite p q => a b   | rewrite p q; move=> a b         |                       |
 
 
 ## move=>[]と、caseの関係。
@@ -34,6 +41,8 @@ SSReflectノート
 | case=> [l m n].      | case=> l m n.                    | 「move=> l m n」ではない。|
 | move=> [l m n].      | move=> [] l m n.                 | move=> []; move=> l m n. |
 | move=> [l m n].      | case; move=> l m n.              | case=> []; move=> l m n. |
+| move=> [l|m].        | move=> []; first move=> l; last move=> m. |                 |
+| move=> [l|m].        | move=> []; [move=> l| move=> m]. |                       |
 
 以下はすべて同じになる。
 
@@ -55,6 +64,16 @@ move=> []; move=> []; move=> l m n.
 case; case; move=> l m n.
 case; case=> l m n.
 ```
+
+例3
+```Coq
+move=> [|[]].
+move=> []; last move=> [].
+move=> []; [| move=> []].
+case; last case.
+case; [| case].
+```
+
 
 # Introduction
 
@@ -104,6 +123,7 @@ case; case=> l m n.
 | rewrite 3?t.         |                       | 3回以下書き換える。(‡)           |
 | rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(‡)            |
 | rewrite [m]t.        | (contextual-pattern)  | 8. p.44 (マッチした箇所を) (‡)   |
+| rewrite {}H.         | rewrite H; clear H.   | {}は occ-switchではない。        |
 
 (‡) 方向、回数、occ-switch、contextual-pattern の順番で指定すること。
 
@@ -169,3 +189,5 @@ case; case=> l m n.
 | set t := x.                              |                                                         | 4.2 p.13                 |
 
 以上
+
+https://wri.pe/app#0mpqDaG/edit
