@@ -1,6 +1,6 @@
 SSReflectノート
 ========
-2014/03/02 @suharahiromichi
+2014/03/09 @suharahiromichi
 
 # 基本のキ (CheatSheet以前)
 
@@ -27,8 +27,9 @@ move: x; clear y.
 | exact: x y => a b    | move: x y; exact; move=> a b     |                       |
 | case:  x y => a b    | move: x y; case;  move=> a b     |                       |
 | elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
+| move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
-| rewrite p q => a b   | rewrite p q; move=> a b         |                       |
+| rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
 
 
 ## move=>[]と、caseの関係。
@@ -131,14 +132,30 @@ case; [| case].
 
 | 例                   | 意味                                | 備考                |
 |:---------------------|:-----------------------------------|:--------------------|
-| move/V.              | H->GのHをReflectして、move          |                    |
-| move/V: x => a.      | move: x => a /V.                   | 5.3 p.23 (一番最後) |
-| case/V.              | H->GのHをReflectして、case          |                    |
-| elim/V.              | H->GのHをReflectして、elim          |                    |
+| move/V.              | H->GのHをReflectする。              |                    |
+| case/V.              | move/V; case.                      |                    |
+| elim/V.              | move/V; elim.                      |                    |
 | elim/V.              | intro x; elim x using V; clear x.  | standard Coq の場合 |
 | elim/V: x => a.      | elim x using V; clear x; intro a.  | standard Coq の場合 |
-| apply/V.             | H->GのGをReflectして、apply         |                    |
+| apply/V.             | H->GのGをReflectする。              |                    |
 | apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55           |
+
+case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
+```Coq
+case/V: x y => a b.
+move: x y; case/V; move=> a b.
+move: x y; move/V; case; move=> a b.
+move/V: x y; case; move=> a b.
+```
+
+case=>[]とmove=>[]が同じことから、合わせ技で、以下もすべて同じになる。
+```Coq
+case/V => [l m].
+case/V; move=> [l m].
+move/V; case=> [l m].
+move/V; move=> [l m].
+move/V => [l m].
+```
 
 # Control flow
 
