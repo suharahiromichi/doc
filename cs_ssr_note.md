@@ -41,8 +41,8 @@ move: x; clear y.
 | case=> [l m n].      | case=> l m n.                    | 「move=> l m n」ではない。|
 | move=> [l m n].      | move=> [] l m n.                 | move=> []; move=> l m n. |
 | move=> [l m n].      | case; move=> l m n.              | case=> []; move=> l m n. |
-| move=> [l|m].        | move=> []; first move=> l; last move=> m. |                 |
-| move=> [l|m].        | move=> []; [move=> l| move=> m]. |                       |
+| move=> [l&#124;m].        | move=> []; first move=> l; last move=> m. |                 |
+| move=> [l&#124;m].        | move=> []; [move=> l&#124; move=> m]. |                       |
 
 以下はすべて同じになる。
 
