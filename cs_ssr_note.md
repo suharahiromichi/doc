@@ -2,15 +2,28 @@ SSReflectノート
 ========
 2014/03/09 @suharahiromichi
 
-# 基本のキ (CheatSheet以前)
+# CheatSheet以前
+
+## tactic の意味
+
+| 例                   | 意味                                      | 備考                     |
+|:---------------------|:------------------------------------------|:------------------------|
+| move.                | なにもしない。「=>」や「:」と組み合わせる。  |                         |
+| apply.               | ゴール a -> b のとき、aをbにapplyする。     |                         |
+| case.                | ゴール a -> b のとき、aでbを場合わけする。   | ゴール forall a, b のとき、aでb を場合わけする。 |
+| elim.                |                                            |                         |
+| exact.               |                                            |                         |
+
+(†) a->b->cなら、(b->c)にaを…する。a->(b->c)であるため。
+
 
 ## moveとrewriteは分配できる。
 
 | 例                   | 意味                              | 備考            |
 |:---------------------|:---------------------------------|:----------------|
-| rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
 | move=> a b c.        | move=> a; move=> b; move=> c.    |                 |
-| move: x y z.         | move: x; move: y; move: z.       |                 |
+| move: c b a.         | move: c; move: b; move: a.       | move=> a b cを戻す。  |
+| rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
 
 例外として、clear-switchのとき「:」は付かない。
 ```Coq
@@ -18,6 +31,8 @@ move: x {y}.
 move: x; move {y}.
 move: x; clear y.
 ```
+
+
 
 ## 「:」と「=>」はmoveを略した書き方。
 
@@ -30,6 +45,8 @@ move: x; clear y.
 | move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
 | rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
+
+exact: (f _) のように、exact:でhole(placeholder)のあるときは、上記は成立しない場合がある。
 
 
 ## move=>[]と、caseの関係。
@@ -86,7 +103,6 @@ case; [| case].
 | move=> /=.           | simpl.                |                                  |
 | move=> //=.          | simpl; try done.      |                                  |
 | move=> {H}//.        | (clear-switch)        | 5.4 p.23 (Hも使い、Hを消す。)     | 
-| move=> /V.           | view                  | 5.3 p.23 (一番最後)               |
 
 (†) 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
 
@@ -95,9 +111,9 @@ case; [| case].
 
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
-| move: x.             | revert x.             | (†)                             |
-| move: (x).           | generalize x.         | (†)                             |
-| move: {+}x.          | generalize x.         | (†)                             |
+| move: x.             | revert x.             | (†) xをclearする。               |
+| move: (x).           | generalize x.         | (†) xを消さずに残す。             |
+| move: {+}x.          | generalize x.         | (†) xを消さずに残す。             |
 | move H.              | Hは、option item      | 5.5 p.25                         |
 | case H.              | Hは、option item      | 5.5 p.25                         |
 | case: y/x.           | y/は、type families   | 5.5 p.26                         |
@@ -161,10 +177,11 @@ move/V => [l m].
 
 ## Selector
 
-| 例                   | 意味                                | 備考                |
-|:---------------------|:-----------------------------------|:--------------------|
-| first                |                                    | 6.3 p.29            |
-| last                 |                                    | 6.3 p.29            |
+| 例                   | 意味                | 備考                |
+|:---------------------|:-------------------|:--------------------|
+| first                |                    | 6.3 p.29            |
+| last                 |                    | 6.3 p.29            |
+| [t1 | t2]            | first t1; last t2  | byやdoが付くと、選択ではなく、tryの意味になる。 |
 
 ## Iteration
 
