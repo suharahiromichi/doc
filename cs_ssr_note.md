@@ -42,15 +42,15 @@ move: x; clear y.
 
 | 例                   | 意味                              | 備考                  |
 |:---------------------|:---------------------------------|:----------------------|
-| apply: x y => a b    | move: x y; apply; move=> a b     |                       |
-| exact: x y => a b    | move: x y; exact; move=> a b     |                       |
+| apply: x y => a b    | move: x y; apply; move=> a b     | (†)                  |
+| exact: x y => a b    | move: x y; exact; move=> a b     | (†)                  |
 | case:  x y => a b    | move: x y; case;  move=> a b     |                       |
 | elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
 | move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
 | rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
 
-exact: (f _) のように、exact:でhole(placeholder)のあるときは、上記は成立しない場合がある。
+(†) xやyにhole(placeholder)のあるときは、成立しない。
 
 
 ## move=>[]と、caseの関係。
