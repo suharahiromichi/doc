@@ -2,6 +2,8 @@ SSReflectノート
 ========
 2014/03/23 @suharahiromichi
 
+章節番号とページは、"No 6455 A Small Sscale Reflection Extension for the Coq System" の該当箇所を示す。
+
 # CheatSheet以前
 
 ## tactic の意味
@@ -14,12 +16,9 @@ SSReflectノート
 | case.                | Hで場合わけする。                          | xで場合わけする。          |
 | elim.                | Hで帰納法                                  |                           |
 
-- H->G1->G2なら、(G1->G2)にHを…する。H->(G1->G2)であるため。
-
-- byは証明を閉じる（現在のsubgoalの証明を終了できなければ、エラーにする）。
-
-- by t1; t2. は by (t1; t2). の意味である。
-
+1. H->G1->G2なら、(G1->G2)にHを…する。H->(G1->G2)であるため。
+1. byは証明を閉じる（現在のsubgoalの証明を終了できなければ、エラーにする）。
+1. by t1; t2. は by (t1; t2). の意味である。
 
 ## moveとrewriteは分配できる。
 
@@ -42,15 +41,15 @@ move: x; clear y.
 
 | 例                   | 意味                              | 備考                  |
 |:---------------------|:---------------------------------|:----------------------|
-| apply: x y => a b    | move: x y; apply; move=> a b     | (†)                  |
-| exact: x y => a b    | move: x y; exact; move=> a b     | (†)                  |
+| apply: x y => a b    | move: x y; apply; move=> a b     | (1.)                  |
+| exact: x y => a b    | move: x y; exact; move=> a b     | (1.)                  |
 | case:  x y => a b    | move: x y; case;  move=> a b     |                       |
 | elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
 | move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
 | rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
 
-(†) xやyにhole(placeholder)のあるときは、成立しない。
+1. xやyにhole(placeholder)のあるときは、成立しない。
 
 
 ## move=>[]と、caseの関係。
@@ -102,27 +101,27 @@ case; [| case].
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
 | move=> a.            | intro a.              |                                  |
-| move=> ->.           | intor a; rewrite a; clear a.  | (†)                     |
+| move=> ->.           | intor a; rewrite a; clear a.  | (1.)                     |
 | move=> //.           | try done.             |                                  |
 | move=> /=.           | simpl.                |                                  |
 | move=> //=.          | simpl; try done.      |                                  |
 | move=> {H}//.        | (clear-switch)        | 5.4 p.23 (Hも使い、Hを消す。)     | 
 
-(†) 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
+1. 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
 
 
 # Discharge
 
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
-| move: x.             | revert x.             | (†) xをclearする。               |
-| move: (x).           | generalize x.         | (†) xを消さずに残す。             |
-| move: {+}x.          | generalize x.         | (†) xを消さずに残す。             |
+| move: x.             | revert x.             | xをclearする。(1.)                |
+| move: (x).           | generalize x.         | xを消さずに残す。(1.)         |
+| move: {+}x.          | generalize x.         | xを消さずに残す。(1.)         |
 | move H.              | Hは、option item      | 5.5 p.25                         |
 | case H.              | Hは、option item      | 5.5 p.25                         |
 | case: y/x.           | y/は、type families   | 5.5 p.26                         |
 
-(†) 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
+1. 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
 
 
 # rewrite
@@ -137,16 +136,16 @@ case; [| case].
 | rewrite -[x]y.       | change x with y.      |                                  |
 | rewrite (_: a=b).    | replace (_ : a=b).    | あとでa=bの証明をする。           |
 | cutrewrite (a=b).    | replace a with b.     | あとでa=bの証明をする。           |
-| rewrite -t.          | (方向)                | 逆方向へ書き換える。(‡)          |
-| rewrite 3!t.         | (回数)                | 3回だけ書き換える。(‡)           |
-| rewrite !t.          |                       | 1回以上書き換える。(‡)           |
-| rewrite ?t.          |                       | 0回以上書き換える。(‡)           |
-| rewrite 3?t.         |                       | 3回以下書き換える。(‡)           |
-| rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(‡)            |
-| rewrite [m]t.        | (contextual-pattern)  | 8. p.44 (マッチした箇所を) (‡)   |
+| rewrite -t.          | (方向)                | 逆方向へ書き換える。(1.)          |
+| rewrite 3!t.         | (回数)                | 3回だけ書き換える。(1.)           |
+| rewrite !t.          |                       | 1回以上書き換える。(1.)           |
+| rewrite ?t.          |                       | 0回以上書き換える。(1.)           |
+| rewrite 3?t.         |                       | 3回以下書き換える。(1.)           |
+| rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(1.)            |
+| rewrite [m]t.        | (contextual-pattern)  | 8. p.44 (マッチした箇所を) (1.)   |
 | rewrite {}H.         | rewrite H; clear H.   | {}は occ-switchではない。        |
 
-(‡) 方向、回数、occ-switch、contextual-pattern の順番で指定すること。
+1. 方向、回数、occ-switch、contextual-pattern の順番で指定すること。
 
 # Views
 
@@ -216,6 +215,7 @@ move/V => [l m].
 | wlong:                     |                                        | 6.6 p.33               |
 
 # Gallinaの拡張
+## Gallinaの拡張
 
 | 例                                       | 意味                                                    | 備考                      |
 |:-----------------------------------------|:--------------------------------------------------------|:-------------------------|
@@ -225,6 +225,27 @@ move/V => [l m].
 | if t1 is p as i return t then t2 else t3 | match t1 return t with p as i => t2 &#124; _ => t3 end  | iはpの別名、tはt2とt3の型 |
 | pose t := x.                             |                                                         | 4.1 p.12                 |
 | set t := x.                              |                                                         | 4.2 p.13                 |
+
+## Inductive
+
+以下はどれも同じ。3.4 p.12
+```Coq
+Inductive list (A : Type) : Type :=
+| nil
+| cons of A & list A.
+
+Inductive list' (A : Type) : Type :=
+| nil' : list' A
+| cons' of A & list' A : list' A.
+
+Inductive list'' (A : Type) : Type :=
+| nil'' : list'' A
+| cons'' : A -> list'' A -> list'' A.
+
+Inductive list''' (A : Type) : Type :=
+| nil''' : list''' A
+| cons''' (x : A) (l : list''' A) : list''' A.
+```
 
 以上
 
