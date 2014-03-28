@@ -106,6 +106,8 @@ case; [| case].
 | move=> /=.           | simpl.                |                                  |
 | move=> //=.          | simpl; try done.      |                                  |
 | move=> {H}//.        | (clear-switch)        | 5.4 p.23 (Hも使い、Hを消す。)     | 
+| move=> /V.           | move/V.               | 5.4 p.23 (最後)、9.9　            |
+| move=> -.            | move.                 | 9.9 (なにもしない、NO-OP)         |
 
 1. 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
 
