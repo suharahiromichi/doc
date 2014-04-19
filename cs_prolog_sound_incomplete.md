@@ -116,9 +116,7 @@ https://github.com/suharahiromichi/doc/blob/master/cs_prolog_denotational_semant
 
 ## Prologの個々のプログラムについて、完全性を証明する。
 具体的には、型付きラムダ式の型推論を行うプログラム
-
-    https://github.com/suharahiromichi/prolog/blob/master/tapl/tapl_type_stlc.swi
-
+https://github.com/suharahiromichi/prolog/blob/master/tapl/tapl_type_stlc.swi
 は、論理式をPrologで証明しているとみてよいので、結果として完全性が保証され**ない**のだろう。
 
 ならば、どうすれば完全性が保証できるのだろうか。停止性を保証すればよいのだろうか。
