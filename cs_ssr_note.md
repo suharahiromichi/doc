@@ -25,7 +25,7 @@ SSReflectノート
 | 例                   | 意味                              | 備考            |
 |:---------------------|:---------------------------------|:----------------|
 | move=> a b c.        | move=> a; move=> b; move=> c.    |                 |
-| move: c b a.         | move: c; move: b; move: a.       | move=> a b cを戻す。  |
+| move: a b c.         | move: c; move: b; move: a.       | move=> a b cを戻す。  |
 | rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
 
 例外として、clear-switchのとき「:」は付かない。
