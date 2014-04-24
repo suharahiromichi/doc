@@ -212,11 +212,15 @@ move/V => [l m].
 
 | 例                         | 意味                                   | 備考                    |
 |:---------------------------|:---------------------------------------|:-----------------------|
-| have : t.                  | assert t.                              | 6.6 p.32 (だいたい同じ) |
-| have H : t by tactics.     | have: t; first by tactics. move=> H.   |                        |
-| have H := t.               | 直接証明を与える。                      | 6.6 p.33 (半ば)        |
+| have: t.                   |                                        | (1.) (2.)
+| have H : t.                | have: t => H.                          | Hには場合分け[&#124;]も書ける。 |
+| have H : t by tactics.     | have: t; first by tactics. move=> H.   | 6.6 p.32               |
+| have H := t.               | move: t => H                           | 6.6 p.33、直接証明を与える。|
 | suff                       |                                        | 6.6 p.33               |
 | wlong:                     |                                        | 6.6 p.33               |
+
+1. 現在のゴールにtをpushするとともに、新しいゴールをtにする。 assert t は新しいゴールtだけ。
+2. have:の後に括弧が要らない。assertの後には括弧が要る。
 
 # Gallinaの拡張
 ## Gallinaの拡張
