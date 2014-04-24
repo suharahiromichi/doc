@@ -159,9 +159,9 @@ case; [| case].
 | elim/V.              | intro x; elim x using V; clear x.  | standard Coq の場合 |
 | elim/V: x => a.      | elim x using V; clear x; intro a.  | standard Coq の場合 |
 | apply/V.             | H->GのGをReflectする。              |                    |
-| apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55           |
+| apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55 (3.)       |
 
-case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
+1. case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
 ```Coq
 case/V: x y => a b.
 move: x y; case/V; move=> a b.
@@ -169,7 +169,7 @@ move: x y; move/V; case; move=> a b.
 move/V: x y; case; move=> a b.
 ```
 
-case=>[]とmove=>[]が同じことから、合わせ技で、以下もすべて同じになる。
+2. case=>[]とmove=>[]が同じことから、合わせ技で、以下もすべて同じになる。
 ```Coq
 case/V => [l m].
 case/V; move=> [l m].
@@ -177,6 +177,8 @@ move/V; case=> [l m].
 move/V; move=> [l m].
 move/V => [l m].
 ```
+
+3. apply/idP/idPは、ゴールx=yを x->y と y->x にする。
 
 # Control flow
 
