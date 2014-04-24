@@ -135,7 +135,7 @@ case; [| case].
 | rewrite /=.          | simpl.                |                                  |
 | rewrite //=.         | somple; try done.     |                                  |
 | rewrite (s, t, u).   |                       | 順番に試す。                      |
-| rewrite -[x]y.       | change x with y.      |                                  |
+| rewrite -[x]/y.      | change x with y.      | p.37、これはこのかたちで覚える。   |
 | rewrite (_: a=b).    | replace (_ : a=b).    | あとでa=bの証明をする。           |
 | cutrewrite (a=b).    | replace a with b.     | あとでa=bの証明をする。           |
 | rewrite -t.          | (方向)                | 逆方向へ書き換える。(1.)          |
