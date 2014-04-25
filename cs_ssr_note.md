@@ -1,6 +1,6 @@
-SSReflectノート
+SSReflectノート (暫定版)
 ========
-2014/03/23 @suharahiromichi
+2014/04/27 @suharahiromichi
 
 章節番号とページは、"No 6455 A Small Sscale Reflection Extension for the Coq System" の該当箇所を示す。
 
@@ -20,12 +20,27 @@ SSReflectノート
 1. byは証明を閉じる（現在のsubgoalの証明を終了できなければ、エラーにする）。
 1. by t1; t2. は by (t1; t2). の意味である。
 
-## moveとrewriteは分配できる。
+## 「tactic: x => a」は、「move: x; tactic; move=> a」
+
+| 例                   | 意味                              | 備考                  |
+|:---------------------|:---------------------------------|:----------------------|
+| apply: x y => a b    | move: x y; apply; move=> a b     |                   |
+| exact: x y => a b    | move: x y; exact; move=> a b     |                   |
+| case: x y => a b     | move: x y; case;  move=> a b     |                       |
+| elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
+| move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
+| apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
+| rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
+
+1. xやyにhole(placeholder)のあるときは、成立しない。
+
+
+## moveとrewriteは「分配」できる
 
 | 例                   | 意味                              | 備考            |
 |:---------------------|:---------------------------------|:----------------|
-| move=> a b c.        | move=> a; move=> b; move=> c.    |                 |
-| move: a b c.         | move: c; move: b; move: a.       | move=> a b cを戻す。  |
+| move=> a b c.        | move=> a; move=> b; move=> c.    | move: a b c で戻る。 |
+| move: a b c.         | move: c; move: b; move: a.       | 逆順になる。     |
 | rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
 
 例外として、clear-switchのとき「:」は付かない。
@@ -36,23 +51,7 @@ move: x; clear y.
 ```
 
 
-
-## 「:」と「=>」はmoveを略した書き方。
-
-| 例                   | 意味                              | 備考                  |
-|:---------------------|:---------------------------------|:----------------------|
-| apply: x y => a b    | move: x y; apply; move=> a b     | (1.)                  |
-| exact: x y => a b    | move: x y; exact; move=> a b     | (1.)                  |
-| case:  x y => a b    | move: x y; case;  move=> a b     |                       |
-| elim: x y => a b     | move: x y; elim;  move=> a b     |                       |
-| move/V: x y => a b   | move: x y; move/V; move=> a b    | Viewを指定しても同じ。 |
-| apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
-| rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
-
-1. xやyにhole(placeholder)のあるときは、成立しない。
-
-
-## move=>[]と、caseの関係。
+## move=>[]と、caseの関係
 
 | 例                   | 意味                              | 備考                  |
 |:---------------------|:---------------------------------|:----------------------|
@@ -65,7 +64,7 @@ move: x; clear y.
 | move=> [l&#124;m].        | move=> []; first move=> l; last move=> m. |                 |
 | move=> [l&#124;m].        | move=> []; [move=> l&#124; move=> m]. |                       |
 
-以下はすべて同じになる。
+以下の例はそれぞれ同じになる。
 
 例1
 ```Coq
@@ -119,9 +118,9 @@ case; [| case].
 | move: x.             | revert x.             | xをclearする。(1.)                |
 | move: (x).           | generalize x.         | xを消さずに残す。(1.)         |
 | move: {+}x.          | generalize x.         | xを消さずに残す。(1.)         |
-| move H.              | Hは、option item      | 5.5 p.25  (?)                    |
-| case H.              | Hは、option item      | 5.5 p.25  (?)                    |
-| case: y/x.           | y/は、type families   | 5.5 p.26  (?)                    |
+| move H.              | Hは、option item      | 5.5 p.25  (要確認)                    |
+| case H.              | Hは、option item      | 5.5 p.25  (要確認)                    |
+| case: y/x.           | y/は、type families   | 5.5 p.26  (要確認)                    |
 
 1. 対象をその順番で指定するには、occ-switch(例：{2})を使う。
 
@@ -154,12 +153,14 @@ case; [| case].
 | 例                   | 意味                                | 備考                |
 |:---------------------|:-----------------------------------|:--------------------|
 | move/V.              | H->GのHをReflectする。              |                    |
-| case/V.              | move/V; case.                      |                    |
-| elim/V.              | move/V; elim.                      |                    |
+| case/V.              | move/V; case.                      | (2.)               |
+| elim/V.              | move/V; elim.                      | (2.)               |
 | elim/V.              | intro x; elim x using V; clear x.  | standard Coq の場合 |
 | elim/V: x => a.      | elim x using V; clear x; intro a.  | standard Coq の場合 |
 | apply/V.             | H->GのGをReflectする。              |                    |
-| apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55 (3.)       |
+| apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55 (1.)       |
+
+1. apply/idP/idP は、ゴール x=y を x->y と y->x にする。
 
 1. case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
 ```Coq
@@ -169,7 +170,7 @@ move: x y; move/V; case; move=> a b.
 move/V: x y; case; move=> a b.
 ```
 
-2. case=>[]とmove=>[]が同じことから、合わせ技で、以下もすべて同じになる。
+case=>[]と、move=>[]が同じことから、合わせ技で、以下もすべて同じになる。
 ```Coq
 case/V => [l m].
 case/V; move=> [l m].
@@ -177,8 +178,6 @@ move/V; case=> [l m].
 move/V; move=> [l m].
 move/V => [l m].
 ```
-
-3. apply/idP/idPは、ゴールx=yを x->y と y->x にする。
 
 # Control flow
 
