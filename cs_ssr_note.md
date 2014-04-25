@@ -14,7 +14,7 @@ SSReflectノート
 | apply.               | Hを適用する。                             |                            |
 | exact.               | by apply.                                 |                           |
 | case.                | Hで場合わけする。                          | xで場合わけする。          |
-| elim.                | Hで帰納法                                  |                           |
+| elim.                | Hに対して帰納法を使う。                    | xに対して帰納法を使う。    |
 
 1. H->G1->G2なら、(G1->G2)にHを…する。H->(G1->G2)であるため。
 1. byは証明を閉じる（現在のsubgoalの証明を終了できなければ、エラーにする）。
@@ -109,7 +109,7 @@ case; [| case].
 | move=> /V.           | move/V.               | 5.4 p.23 (最後)、9.9　            |
 | move=> -.            | move.                 | 9.9 (なにもしない、NO-OP)         |
 
-1. 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
+1. 対象をその順番で指定するには、occ-switch(例：{2})を使う。
 
 
 # Discharge
@@ -119,11 +119,11 @@ case; [| case].
 | move: x.             | revert x.             | xをclearする。(1.)                |
 | move: (x).           | generalize x.         | xを消さずに残す。(1.)         |
 | move: {+}x.          | generalize x.         | xを消さずに残す。(1.)         |
-| move H.              | Hは、option item      | 5.5 p.25                         |
-| case H.              | Hは、option item      | 5.5 p.25                         |
-| case: y/x.           | y/は、type families   | 5.5 p.26                         |
+| move H.              | Hは、option item      | 5.5 p.25  (?)                    |
+| case H.              | Hは、option item      | 5.5 p.25  (?)                    |
+| case: y/x.           | y/は、type families   | 5.5 p.26  (?)                    |
 
-1. 対象が一意に決定できないときは、occ-switch(例：{2})を使う。
+1. 対象をその順番で指定するには、occ-switch(例：{2})を使う。
 
 
 # rewrite
