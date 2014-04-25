@@ -1,7 +1,10 @@
 SSReflectのインストール
 ========
 2013/08/26 @suharahiromichi
+
 2013/10/26 @suharahiromichi 追記
+
+2014/04/26 @suharahiromichi 追記
 
 SSReflectの設置（インストール）は、
 SSReflectの配布物にある INSTALL ファイルに基づいておこなってください。
@@ -18,11 +21,15 @@ SSReflectの配布物にある INSTALL ファイルに基づいておこなっ�
 1. coq-8.4pl2
 2. ssreflect-1.4
 
+SSReflectの設置には、
+「同じバージョンのOCamlでビルドされたCoq」が必要である。
+だから、既にCoqが設置されていても、Coq本体もソースコードからビルドして入れ直すべきである。
+
 ## インストール先
 
     /usr/local/bin
 
-バイナリパッケージなどでCoqを既に /usr/bin に設置している場合(Ubuntuなど)であっても、
+バイナリパッケージなどでCoq本体を既に /usr/bin に設置している場合(Ubuntuなど)であっても、
 それはそのままにして、指示通りソースコードから入れ直すことにする。
 
 
@@ -36,6 +43,8 @@ http://coq.inria.fr/download から coq-8.4pl2.tar.gz (ソースコード)
 
 https://gforge.inria.fr/frs/?group_id=401 から ssreflect-1.4-coq8.4.tar.gz
 
+同じ場所に「for Coq 8.3pl4」 も置いてあるので、間違えないようにすること。
+
 
 ## その他のバージョン情報
 
@@ -48,13 +57,13 @@ https://gforge.inria.fr/frs/?group_id=401 から ssreflect-1.4-coq8.4.tar.gz
 
 ## 追記 (2013/10/26)
 
-Coq、SSReflectに加えて、Camlp5 も同一のバージョンのOCamlでコンパイルするべきである。
+Coq、SSReflectに加えて、Camlp5 も同一のバージョンのOCamlでビルドするべきのようだ。
 今回は、Camlp5は、信頼の置けるバイナリパッケージ(Ubutu、FreeBSD)から設置したが、
 Camlp5もソースコードからコンパイルするとよいようだ。
 
 ## 注意
 
- + BSD系のOSも同様の手順で可能だが、gmakeでGNU Makeを使う。
+ + BSD系のOSも同様の手順で可能だが、その場合は、gmakeでGNU Makeを使う。
 
  + ビルドの過程で coqtop がメモリをかなり(〜1GB)消費するため、
 主記憶が小さいマシンでは時間がかかる。
@@ -105,6 +114,13 @@ emacs lispのパスを通ったところ(例：$HOME/lisp/)にコピーする。
 
     (load-file "/usr/share/emacs/site-lisp/ProofGeneral/generic/proof-site.el")
     (load-file "$HOME/lisp/pg-ssr.el")
+
+
+# 補足
+
+タクティクスについてのノート（暫定版）
+
+https://github.com/suharahiromichi/doc/blob/master/cs_ssr_note.md
 
 
 # 文献
