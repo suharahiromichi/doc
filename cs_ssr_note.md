@@ -32,7 +32,7 @@ SSReflectノート (暫定版)
 | apply/V: x y => a b  | move: x y; apply/V; move=> a b   | Viewを指定しても同じ。 |
 | rewrite p q => a b   | rewrite p q; move=> a b          | 「:」のないtactic全て。 |
 
-1. xやyにhole(placeholder)のあるときは、成立しない。
+注意. xやyにhole(placeholder)のあるときは、成立しない。
 
 
 ## moveとrewriteは「分配」できる
@@ -42,13 +42,6 @@ SSReflectノート (暫定版)
 | move=> a b c.        | move=> a; move=> b; move=> c.    | move: a b c で戻る。 |
 | move: a b c.         | move: c; move: b; move: a.       | 逆順になる。     |
 | rewrite p q r        | rewrite p; rewrite q; rewrite r  |                 |
-
-例外として、clear-switchのとき「:」は付かない。
-```Coq
-move: x {y}.
-move: x; move {y}.
-move: x; clear y.
-```
 
 
 ## move=>[]と、caseの関係
@@ -95,7 +88,7 @@ case; [| case].
 ```
 
 
-# Introduction
+# Introduction (i-item)
 
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
@@ -104,28 +97,26 @@ case; [| case].
 | move=> //.           | try done.             |                                  |
 | move=> /=.           | simpl.                |                                  |
 | move=> //=.          | simpl; try done.      |                                  |
-| move=> {H}//.        | (clear-switch)        | 5.4 p.23 (Hも使い、Hを消す。)     | 
+| move=> {H}.          | clear H.              | 5.4 p.23 (clear-switch)           |
 | move=> /V.           | move/V.               | 5.4 p.23 (最後)、9.9　            |
 | move=> -.            | move.                 | 9.9 (なにもしない、NO-OP)         |
 
 1. 対象をその順番で指定するには、occ-switch(例：{2})を使う。
 
-
-# Discharge
+# Discharge (d-item)
 
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
-| move: x.             | revert x.             | xをclearする。(1.)                |
-| move: (x).           | generalize x.         | xを消さずに残す。(1.)         |
-| move: {+}x.          | generalize x.         | xを消さずに残す。(1.)         |
-| move H.              | Hは、option item      | 5.5 p.25  (要確認)                    |
-| case H.              | Hは、option item      | 5.5 p.25  (要確認)                    |
-| case: y/x.           | y/は、type families   | 5.5 p.26  (要確認)                    |
+| move: x.             | revert x.             | xをpushする。xをclearする。(1.)                |
+| move: (x).           | generalize x.         | xをpushする。xを消さずに残す。(1.)         |
+| move: {+}x.          | generalize x.         | xをpushする。xを消さずに残す。(1.)         |
+| move: {x}            | (clear-switch)        | clear x  (要確認)            |
+| case: y/x.           | y/は、type families   | 5.5 p.26                     |
 
 1. 対象をその順番で指定するには、occ-switch(例：{2})を使う。
 
 
-# rewrite
+# rewrite (r-step)
 
 | 例                   | 意味                   | 備考                             |
 |:---------------------|:----------------------|:---------------------------------|
@@ -135,34 +126,37 @@ case; [| case].
 | rewrite //=.         | somple; try done.     |                                  |
 | rewrite (s, t, u).   |                       | 順番に試す。                      |
 | rewrite -[x]/y.      | change x with y.      | p.37、これはこのかたちで覚える。   |
-| rewrite (_: a=b).    | replace (_ : a=b).    | あとでa=bの証明をする。           |
-| cutrewrite (a=b).    | replace a with b.     | あとでa=bの証明をする。           |
+| rewrite (_: a=b).    | replace (_ : a=b).    | あとでa=bの証明をする。(2.)       |
 | rewrite -t.          | (方向)                | 逆方向へ書き換える。(1.)          |
 | rewrite 3!t.         | (回数)                | 3回だけ書き換える。(1.)           |
 | rewrite !t.          |                       | 1回以上書き換える。(1.)           |
 | rewrite ?t.          |                       | 0回以上書き換える。(1.)           |
 | rewrite 3?t.         |                       | 3回以下書き換える。(1.)           |
 | rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(1.)            |
-| rewrite [m]t.        | (contextual-pattern)  | 8. p.44 (マッチした箇所を) (1.)   |
+| rewrite [m]t.        | (contextual-pattern)(3.) | 8. p.44 (マッチした箇所を) (1.)   |
 | rewrite {}H.         | rewrite H; clear H.   | {}は occ-switchではない。        |
 
 1. 方向、回数、occ-switch、contextual-pattern の順番で指定すること。
+2. cutrewrite (a=b). と replace a with b.  でも同じ。
+3. r-pattern (c-patternも含む)。
 
 # Views
 
 | 例                   | 意味                                | 備考                |
 |:---------------------|:-----------------------------------|:--------------------|
-| move/V.              | H->GのHをReflectする。              |                    |
-| case/V.              | move/V; case.                      | (2.)               |
-| elim/V.              | move/V; elim.                      | (2.)               |
+| move/V.              | H->GのHをReflectする。              | (2.)               |
+| case/V.              | move/V; case.                      | (3.)               |
+| elim/V.              | move/V; elim.                      | (3.)               |
 | elim/V.              | intro x; elim x using V; clear x.  | standard Coq の場合 |
 | elim/V: x => a.      | elim x using V; clear x; intro a.  | standard Coq の場合 |
 | apply/V.             | H->GのGをReflectする。              |                    |
 | apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55 (1.)       |
 
-1. apply/idP/idP は、ゴール x=y を x->y と y->x にする。
+1. とくに、「apply/idP/idP」は、ゴール x=y を x->y と y->x にする。
 
-1. case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
+2. 「move/V1/V2」は、「move/V1; move/V2」 と同じである。
+
+3. case/Vとelim/Vの場合は、以下はすべて同じになる。apply/Vは駄目である。
 ```Coq
 case/V: x y => a b.
 move: x y; case/V; move=> a b.
@@ -183,11 +177,14 @@ move/V => [l m].
 
 ## Selector
 
+「;」に続いて書いた場合。
+[t1  &#124;t2]は、「.」に続いて書いた場合や、doに続いて書いた場合、t1とt2を順番にtryする意味になる。
+
 | 例                   | 意味                | 備考                |
 |:---------------------|:-------------------|:--------------------|
 | first                |                    | 6.3 p.29            |
 | last                 |                    | 6.3 p.29            |
-| [t1  &#124;t2]       | first t1; last t2  | byやdoが付くと、選択ではなく、tryの意味になる。 |
+| [t1  &#124; t2]       | first t1; last t2  |                     |
 
 ## Iteration
 
