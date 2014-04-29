@@ -4,14 +4,20 @@ SSReflectのインストール
 
 2013/10/26 @suharahiromichi 追記
 
-2014/04/26 @suharahiromichi 追記
+2014/04/29 @suharahiromichi 追記
 
-SSReflectの設置（インストール）は、
+# はじめに
+
+最新の事項については、
+みずぴー日記 ssreflectインストール方法まとめ(Windowsもあるよ!)
+http://mzp.hatenablog.com/entry/2014/04/29/105144
+を参照してください。
+
+以下は、私自身の控えとして、設置作業の記録を残したものです。
+SSReflectの設置（インストール）は、原則として、
 SSReflectの配布物にある INSTALL ファイルに基づいておこなってください。
-これは、私自身の控えとして、設置作業の記録を残したものです。
 
 なお、[文献1.]のInstallの節の内容は、役に立ちません。
-
 
 # 準備
 
