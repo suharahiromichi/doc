@@ -132,7 +132,8 @@ case; [| case].
 | rewrite !t.          |                       | 1回以上書き換える。(1.)           |
 | rewrite ?t.          |                       | 0回以上書き換える。(1.)           |
 | rewrite 3?t.         |                       | 3回以下書き換える。(1.)           |
-| rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(1.)            |
+| rewrite {2}t.        | (occ-switch)          | 2番めの箇所を書き換える。(1.)            |
+| rewrite {-2}t.       | (occ-switch)          | 2番めの箇所以外を書き換える。(1.)         |
 | rewrite [m]t.        | (contextual-pattern)(3.) | 8. p.44 (マッチした箇所を) (1.)   |
 | rewrite {}H.         | rewrite H; clear H.   | {}は occ-switchではない。        |
 
