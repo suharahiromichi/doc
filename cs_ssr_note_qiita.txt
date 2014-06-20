@@ -100,13 +100,13 @@ case; [| case].
 |:---------------------|:----------------------|:---------------------------------|
 | move=> a.            | intro a.              |                                  |
 | move=> ->.           | intro a; rewrite a; clear a.      |                      |
-| move=> {n}->.        | intro a; rewrite {n}a; clear a.   | occ-switch          |
+| move=> {2}->.        | intro a; rewrite {2}a; clear a.   | occ-switch          |
 | move=> <-.           | intro a; rewrite -a; clear a.     |                      |
-| move=> {n}<-.        | intro a; rewrite -{n}a; clear a.  | occ-switch          |
+| move=> {2}<-.        | intro a; rewrite -{2}a; clear a.  | occ-switch          |
 | move=> //.           | try done.             |                                  |
 | move=> /=.           | simpl.                |                                  |
 | move=> //=.          | simpl; try done.      |                                  |
-| move=> {a}.          | intro a; clear a.     |                                   |
+| move=> {a}.          | intro a; clear a.     | clear-switch  |
 | move=> /V.           | move/V.               | 5.4 p.23 (最後)、9.9　            |
 | move=> -.            | move.                 | 9.9 (なにもしない)           |
 
@@ -134,20 +134,24 @@ case; [| case].
 | rewrite /=.          | simpl.                |                                  |
 | rewrite //=.         | somple; try done.     |                                  |
 | rewrite (s, t, u).   |                       | 順番に試す。                      |
-| rewrite -[x]/y.      | change x with y.      | p.37、これはこのかたちで覚える。   |
+| rewrite -[x]/y.      | change x with y.      | p.37。(4.)                       |
 | rewrite (_: a=b).    | replace a with b.    | あとでa=bの証明をする。(2.)       |
 | rewrite -t.          | (方向)                | 逆方向へ書き換える。(1.)          |
 | rewrite 3!t.         | (回数)                | 3回だけ書き換える。(1.)           |
 | rewrite !t.          |                       | 1回以上書き換える。(1.)           |
 | rewrite ?t.          |                       | 0回以上書き換える。(1.)           |
 | rewrite 3?t.         |                       | 3回以下書き換える。(1.)           |
-| rewrite {2}t.        | (occ-switch)          | {2}はocc-switch。(1.)            |
+| rewrite {2}t. | (occ-switch) | 2番めの箇所を書き換える。(1.) |
+| rewrite {-2}t. | (occ-switch) | 2番めの箇所以外を書き換える。(1.) |
 | rewrite [m]t.        | (contextual-pattern)(3.) | 8. p.44 (マッチした箇所を) (1.)   |
 | rewrite {}H.         | rewrite H; clear H.   | {}は occ-switchではない。        |
 
 1. 方向、回数、occ-switch、contextual-pattern の順番で指定すること。
 2. cutrewrite (a=b). と replace (_ : a=b).  でも同じ。
 3. r-pattern (c-patternも含む)。
+4. rewrite -[ term1 ]/ term2. is equivalent to: change term1 with term.
+If term2 is a single constant and term1 head symbol is not term2 , then the head symbol
+of term1 is repeatedly unfolded until term2 appears.
 
 # Views
 
@@ -200,17 +204,17 @@ case; [| case].
 2. assertの後には括弧が要る。have:の後にはひとつの項しか書けない。
 3. move:の後には括弧が要るが、複数の項を書ける。have:の後にはひとつの項しか書けない。
 
-実行前が、 Δ ├ G である場合、
+実行前が、 Γ ├ G である場合、
 
 | 例                   | 実行後                                      | 備考          |
 |:---------------------|:--------------------------------------------|:-----------------------|
-| have H := t.         | Δ  H:t ├  G                                 | 直接与える。           |
-| have H : P.          | Δ      ├  P,         Δ  H:P ├  G           | assert P as H.         |
-| suff H : P.          | Δ  H:P ├  G,              Δ ├  P           | 6.6 p.33               |
-| have suff H : P.     | Δ      ├ P->G,     Δ  H:P->G ├  G          |                       |
-| suff have H : P.     | Δ  H:P ├  G,               Δ ├  (P->G)->G  | 6.6 p.34            |
-| wlog H : / P.        | Δ     ├ (P->G)->G,    Δ  H:P ├  G          | 6.6 p.34            |
-| wlog suff H : / P.   | Δ  H:P ├  G,               Δ ├  (P->G)->G  | suff have H : P.    |
+| have H := t.         | Γ  H:t ├  G                                 | 直接与える。           |
+| have H : P.          | Γ      ├  P,         Γ  H:P ├  G           | assert P as H.         |
+| suff H : P.          | Γ  H:P ├  G,              Γ ├  P           | 6.6 p.33               |
+| have suff H : P.     | Γ      ├ P->G,     Γ  H:P->G ├  G          |                       |
+| suff have H : P.     | Γ  H:P ├  G,               Γ ├  (P->G)->G  | 6.6 p.34            |
+| wlog H : / P.        | Γ     ├ (P->G)->G,    Γ  H:P ├  G          | 6.6 p.34            |
+| wlog suff H : / P.   | Γ  H:P ├  G,               Γ ├  (P->G)->G  | suff have H : P.    |
 
 # Gallinaの拡張
 
