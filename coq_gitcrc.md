@@ -21,9 +21,11 @@ Coq veversion 8.4 でコンパイルする手順は以下である。
 
 - 以下の修正をする。
 
-    (1) ``cp V8.3/Matrics.v Mat.v``
-    (1') Section名をMatに修正する。
-    (2) Makefileの ``_CoqProject`` のエントリをコメントアウトする。
+(1) ``cp V8.3/Matrics.v Mat.v``
+
+(1') Section名をMatに修正する。
+
+(2) Makefileの ``_CoqProject`` のエントリをコメントアウトする。
 
 - make
 
