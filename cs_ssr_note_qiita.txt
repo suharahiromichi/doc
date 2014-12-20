@@ -1,12 +1,13 @@
 SSReflectノート (暫定版)
 ========
 2014/04/27 @suharahiromichi
+2014/04/27 @suharahiromichi、Qiitaに投稿。曖昧な箇所を削除した。
+2014/12/20 @suharahiromichi、追記。Viewについての記述を訂正した。
 
-2014/04/27 @suharahiromichi、Qiitaに投稿。曖昧な箇所を削除
 暫定版のさらに仮版はこちら：
-https://github.com/suharahiromichi/doc/blob/master/cs_ssr_note.md
+https://github.com/suharahiromichi/doc/blob/master/cs_ssr_note_qiita.md
 
-章節番号とページは、"No 6455 A Small Sscale Reflection Extension for the Coq System" の該当箇所を示す。
+章節番号とページは、No 6455 "A Small Sscale Reflection Extension for the Coq System" の該当箇所を示す。
 
 # CheatSheet以前の事項
 
@@ -153,19 +154,36 @@ case; [| case].
 If term2 is a single constant and term1 head symbol is not term2 , then the head symbol
 of term1 is repeatedly unfolded until term2 appears.
 
+# ident
+
+| 例                   | 意味                               | 備考         |
+|:---------------------|:----------------------------------|:-------------|
+| move H : (t) => h.   | 仮定 H : t = h を導入する。 　　　　 |              |
+| case H : t.          | 仮定 H に場合わけの条件を保存する。  |               |
+
+
+# congr
+
+ゴールが等式のとき、等式を複数のゴールに分解する。f_equalと同じだが、分解のパターンを明示する。
+例：``congr (_ + _).``
+
+
 # Views
 
-| 例                   | 意味                                | 備考                |
-|:---------------------|:-----------------------------------|:--------------------|
-| move/V.              | H->GのHをReflectする。              | (2.)               |
+| 例                   | 意味                                      | 備考                |
+|:---------------------|:-----------------------------------------|:--------------------|
+| move/V.              | intro H; apply V in H; apply H.    | ゴールが「△->○」のとき、△の部分（スタックトップ）を書き換える。  |
+| move/V.              | move=>H; move: (V H); move=> {H}.
 | case/V.              | move/V; case.                      |  |
 | elim/V.              | move/V; elim.                      |  | 
-|apply/Vl/Vr.         | 左右を示すふたつ。                  | 9.5 p.55 (1.)       |
+| move/(_ 0).          | move=> H; move: (H 0); move=> {H}.   | 「_」は、スタックトップを意味する。
+| apply/V.             | apply V.                           | ゴール全体を書き換える。ゴールが△->○の場合はその全体が対象になる。 |
+| apply/V1/V2.         | apply/V1; apply/V2                 | 連続してapplyする。　|
+| apply/idP/idP        | ゴールの A = B を A -> B と B -> A にする。 | 9.5 p.55 (1.)       |
 
-1. とくに、「apply/idP/idP」は、ゴール x=y を x->y と y->x にする。
-
-2. 「move/V1/V2」は、「move/V1; move/V2」 と同じである。（要確認）
-
+ iffLRやelimTなどが自動的に補われること（View Hint）については、
+http://qiita.com/suharahiromichi/items/02c7f42809f2d20ba11a
+および、「An introduction to small scale reflection in Coq」の4章を参照のこと。
 
 # Control flow
 
@@ -204,17 +222,17 @@ of term1 is repeatedly unfolded until term2 appears.
 2. assertの後には括弧が要る。have:の後にはひとつの項しか書けない。
 3. move:の後には括弧が要るが、複数の項を書ける。have:の後にはひとつの項しか書けない。
 
-実行前が、 Γ ├ G である場合、
+実行前が、 Γ ⊦ G である場合、
 
 | 例                   | 実行後                                      | 備考          |
 |:---------------------|:--------------------------------------------|:-----------------------|
-| have H := t.         | Γ  H:t ├  G                                 | 直接与える。           |
-| have H : P.          | Γ      ├  P,         Γ  H:P ├  G           | assert P as H.         |
-| suff H : P.          | Γ  H:P ├  G,              Γ ├  P           | 6.6 p.33               |
-| have suff H : P.     | Γ      ├ P->G,     Γ  H:P->G ├  G          |                       |
-| suff have H : P.     | Γ  H:P ├  G,               Γ ├  (P->G)->G  | 6.6 p.34            |
-| wlog H : / P.        | Γ     ├ (P->G)->G,    Γ  H:P ├  G          | 6.6 p.34            |
-| wlog suff H : / P.   | Γ  H:P ├  G,               Γ ├  (P->G)->G  | suff have H : P.    |
+| have H := t.         | Γ  H:t ⊦  G                                 | 直接与える。           |
+| have H : P.          | Γ      ⊦  P,         Γ  H:P ⊦ G           | assert P as H.         |
+| suff H : P.          | Γ  H:P ⊦  G,              Γ ⊦ P           | 6.6 p.33               |
+| have suff H : P.     | Γ      ⊦ P->G,    Γ  H:P->G ⊦ G          |                       |
+| suff have H : P.     | Γ  H:P ⊦  G,              Γ ⊦ (P->G)->G  | 6.6 p.34            |
+| wlog H : / P.        | Γ      ⊦ (P->G)->G,  Γ  H:P ⊦ G          | 6.6 p.34            |
+| wlog suff H : / P.   | Γ  H:P ⊦  G,              Γ ⊦  (P->G)->G  | suff have H : P.    |
 
 # Gallinaの拡張
 
@@ -255,5 +273,21 @@ Inductive list (A : Type) : Type :=
 | nil : list A
 | cons (x : A) (l : list A) : list A.
 ```
+
+# 参考文献
+
+以下にタクティクのリファレンスとしても使える資料を列挙する。
+
+1. No 6455 "A Small Sscale Reflection Extension for the Coq System",
+   https://hal.inria.fr/file/index/docid/409356/filename/main.pdf
+3. No. 367 "An Ssreflect Tutorial",
+   https://hal.inria.fr/inria-00407778/file/RT-367.pdf
+2. No 7392 "An introduction to small scale reflection in Coq",
+   https://hal.inria.fr/inria-00515548/file/main-rr.pdf
+4. "Programs and Proofs",
+   http://ilyasergey.net/pnp/
+5. "定理証明支援系Coq/SSReflect入門",
+   https://staff.aist.go.jp/reynald.affeldt/ssrcoq/
+
 
 以上
