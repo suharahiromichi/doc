@@ -29,6 +29,7 @@ Coq veversion 8.4 でコンパイルする手順は以下である。
 
 - make
 
+BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 
 
 # 本文とサンプルコードの対応
@@ -68,5 +69,10 @@ Coq veversion 8.4 でコンパイルする手順は以下である。
 
 1. Monoid.vはFunction版である。この以外の節で内容は重複している。
 2. 内容はほぼ重複している。
+
+
+# 本文の正誤表
+
+1. Class Monoid の定義 (p.5)。unitをoneに置き換える。
 
 以上
