@@ -75,4 +75,23 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 
 1. Class Monoid の定義 (p.5)。unitをoneに置き換える。
 
+
+# 2章を読む
+
+2章と平行して、Monoid_prog.v と Mat.v を読んでいく。
+
+     2.2          Class Monoid を定義する。      台A、dot と one を持つ。
+     2.2.1        Instance ZMult                 Zmultと1。AはZと推論される。
+     2.2.2        power を定義する。             「仕様」となる。
+     2.2.3        Set Printing Implicit の説明
+    (2.2.4        Instance M2Z                    Mat.v に記載。)
+     2.3          binary_power を定義する。
+     1st ex.      (Z, Zmult, 1)の例               ZMultを使う例。
+     2nd ex.      (M2, M2_mult, Id2)の例          Mat.v で定義。
+     2.3.1        Context の説明など。
+     2.3.2        補題の証明                      証明しよう！
+     2.3.3        定理の証明                      証明しよう！
+     2.3.4        Context の説明                  Zの例とM2の例
+     2.3.5        Abelian_Monoid                  Monoidを継承したサブクラス
+
 以上
