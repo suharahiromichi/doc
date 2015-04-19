@@ -58,10 +58,12 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 | 3.5	  | Proper Functions	             | Lost_in_NY.v 		| |     |
 | 3.6	  | Some Other instances of Proper   | Lost_in_NY.v 		| |     |
 | 3.7	  | Deciding Route Equivalence	     | Lost_in_NY.v 		| |     |
-| 3.8	  | Monoids and Setoids	             | Lost_in_NY.v 		| |     |
+| 3.8	  | Monoids and Setoids	             | - 		| |     |
 | 	  | (Class EMonoid)	             | EMonoid.v	| Monoid_op_classes.v |2.|
 | 	  | (Fixpoint Epower)	             | EMonoid.v	| Monoid_op_classes.v |2.|
-| 	  | (Abelian_EMonoid)	             | EMonoid.v	| |	              |
+|         | (Instance Route)		     | Lost_in_NY.v 		| |     |
+| 	  | (Abelian_EMonoid)	             | EMonoid.v		| |     |
+|         | (Instance AbelianRoute)	     | Lost_in_NY.v 		| |     |
 | 3.9	  | Advanced Features of Type Classes           | | |			      |
 | 3.9.1   | Alternate deﬁnitions of the class Monoid	| | |		              |
 | 3.9.2	  | Operational Type Classes	     | Monoid_op_classes.v | |		      |
