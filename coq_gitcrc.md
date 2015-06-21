@@ -88,7 +88,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 ### 概要
 - モノイドクラス。その上で、power関数を定義する。
 - Implicit generalization
-- ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明した。
+- ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明する。
 
 ## 本文3.1〜3.6 Lost in Manhattan
 
@@ -98,7 +98,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
 ### 概要
 - ルートの同値関係(=r=)を定義する。
 - ルートの同値関係(=r=)の上で、rewrite や reflexivity をする。
-- Proper ``==>`` , 
+- Proper, ``==>``
 - consのtailをrewriteする。appendの一部をrewriteする。
 
 
@@ -117,7 +117,10 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid
 
 ### 概要
 - Equivalence
-- EMonoid の インスタンスとしての route
+- ``E_rel :> Equivalence E_eq`` は、
+E_rel は、``EMonoid _ _ _ _`` から ``Equivalence E_eq`` へのコアーションであるということ。
+つまり、EMonoid が 同値関係を Equivalenceから継承することを示す。
+- EMonoid の インスタンスとしての route を定義する。
 
 ## 本文3.9.1 Alternate deﬁnitions of the class Monoid
 
