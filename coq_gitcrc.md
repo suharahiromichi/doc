@@ -2,6 +2,7 @@
 ======
 
 2014/12/20 @suharahiromichi
+2015/ 6/21 @suharahiromichi
 
 
 # 文書の在処
@@ -11,9 +12,10 @@ http://www.labri.fr/perso/casteran/CoqArt/TypeClassesTut/typeclassestut.pdf
 
 # サンプルコードのインストール
 
-http://www.labri.fr/perso/casteran/CoqArt/TypeClassesTut/src-V8.4.tar.gz
+http://www.labri.fr/perso/casteran/CoqArt/TypeClassesTut/
+から自分のCoqのバージョンにあわせたアーカイブををダウンロードして展開する。
+typeclassesTut というディレクトリができる。
 
-をダウンロードして展開すると、typeclassesTut というディレクトリができる。
 Coq veversion 8.4 でコンパイルする手順は以下である。
 （version 8.4pl2 で確認）
 
@@ -58,12 +60,10 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 | 3.5	  | Proper Functions	             | Lost_in_NY.v 		| |     |
 | 3.6	  | Some Other instances of Proper   | Lost_in_NY.v 		| |     |
 | 3.7	  | Deciding Route Equivalence	     | Lost_in_NY.v 		| |     |
-| 3.8	  | Monoids and Setoids	             | - 		| |     |
+| 3.8	  | Monoids and Setoids	             | Lost_in_NY.v 		| |     |
 | 	  | (Class EMonoid)	             | EMonoid.v	| Monoid_op_classes.v |2.|
 | 	  | (Fixpoint Epower)	             | EMonoid.v	| Monoid_op_classes.v |2.|
-|         | (Instance Route)		     | Lost_in_NY.v 		| |     |
-| 	  | (Abelian_EMonoid)	             | EMonoid.v		| |     |
-|         | (Instance AbelianRoute)	     | Lost_in_NY.v 		| |     |
+| 	  | (Abelian_EMonoid)	             | EMonoid.v	| |	              |
 | 3.9	  | Advanced Features of Type Classes           | | |			      |
 | 3.9.1   | Alternate deﬁnitions of the class Monoid	| | |		              |
 | 3.9.2	  | Operational Type Classes	     | Monoid_op_classes.v | |		      |
@@ -78,22 +78,52 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 1. Class Monoid の定義 (p.5)。unitをoneに置き換える。
 
 
-# 2章を読む
+# ProofCafe で使った資料
 
-2章と平行して、Monoid_prog.v と Mat.v を読んでいく。
+## 本文Chapter 2 (本文2.1〜2.3.4)
+### ProofCafe
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 
-     2.2          Class Monoid を定義する。      台A、dot と one を持つ。
-     2.2.1        Instance ZMult                 Zmultと1。AはZと推論される。
-     2.2.2        power を定義する。             「仕様」となる。
-     2.2.3        Set Printing Implicit の説明
-    (2.2.4        Instance M2Z                    Mat.v に記載。)
-     2.3          binary_power を定義する。
-     1st ex.      (Z, Zmult, 1)の例               ZMultを使う例。
-     2nd ex.      (M2, M2_mult, Id2)の例          Mat.v で定義。
-     2.3.1        Context の説明など。
-     2.3.2        補題の証明                      証明しよう！
-     2.3.3        定理の証明                      証明しよう！
-     2.3.4        Context の説明                  Zの例とM2の例
-     2.3.5        Abelian_Monoid                  Monoidを継承したサブクラス
+概要 :
+
+
+## 本文Chapter 3 その1 (本文3.1〜3.6)
+
+### ProofCafe
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
+
+### 概要
+
+
+## 本文Chapter 3 その2 (本文3.7)
+### ProofCafe
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_7_digest.v
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
+
+### 概要
+
+## 本文Chapter 3 その3 (本文3.8)
+### ProofCafe
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid.v
+
+
+## 本文Chapter 3 その4 (本文3.9.1)
+
+### 概要
+
+## 本文Chapter 3 その4 (本文3.9.2)
+### ProofCafe
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring.v
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring_simple.v
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3_9_22_semi_ring.v
+
+### 概要
+
+
+## 本文Chapter 3 その4 (本文3.9.3)
+
+### 概要
+
 
 以上
