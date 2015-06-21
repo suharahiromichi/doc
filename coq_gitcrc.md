@@ -115,11 +115,13 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
 ## 本文3.8 Monoids and Setoids
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid.v
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
+(E_refl' の証明の部分)
 
 ### 概要
 - Equivalence
 - ``E_rel :> Equivalence E_eq`` は、以下を意味する。
-  - E_rel において、``EMonoid _ _ _ _`` 型の値を ``Equivalence E_eq`` 型の値とみなす
+  - E_rel を使って、``EMonoid _ _ _ _`` 型の値を ``Equivalence E_eq`` 型の値とみなされる。
   - E_rel は、``EMonoid _ _ _ _`` から ``Equivalence E_eq`` へのコアーションである、
   - EMonoid が 同値関係を Equivalenceから継承することを示す。
 - EMonoid の インスタンスとしての route を定義する。
@@ -165,7 +167,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_opera
 
 # 参考
 
-ProofCafeの中で参考にさせていただいたページを以下に示します。ありがとうございました。
+ProofCafeの中で参考にしたページを以下に示します。
 
 - Coq で Setoid を作る。 http://mathink.net/program/coq_setoid.html
 - Setoid の Proper な Map を作る。 http://mathink.net/program/coq_map.html
