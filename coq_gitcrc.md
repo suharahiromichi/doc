@@ -86,9 +86,10 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 
 ### 概要
-- モノイドクラス。その上で、power関数を定義する。
+- モノイドクラス。
+  - その上で、power関数を定義する。
+  - ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明する。
 - Implicit generalization
-- ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明する。
 
 ## 本文3.1〜3.6 Lost in Manhattan
 
@@ -97,9 +98,9 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
 
 ### 概要
 - ルートの同値関係(=r=)を定義する。
-- ルートの同値関係(=r=)の上で、rewrite や reflexivity をする。
+  - ルートの同値関係(=r=)の上で、rewrite や reflexivity をする。
 - Proper, ``==>``
-- consのtailをrewriteする。appendの一部をrewriteする。
+  - consのtailをrewriteする。appendの一部をrewriteする。
 
 
 ## 本文3.7 Deciding Route Equivalence
@@ -109,7 +110,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
 
 ### 概要
 - 計算による同値の証明
-- ``East::North::West::South::East::nil =r= East::nil`` を証明する。
+  - ``East::North::West::South::East::nil =r= East::nil`` を証明する。
 
 ## 本文3.8 Monoids and Setoids
 ### ProofCafeの資料
@@ -117,15 +118,16 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid
 
 ### 概要
 - Equivalence
-- ``E_rel :> Equivalence E_eq`` は、
-E_rel は、``EMonoid _ _ _ _`` から ``Equivalence E_eq`` へのコアーションであるということ。
-つまり、EMonoid が 同値関係を Equivalenceから継承することを示す。
+- ``E_rel :> Equivalence E_eq`` は、以下を意味する。
+  - E_rel において、``EMonoid _ _ _ _`` 型の値を ``Equivalence E_eq`` 型の値とみなす
+  - E_rel は、``EMonoid _ _ _ _`` から ``Equivalence E_eq`` へのコアーションである、
+  - EMonoid が 同値関係を Equivalenceから継承することを示す。
 - EMonoid の インスタンスとしての route を定義する。
 
 ## 本文3.9.1 Alternate deﬁnitions of the class Monoid
 ### 概要
 - 台(carrier)や演算子、単位元などをclassのfieldに書く方法。
-- あまり勧められない。
+  - あまり勧められない？
 
 
 ## 本文3.9.2 Operational Type Classes (前半)
@@ -145,7 +147,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3_9_22_semi
 ### 概要
 - Hintデータベースへの追加 (Typeclasses Transparent)
 - 半環(semiring)の定義
-- (補足) semiring のインスタンスを作ってみる。
+  - (補足) semiring のインスタンスを作ってみる。
 
 
 
@@ -157,8 +159,8 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_opera
 
 ### 概要
 - インスタンスの優先順位の指定する。
-- 例：monoid_binop Z のインスタンスである Z_plus_op と Z_mult_op の優先順位によって、結果が変わる。
-- 指定なければ、複雑なものが優先される。
+  - 例：monoid_binop Z のインスタンスである Z_plus_op と Z_mult_op の優先順位によって、結果が変わる。
+  - 指定なければ、複雑なものが優先される。
 
 
 # 参考
