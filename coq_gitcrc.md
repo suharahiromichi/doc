@@ -2,6 +2,7 @@
 ======
 
 2014/12/20 @suharahiromichi
+
 2015/ 6/21 @suharahiromichi
 
 
@@ -85,7 +86,7 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 
 ### 概要
-- Class, Instance
+- モノイドクラス。その上で、power関数を定義する。
 - Implicit generalization
 - ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明した。
 
@@ -95,7 +96,8 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
 
 ### 概要
-- 自分で定義した同値関係(=r=)で、rewrite や reflexivity をする。
+- ルートの同値関係(=r=)を定義する。
+- ルートの同値関係(=r=)の上で、rewrite や reflexivity をする。
 - Proper ``==>`` , 
 - consのtailをrewriteする。appendの一部をrewriteする。
 
@@ -107,7 +109,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
 
 ### 概要
 - 計算による同値の証明
-- East::North::West::South::East::nil =r= East::nil.
+- ``East::North::West::South::East::nil =r= East::nil`` を証明する。
 
 ## 本文Chapter 3 その3 (本文3.8)
 ### ProofCafeの資料
@@ -115,7 +117,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid
 
 ### 概要
 - Equivalence
-
+- EMonoid の インスタンスとしての route
 
 ## 本文Chapter 3 その4 (本文3.9.1 Alternate deﬁnitions of the class Monoid)
 
