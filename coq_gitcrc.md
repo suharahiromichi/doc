@@ -81,7 +81,7 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 
 # ProofCafe で使った資料
 
-## 本文Chapter 2 (本文2.1〜2.3.4 Classes and Instances)
+## 本文2.1〜2.3.4 Classes and Instances
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 
@@ -90,7 +90,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 - Implicit generalization
 - ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明した。
 
-## 本文Chapter 3 その1 (本文3.1〜3.6 Lost in Manhattan)
+## 本文3.1〜3.6 Lost in Manhattan
 
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
@@ -102,7 +102,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
 - consのtailをrewriteする。appendの一部をrewriteする。
 
 
-## 本文Chapter 3 その2 (本文3.7 Deciding Route Equivalence)
+## 本文3.7 Deciding Route Equivalence
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_7_digest.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
@@ -111,7 +111,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
 - 計算による同値の証明
 - ``East::North::West::South::East::nil =r= East::nil`` を証明する。
 
-## 本文Chapter 3 その3 (本文3.8)
+## 本文3.8 Monoids and Setoids
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid.v
 
@@ -119,11 +119,11 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid
 - Equivalence
 - EMonoid の インスタンスとしての route
 
-## 本文Chapter 3 その4 (本文3.9.1 Alternate deﬁnitions of the class Monoid)
+## 本文3.9.1 Alternate deﬁnitions of the class Monoid
 
 ### 概要
 
-## 本文Chapter 3 その4 (本文3.9.2 Operational Type Classes)
+## 本文3.9.2 Operational Type Classes
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring.v
@@ -136,7 +136,7 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3_9_22_semi
 - 半環(semiring)の定義
 - (補足) semiring のインスタンスを作ってみる。
 
-## 本文Chapter 3 その4 (本文3.9.3 Instance Resolution)
+## 本文3.9.3 Instance Resolution
 
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
