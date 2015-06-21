@@ -123,24 +123,34 @@ E_rel は、``EMonoid _ _ _ _`` から ``Equivalence E_eq`` へのコアーシ�
 - EMonoid の インスタンスとしての route を定義する。
 
 ## 本文3.9.1 Alternate deﬁnitions of the class Monoid
-
 ### 概要
+- 台(carrier)や演算子、単位元などをclassのfieldに書く方法。
+- あまり勧められない。
 
-## 本文3.9.2 Operational Type Classes
+
+## 本文3.9.2 Operational Type Classes (前半)
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
+
+### 概要
+- operational type class
+
+
+## 本文3.9.2 (後半）Class SemiRing
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring_simple.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3_9_22_semi_ring.v
 
 ### 概要
-- operational type class
 - Hintデータベースへの追加 (Typeclasses Transparent)
 - 半環(semiring)の定義
 - (補足) semiring のインスタンスを作ってみる。
 
-## 本文3.9.3 Instance Resolution
 
+
+
+## 本文3.9.3 Instance Resolution
 ### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
 (最後の「優先順位」の部分)
@@ -149,5 +159,22 @@ https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_opera
 - インスタンスの優先順位の指定する。
 - 例：monoid_binop Z のインスタンスである Z_plus_op と Z_mult_op の優先順位によって、結果が変わる。
 - 指定なければ、複雑なものが優先される。
+
+
+# 参考
+
+ProofCafeの中で参考にさせていただいたページを以下に示します。ありがとうございました。
+
+- Coq で Setoid を作る。 http://mathink.net/program/coq_setoid.html
+- Setoid の Proper な Map を作る。 http://mathink.net/program/coq_map.html
+- 代数的構造と Coq：序 http://mathink.net/program/coq_group.html
+
+- Coq Reference Manual, Chapter 19  Type Classes
+https://coq.inria.fr/distrib/current/refman/Reference-Manual022.html
+
+(章の移動でリンクがずれている可能性があります。ご注意ください）
+
+- First-Class Type Classes
+http://www.pps.univ-paris-diderot.fr/~sozeau/research/publications/First-Class_Type_Classes.pdf
 
 以上
