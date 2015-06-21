@@ -80,50 +80,69 @@ BSD系UNIXの場合は、GNU Make (gmake) を使用すること。
 
 # ProofCafe で使った資料
 
-## 本文Chapter 2 (本文2.1〜2.3.4)
-### ProofCafe
+## 本文Chapter 2 (本文2.1〜2.3.4 Classes and Instances)
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_2_Monoid.v
 
-概要 :
+### 概要
+- Class, Instance
+- Implicit generalization
+- ``binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n`` を証明した。
 
+## 本文Chapter 3 その1 (本文3.1〜3.6 Lost in Manhattan)
 
-## 本文Chapter 3 その1 (本文3.1〜3.6)
-
-### ProofCafe
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_digest.v
 
 ### 概要
+- 自分で定義した同値関係(=r=)で、rewrite や reflexivity をする。
+- Proper ``==>`` , 
+- consのtailをrewriteする。appendの一部をrewriteする。
 
 
-## 本文Chapter 3 その2 (本文3.7)
-### ProofCafe
+## 本文Chapter 3 その2 (本文3.7 Deciding Route Equivalence)
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_7_digest.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3.v
 
 ### 概要
+- 計算による同値の証明
+- East::North::West::South::East::nil =r= East::nil.
 
 ## 本文Chapter 3 その3 (本文3.8)
-### ProofCafe
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_8_EMonoid.v
 
+### 概要
+- Equivalence
 
-## 本文Chapter 3 その4 (本文3.9.1)
+
+## 本文Chapter 3 その4 (本文3.9.1 Alternate deﬁnitions of the class Monoid)
 
 ### 概要
 
-## 本文Chapter 3 その4 (本文3.9.2)
-### ProofCafe
+## 本文Chapter 3 その4 (本文3.9.2 Operational Type Classes)
+### ProofCafeの資料
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_2_semi_ring_simple.v
 https://github.com/suharahiromichi/coq/blob/master/gitcrc/ssr_gitcrc_3_9_22_semi_ring.v
 
 ### 概要
+- operational type class
+- Hintデータベースへの追加 (Typeclasses Transparent)
+- 半環(semiring)の定義
+- (補足) semiring のインスタンスを作ってみる。
 
+## 本文Chapter 3 その4 (本文3.9.3 Instance Resolution)
 
-## 本文Chapter 3 その4 (本文3.9.3)
+### ProofCafeの資料
+https://github.com/suharahiromichi/coq/blob/master/gitcrc/coq_gitcrc_3_9_2_operational_type_classes.v
+(最後の「優先順位」の部分)
 
 ### 概要
-
+- インスタンスの優先順位の指定する。
+- 例：monoid_binop Z のインスタンスである Z_plus_op と Z_mult_op の優先順位によって、結果が変わる。
+- 指定なければ、複雑なものが優先される。
 
 以上
