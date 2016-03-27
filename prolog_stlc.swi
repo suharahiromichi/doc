@@ -1,0 +1,168 @@
+/**
+# ここで使う記法について
+*/
+
+/**
+## 記法の一覧
+
+```
+  λx.y     tm_abs(x, y)       型注釈のないλ抽象
+  λx:T.y   tm_abs(x:T, y)     型注釈のあるλ抽象 (「:」は中置記法)
+  f x      tm_app(f, x)       適用
+  x        tm_var(x)          変数の参照
+  t1->t2   t1->t2             関数型 (中置記法)
+  Bool     ty_bool            型定数
+  True     tm_true            定数
+  False    tm_false           定数
+```
+
+## 変換の例
+
+### 一般的な記法
+
+```
+  λa:Bool. λ:b:Bool->Bool. b (b a)
+```
+
+### ここで使う記法
+
+```
+tm_abs(a:ty_Bool,
+  tm_abs(b:ty_Bool->ty_Bool,
+    tm_app(tm_var(b),
+           tm_app(tm_var(b), tm_var(a)))))
+*/  
+
+/**
+型の注釈で使う「:」と、そのなかでの関数型を示す「->」は、「,」より優先度が高いものとする。
+*/
+  
+:- op(600, xfx, :).                         % 例、x : T
+:- op(500, xfy, ->).                        % 例、Tx->Ty
+
+/**
+# 型検査のプログラム
+
+  第2引数の「型」は、入力でも出力でもよい。たとえば正しい型を指定して
+  実行すると、結果は「成功」になる（型検査）。間違った型を指定したら結
+  果は「失敗」になる。第1引数に与えられた式がもともと型付けできなけれ
+  ば、このときも、結果は「失敗」になる。
+*/
+
+typeof(E, T) :-
+        typeof([], E, T).
+  
+typeof(CTX, tm_var(Tm), T) :-
+        getTypeFromContext(CTX, Tm, T).
+typeof(CTX, tm_abs(Tm1:TyT1, Tm2), TyT1 -> TyT2) :- % 型注釈のある場合
+        typeof([Tm1:TyT1|CTX], Tm2, TyT2).
+/*
+typeof(CTX, tm_abs(Tm1, Tm2), TyT1 -> TyT2) :- % 型注釈のない場合
+        typeof([Tm1:TyT1|CTX], Tm2, TyT2).
+*/
+typeof(CTX, tm_app(Tm1, Tm2), Ty12) :-
+        typeof(CTX, Tm1, Ty11 -> Ty12),
+        typeof(CTX, Tm2, Ty11).
+typeof(CTX, tm_true, ty_Bool).        
+typeof(CTX, tm_false, ty_Bool).
+typeof(CTX, tm_if(T1, T2, T3), TyT2) :-
+        typeof(CTX, T1, ty_Bool),
+        typeof(CTX, T2, TyT12),
+        typeof(CTX, T3, TyT12).
+
+getTypeFromContext(CTX, Tm, TA) :-
+        member(Tm : TB, CTX), !,            % (*2)
+        unify_with_occurs_check(TA, TB).    % (*1)
+
+/*
+(*1)
+  Occurs Check のもとで、TA=TBを実行する。
+
+(*2)
+  同名の「別の」λ変数を探さないよう、memberは最初のひとつだけに制限する。
+*/
+
+
+
+/**
+## 実行例
+*/
+
+/**
+### 型付けできない例
+
+型付けできないことで有名な例、「λx.x x」 である。
+*/
+go23 :-
+        typeof(tm_abs(x,
+                      tm_app(tm_var(x), tm_var(x))),
+               T).
+
+/**
+型付けできないのが正しいので、これは「失敗」で終了する。
+
+しかし、getTypeFromContextのOccurs Checkを外す(unify_with_occurs_check(TA, TB)
+を TA = TBに書き換える)と間違った型を返す。これは以下の理由による。
+
+λx.x x の本体 (x x) の全体の型をT1、二番目のxの型をTxとする。
+すると、一番目のxの型はTx->T1になるが、これもTxであるはずだから、Tx = Tx->T1 になる。
+つまり、xの型は Tx かつ Tx->T1 になってしまい、これは型としておかしい。
+
+しかしながら、Prologで（実行速度を優先して、省略時解釈のまま）Occurs Checkを行わ **ない** と、
+これを「おかしい」と判断されないため、このおかしいまま、λx.x x の型として以下の奇妙な結果を返す。
+
+  (Tx->T1)->T1、ただし Tx=Tx->T1
+
+Occurs Check をおこなうと、Tx = Tx->T1 は「おかしい」と判断され「失敗」になる。
+結果としてtypeof全体が「失敗」になる。
+*/
+
+/**
+### ソフトウェアの基礎（文献2.) のサンプル
+
+λa:bool.λb:bool->bool.(b (b a)) : bool -> (bool -> bool) -> bool
+
+これは型付けできる例である。
+  */
+go24 :-
+        Tm = tm_abs(a : ty_Bool,
+                    tm_abs(b : ty_Bool -> ty_Bool,
+                           tm_app(tm_var(b),
+                                  tm_app(tm_var(b), tm_var(a))))),
+        Ty = ty_Bool -> (ty_Bool -> ty_Bool) -> ty_Bool,
+        typeof(Tm, Ty).                     % 型検査
+
+go24(Ty) :-
+        Tm = tm_abs(a : ty_Bool,
+                    tm_abs(b : ty_Bool -> ty_Bool,
+                           tm_app(tm_var(b),
+                                  tm_app(tm_var(b), tm_var(a))))),
+        typeof(Tm, Ty).                     % 型推論
+
+
+go241 :-
+        Tm = tm_abs(a : _,
+                    tm_abs(b : _,
+                           tm_app(tm_var(b),
+                                  tm_app(tm_var(b), tm_var(a))))),
+        Ty = ty_Bool -> (ty_Bool -> ty_Bool) -> ty_Bool,
+        typeof(Tm, Ty).                     % 型検査
+
+go241(Ty) :-
+        Tm = tm_abs(a : _,
+                    tm_abs(b : _,
+                           tm_app(tm_var(b),
+                                  tm_app(tm_var(b), tm_var(a))))),
+        typeof(Tm, Ty).                     % 型推論
+
+
+/**
+# 参考文献
+
+1. Benjamin C. Pierce、住井 監訳「型システム入門 プログラミング言語と型の理論」オーム社
+2. Benjamin C. Pierce他、梅村他訳「ソフトウエアの基礎」、http://proofcafe.org/sf/
+3. SWI-Prolog、http://www.swi-prolog.org/
+4. GNU Prolog、http://www.gprolog.org/
+*/  
+                                                              
+/* end */
