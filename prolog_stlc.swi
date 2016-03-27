@@ -56,10 +56,8 @@ typeof(CTX, tm_var(Tm), T) :-
         getTypeFromContext(CTX, Tm, T).
 typeof(CTX, tm_abs(Tm1:TyT1, Tm2), TyT1 -> TyT2) :- % 型注釈のある場合
         typeof([Tm1:TyT1|CTX], Tm2, TyT2).
-/*
 typeof(CTX, tm_abs(Tm1, Tm2), TyT1 -> TyT2) :- % 型注釈のない場合
         typeof([Tm1:TyT1|CTX], Tm2, TyT2).
-*/
 typeof(CTX, tm_app(Tm1, Tm2), Ty12) :-
         typeof(CTX, Tm1, Ty11 -> Ty12),
         typeof(CTX, Tm2, Ty11).
@@ -71,7 +69,7 @@ typeof(CTX, tm_if(T1, T2, T3), TyT2) :-
         typeof(CTX, T3, TyT12).
 
 getTypeFromContext(CTX, Tm, TA) :-
-        member(Tm : TB, CTX), !,            % (*2)
+        member(Tm : TB, CTX),               % CUTをとった！
         unify_with_occurs_check(TA, TB).    % (*1)
 
 /*
@@ -166,3 +164,156 @@ go241(Ty) :-
 */  
                                                               
 /* end */
+/*
+typeof(_, cons, ty_Bool->ty_List->ty_List).
+typeof(_, nil, ty_List).
+go(T) :-
+        Tm1 = tm_abs(f:ty_Bool->ty_List,
+                    tm_abs(x:ty_Bool, tm_app(tm_var(f), tm_var(x)))),
+        Tm2 = tm_abs(x:ty_Bool, tm_app(tm_app(cons, tm_var(x)), nil)),
+        Tm = tm_app(tm_app(Tm1, Tm2), tm_true),
+        typeof(Tm, T).
+*/
+
+%% SFのサンプル
+go0 :-                                      % true
+        typeof([],
+                 tm_abs(a : ty_Bool, tm_var(a)),
+                 ty_Bool -> ty_Bool).
+
+go1 :-                                      % true
+        typeof([],
+                 tm_abs(a : ty_Bool,
+                        tm_abs(b : ty_Bool -> ty_Bool,
+                               tm_app(tm_var(b),
+                                      tm_app(tm_var(b), tm_var(a))))),
+                 ty_Bool -> (ty_Bool -> ty_Bool) -> ty_Bool).
+
+go2 :-                                      % false
+        typeof([],
+                 tm_abs(a : ty_Bool,
+                        tm_abs(b : ty_Bool,
+                               tm_app(tm_var(a), tm_var(b)))),
+                 _).
+%% いつもの例、失敗する。
+go3 :-                                      % false
+        typeof([],
+                 tm_abs(x,
+                        tm_app(tm_var(x), tm_var(x))),
+                 T),
+        write(T).
+%% member_with_occurs_check のコメントを参照のこと。
+go31 :-                                     % false
+        typeof([],
+                 tm_abs(x,
+                        tm_abs(x,
+                               tm_app(tm_var(x), tm_var(x)))),
+                 T),
+        write(T).
+
+%% TaPLのサンプル
+go4 :-                                      % TaPL 例22.2.2
+        G = [f : X, a : Y],
+        typeof(G, tm_app(tm_var(f), tm_var(a)), T),
+        write([G, T]).
+%% [f : Y -> Z, a : Y], T=Z
+
+go5 :-                                      % TaPL 演習22.2.3
+        typeof([],
+                 tm_abs(x : X,
+                        tm_abs(y : Y,
+                               tm_abs(z : Z,
+                                      tm_app(tm_app(tm_var(x), tm_var(z)),
+                                             tm_app(tm_var(y), tm_var(z)))))),
+                 T),
+        write([[X,Y,Z], T]).
+%% X=A->B->C, Y=A->B, Z=A, T=(A->B->C)->(A-B)->A->C
+
+%% SFの練習問題
+go6 :-                                      % true
+        typeof([a : S],
+                 tm_app(tm_abs(b : ty_Bool -> ty_Bool,
+                               tm_var(b)),
+                        tm_var(a)),
+                 S),
+        write(S).                           % Bool->Bool
+
+go71 :-                                     % true
+        typeof([],
+                 tm_abs(b : B->B->B,
+                        tm_abs(a:B,
+                               tm_app(tm_var(b), tm_var(a)))),
+                 T),
+        write([B, T]).                      % T=(B->B->B)->B->B->B
+
+go72 :-                                     % true.
+        typeof([],
+                 tm_abs(a : A->B,
+                        tm_abs(b : B->C,
+                               tm_abs(c : A,
+                                      tm_app(tm_var(b),
+                                             tm_app(tm_var(a), tm_var(c)))))),
+                 T),
+        write(T).
+
+go73 :-                                     % true.
+        typeof([a : S, b : U],
+                 tm_abs(c : A, tm_app(tm_var(a),
+                                      tm_app(tm_var(b), tm_var(c)))),
+                 T),
+        write([S, U, A, T]).
+
+go74 :-                                     % true.
+        typeof([a : S],
+                 tm_abs(b : A, tm_app(tm_var(a), tm_app(tm_var(a), tm_var(b)))),
+                 T),
+        write([S, A, T]).                   % S=A->A, T=A->A
+
+go75 :-                                     % fail
+        typeof([a : S],
+                 tm_app(tm_var(a), tm_abs(c : U, tm_app(tm_var(c), tm_var(a)))),
+                 T),
+        write([S, U, T]).
+
+
+go_s0 :-
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Bool,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+go_s01 :-
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Nat,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+go_s11 :-
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+go_s1 :-
+        typeof(tm_abs(b,
+                      tm_abs(a:ty_Bool,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+go_s2 :-
+        typeof(tm_abs(b,
+                      tm_abs(a,
+                             tm_app(tm_var(b), tm_var(a)))),
+               (ty_Bool->ty_Nat)->ty_Bool->ty_Nat),
+        write(T).
+
+go_s5 :-
+        typeof(tm_abs(b,
+                      tm_abs(a,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
