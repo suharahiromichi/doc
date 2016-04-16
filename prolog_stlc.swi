@@ -317,3 +317,25 @@ go_s5 :-
                              tm_app(tm_var(b), tm_var(a)))),
                T),
         write(T).
+
+go_debug_ng :-
+        spy(typeof),
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Nat,      % XXXXX
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+% * Fail: (12) typeof([a:ty_Nat, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ? 
+
+go_debug_ok :-
+        spy(typeof),
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Bool,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+% * Exit: (12) typeof([a:ty_Bool, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ?
+
+/* END */
