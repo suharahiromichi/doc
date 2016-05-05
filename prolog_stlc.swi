@@ -1,4 +1,12 @@
 /**
+Prologでλ→ (単純型付きλ式、STLC) の型検査のプログラムを書いてみただけの話
+
+  2016_夏
+
+  @suharahiromichi
+*/
+
+/**
 # ここで使う記法について
 */
 
@@ -6,11 +14,11 @@
 ## 記法の一覧
 
 ```
-  λx.y     tm_abs(x, y)       型注釈のないλ抽象
-  λx:T.y   tm_abs(x:T, y)     型注釈のあるλ抽象 (「:」は中置記法)
+  λx.y    tm_abs(x, y)       型注釈のないλ抽象
+  λx:T.y  tm_abs(x:T, y)     型注釈のあるλ抽象 (「:」は中置記法)
   f x      tm_app(f, x)       適用
   x        tm_var(x)          変数の参照
-  t1->t2   t1->t2             関数型 (中置記法)
+  t1→t2   t1->t2             関数型 (中置記法)
   Bool     ty_bool            型定数
   True     tm_true            定数
   False    tm_false           定数
@@ -69,54 +77,20 @@ typeof(CTX, tm_if(T1, T2, T3), TyT2) :-
         typeof(CTX, T3, TyT12).
 
 getTypeFromContext(CTX, Tm, TA) :-
-        member(Tm : TB, CTX),               % CUTをとった！
+        member(Tm : TB, CTX),
         unify_with_occurs_check(TA, TB).    % (*1)
 
-/*
-(*1)
-  Occurs Check のもとで、TA=TBを実行する。
-
-(*2)
-  同名の「別の」λ変数を探さないよう、memberは最初のひとつだけに制限する。
+/**
+(*1) Occurs Check のもとで、TA=TBを実行する。
 */
 
 
-
 /**
-## 実行例
+# 実行例
 */
 
 /**
-### 型付けできない例
-
-型付けできないことで有名な例、「λx.x x」 である。
-*/
-go23 :-
-        typeof(tm_abs(x,
-                      tm_app(tm_var(x), tm_var(x))),
-               T).
-
-/**
-型付けできないのが正しいので、これは「失敗」で終了する。
-
-しかし、getTypeFromContextのOccurs Checkを外す(unify_with_occurs_check(TA, TB)
-を TA = TBに書き換える)と間違った型を返す。これは以下の理由による。
-
-λx.x x の本体 (x x) の全体の型をT1、二番目のxの型をTxとする。
-すると、一番目のxの型はTx->T1になるが、これもTxであるはずだから、Tx = Tx->T1 になる。
-つまり、xの型は Tx かつ Tx->T1 になってしまい、これは型としておかしい。
-
-しかしながら、Prologで（実行速度を優先して、省略時解釈のまま）Occurs Checkを行わ **ない** と、
-これを「おかしい」と判断されないため、このおかしいまま、λx.x x の型として以下の奇妙な結果を返す。
-
-  (Tx->T1)->T1、ただし Tx=Tx->T1
-
-Occurs Check をおこなうと、Tx = Tx->T1 は「おかしい」と判断され「失敗」になる。
-結果としてtypeof全体が「失敗」になる。
-*/
-
-/**
-### ソフトウェアの基礎（文献2.) のサンプル
+## ソフトウェアの基礎（文献2.) のサンプル
 
 λa:bool.λb:bool->bool.(b (b a)) : bool -> (bool -> bool) -> bool
 
@@ -155,70 +129,30 @@ go241(Ty) :-
 
 
 /**
-# 参考文献
-
-1. Benjamin C. Pierce、住井 監訳「型システム入門 プログラミング言語と型の理論」オーム社
-2. Benjamin C. Pierce他、梅村他訳「ソフトウエアの基礎」、http://proofcafe.org/sf/
-3. SWI-Prolog、http://www.swi-prolog.org/
-4. GNU Prolog、http://www.gprolog.org/
-*/  
-                                                              
-/* end */
-/*
-typeof(_, cons, ty_Bool->ty_List->ty_List).
-typeof(_, nil, ty_List).
-go(T) :-
-        Tm1 = tm_abs(f:ty_Bool->ty_List,
-                    tm_abs(x:ty_Bool, tm_app(tm_var(f), tm_var(x)))),
-        Tm2 = tm_abs(x:ty_Bool, tm_app(tm_app(cons, tm_var(x)), nil)),
-        Tm = tm_app(tm_app(Tm1, Tm2), tm_true),
-        typeof(Tm, T).
+## ソフトウェアの基礎（文献2.) のサンプル
 */
-
-%% SFのサンプル
 go0 :-                                      % true
         typeof([],
                  tm_abs(a : ty_Bool, tm_var(a)),
                  ty_Bool -> ty_Bool).
 
-go1 :-                                      % true
-        typeof([],
-                 tm_abs(a : ty_Bool,
-                        tm_abs(b : ty_Bool -> ty_Bool,
-                               tm_app(tm_var(b),
-                                      tm_app(tm_var(b), tm_var(a))))),
-                 ty_Bool -> (ty_Bool -> ty_Bool) -> ty_Bool).
-
-go2 :-                                      % false
+go1 :-                                      % false
         typeof([],
                  tm_abs(a : ty_Bool,
                         tm_abs(b : ty_Bool,
                                tm_app(tm_var(a), tm_var(b)))),
                  _).
-%% いつもの例、失敗する。
-go3 :-                                      % false
-        typeof([],
-                 tm_abs(x,
-                        tm_app(tm_var(x), tm_var(x))),
-                 T),
-        write(T).
-%% member_with_occurs_check のコメントを参照のこと。
-go31 :-                                     % false
-        typeof([],
-                 tm_abs(x,
-                        tm_abs(x,
-                               tm_app(tm_var(x), tm_var(x)))),
-                 T),
-        write(T).
 
-%% TaPLのサンプル
-go4 :-                                      % TaPL 例22.2.2
+/**
+## TAPLのサンプル
+*/
+go4 :-                                      % TAPL 例22.2.2
         G = [f : X, a : Y],
         typeof(G, tm_app(tm_var(f), tm_var(a)), T),
         write([G, T]).
 %% [f : Y -> Z, a : Y], T=Z
 
-go5 :-                                      % TaPL 演習22.2.3
+go5 :-                                      % TAPL 演習22.2.3
         typeof([],
                  tm_abs(x : X,
                         tm_abs(y : Y,
@@ -229,7 +163,9 @@ go5 :-                                      % TaPL 演習22.2.3
         write([[X,Y,Z], T]).
 %% X=A->B->C, Y=A->B, Z=A, T=(A->B->C)->(A-B)->A->C
 
-%% SFの練習問題
+/**
+## ソフトウェアの基礎（文献2.) の練習問題
+*/
 go6 :-                                      % true
         typeof([a : S],
                  tm_app(tm_abs(b : ty_Bool -> ty_Bool,
@@ -276,6 +212,80 @@ go75 :-                                     % fail
         write([S, U, T]).
 
 
+/**
+## デバッカを使うサンプル
+*/
+go_debug_ng :-
+        spy(typeof),
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Nat,      % XX ここがおかしい。
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+% * Fail: (12) typeof([a:ty_Nat, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ? 
+
+go_debug_ok :-
+        spy(typeof),
+        typeof(tm_abs(b:ty_Bool->ty_Nat,
+                      tm_abs(a:ty_Bool,
+                             tm_app(tm_var(b), tm_var(a)))),
+               T),
+        write(T).
+
+% * Exit: (12) typeof([a:ty_Bool, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ?
+
+/**
+## 型付けできない例
+
+型付けできないことで有名な例、「λx.x x」 である。
+*/
+go3 :-
+        typeof(tm_abs(x,
+                      tm_app(tm_var(x), tm_var(x))),
+               T).
+
+/**
+型付けできないのが正しいので、これは「失敗」で終了する。
+
+しかし、getTypeFromContextのOccurs Checkを外す(unify_with_occurs_check(TA, TB)
+を TA = TBに書き換える)と間違った型を返す。これは以下の理由による。
+
+λx.x x の本体 (x x) の全体の型をT1、二番目のxの型をTxとする。
+すると、一番目のxの型はTx->T1になるが、これもTxであるはずだから、Tx = Tx->T1 になる。
+つまり、xの型は Tx かつ Tx->T1 になってしまい、これは型としておかしい。
+
+しかしながら、Prologで（実行速度を優先して、省略時解釈のまま）Occurs Checkを行わ **ない** と、
+これを「おかしい」と判断されないため、このおかしいまま、λx.x x の型として以下の奇妙な結果を返す。
+
+  (Tx->T1)->T1、ただし Tx=Tx->T1
+
+Occurs Check をおこなうと、Tx = Tx->T1 は「おかしい」と判断され「失敗」になる。
+結果としてtypeof全体が「失敗」になる。
+*/
+
+/**
+# 参考文献
+
+1. Benjamin C. Pierce、住井 監訳「型システム入門 プログラミング言語と型の理論」オーム社
+2. Benjamin C. Pierce他、梅村 他訳「ソフトウエアの基礎」、http://proofcafe.org/sf/
+3. SWI-Prolog、http://www.swi-prolog.org/
+4. GNU Prolog、http://www.gprolog.org/
+*/  
+                                                              
+/*
+typeof(_, cons, ty_Bool->ty_List->ty_List).
+typeof(_, nil, ty_List).
+go(T) :-
+        Tm1 = tm_abs(f:ty_Bool->ty_List,
+                    tm_abs(x:ty_Bool, tm_app(tm_var(f), tm_var(x)))),
+        Tm2 = tm_abs(x:ty_Bool, tm_app(tm_app(cons, tm_var(x)), nil)),
+        Tm = tm_app(tm_app(Tm1, Tm2), tm_true),
+        typeof(Tm, T).
+*/
+
+/* おまけ */
+
 go_s0 :-
         typeof(tm_abs(b:ty_Bool->ty_Nat,
                       tm_abs(a:ty_Bool,
@@ -317,25 +327,5 @@ go_s5 :-
                              tm_app(tm_var(b), tm_var(a)))),
                T),
         write(T).
-
-go_debug_ng :-
-        spy(typeof),
-        typeof(tm_abs(b:ty_Bool->ty_Nat,
-                      tm_abs(a:ty_Nat,      % XXXXX
-                             tm_app(tm_var(b), tm_var(a)))),
-               T),
-        write(T).
-
-% * Fail: (12) typeof([a:ty_Nat, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ? 
-
-go_debug_ok :-
-        spy(typeof),
-        typeof(tm_abs(b:ty_Bool->ty_Nat,
-                      tm_abs(a:ty_Bool,
-                             tm_app(tm_var(b), tm_var(a)))),
-               T),
-        write(T).
-
-% * Exit: (12) typeof([a:ty_Bool, b:ty_Bool->ty_Nat], tm_var(a), ty_Bool) ?
 
 /* END */
