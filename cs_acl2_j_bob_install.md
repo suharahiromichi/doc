@@ -31,19 +31,21 @@ More information about SBCL is available at <http://www.sbcl.org/>.
 
 ## acl2 のインストール
 
-手順
-
-なお、全体に ~/WORK/proj/ というディレクトリに作っている。
+手順で示す。なお、~/WORK/proj/ というディレクトリは適宜読み替えてください。
 
 - acl2 は、``~/WORK/proj/acl2-7.2``
 - j-bobのacl2版は、``~/WORK/proj/j-bob/acl2``
-- acl2.sh のスクリプトは、``~/bin/`` に置いた。
+
+acl2.sh のスクリプトは、``~/bin/`` に置いた。
+
 
 1. 入手
 
 http://www.cs.utexas.edu/users/moore/acl2/ から acl2-7.2.tar.gz
 
+
 2. コンパイルからインストールまでの手順
+
 
 ```
 % mkdir ~/WORK/proj
@@ -62,8 +64,8 @@ ACL2 !>(good-bye)
 %
 ```
 
-- SBCLの場合、32bit OSではコンパイル時にHeapが不足するので、それを避け
-るためのスクリプト(注1)を acl2-7.2 のディレクトリに用意して、それを指
+- (注1) SBCLの場合、32bit OSではコンパイル時にHeapが不足するので、それを避け
+るためのスクリプトを acl2-7.2 のディレクトリに用意して、それを指
 定してビルドする。--dynamic-space-size 1600 の1600は自分の環境に合わせ
 て設定する。大きすぎてもエラーになる。
 
@@ -73,10 +75,10 @@ ACL2 !>(good-bye)
 /usr/local/bin/sbcl --dynamic-space-size 1600 "$@"
 ```
 
-- ビルドすると、saved_acl2 というshスクリプトが生成される。それを
-  acl2.sh にコピーしたのち修正する。そこに含まれる
-  --dynamic-space-size 2000の2000は自分の環境に合わせて設定する。
-  1600にした。
+- (注2) ビルドすると、saved_acl2 というshスクリプトが生成される。
+それをacl2.sh にコピーしたのち修正する。
+そこに含まれる``--dynamic-space-size 2000`` の2000は自分の環境に合わせて設定する。
+1600にした。
 
 ```
 % cat acl2.sh
@@ -95,12 +97,16 @@ exec "/usr/local/bin/sbcl" --dynamic-space-size 1600
 
 ### The Little Prover の実行
 
+
 1. サンプルの入手
+
 
 % cd ~/WORK/proj
 % git clone https://github.com/the-little-prover/j-bob
 
+
 2. 実行例
+
 
 ``ACL2 !>`` がプロンプトである。
 
@@ -129,5 +135,9 @@ ACL2 !>(dethm.align/align)
 ACL2 !>^D
 %
 ```
+
+### ProofGeneral
+
+(TBD)
 
 **以上**
