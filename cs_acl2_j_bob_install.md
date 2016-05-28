@@ -1,4 +1,4 @@
-ACl2のインストールからサンプルの実行まで
+ACL2のインストールからサンプルの実行まで
 =======================
 
 "The Little Prover"
@@ -100,10 +100,10 @@ exec "/usr/local/bin/sbcl" --dynamic-space-size 1600
 
 1. サンプルの入手
 
-
+```
 % cd ~/WORK/proj
 % git clone https://github.com/the-little-prover/j-bob
-
+```
 
 2. 実行例
 
