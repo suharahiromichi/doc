@@ -122,6 +122,9 @@ Type (good-bye) to quit completely out of ACL2.
 ACL2 !>(include-book "j-bob-lang")
 略
 
+ACL2 !>(include-book "j-bob")
+略
+
 ACL2 !>(include-book "little-prover")
 略
 
@@ -136,8 +139,69 @@ ACL2 !>^D
 %
 ```
 
-### ProofGeneral
+### Emacs インターフェース
 
-(TBD)
+1. ~/.emacs の設定
+
+~/.emacs （または ~/init.el など) に以下を追加する。
+
+```.emacs
+(defvar acl2-skip-shell t)
+(defvar *acl2-shell* "*inferior-acl2*")
+(defvar inferior-acl2-program "acl2.sh")
+(load-file "$HOME/WORK/proj/acl2-7.2/emacs/emacs-acl2.el")
+```
+
+注意
+
+``emacs-acl2.el`` のパスは各自の環境にあわせるが、他のelispファイルに
+も依存するので、場所を移動してはいけない。
+
+``acl2.sh`` は上記の実行例と同じ起動スクリプトである。実行パスが通って
+いるところに置いてあるならば、フルパスで指定する必要はない。
+
+
+2. 主なコマンド
+
+``cd ~/WORK/proj/j-bob/acl2; emacs`` Emacsを起動する。Emacs を起動した
+ディレクトリが、ACL2のカレントディレクトリ、すなわち、ACL2
+include-book の起点になる。
+
+
+``M-x run-acl2`` acl2 を起動する。
+
+
+以降、プログラム（証明）の編集は任意のバッファでおこなう。それをどのディ
+レクトリの保存してもよい。任意のバッファで以下のコマンドが使える。
+
+
+``C-t C-e`` カーソルのある定義などを acl2 のバッファに送る。
+
+``C-t l`` リージョン（選択した範囲）を acl2 のバッファに送る。
+
+
+3. 説明
+
+``
+ACL2 Proof General is incomplete!  Please help improve it!
+Please add improvements at http://proofgeneral.inf.ed.ac.uk/trac"
+``
+
+なので、ACL2に付属の ``emacs/emacs-acl2.el`` を使う。これをロードする
+**だけ** で ``*shell*`` バッファが開くので、そこで実行例の ``acl2.sh``
+以降を実行してもよい。このとき、acl2 関連のコマンドは ``*shell*`` バッ
+ファに送られる。
+
+いきなり ``*shell*`` バッファが開くのが嫌な場合は、上記の設定をすると、
+``M-x run-acl2`` で ``*inferior-acl2*`` バッファが開かれそこで acl2 が
+起動する。acl2 関連のコマンドは ``*inferior-acl2*`` バッファに送られる。
+
+
+``acl2.sh`` が実行されたディレクトリがカレントディレクトリになり、
+``(include-book "j-bob")`` などインクルードの起点はカレントディレクト
+リになる。そのため、Emacs の起動は、ACL2を実行するときのカレントディレ
+クトリでおこなう必要がある。
+
+ACL2 のインクルードパスの詳細については調査中です。
 
 **以上**
