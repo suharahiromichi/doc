@@ -1,25 +1,21 @@
-ACL2のインストールからサンプルの実行まで
+"The Little Prover" - J-BOBの実行まで（ACL2版）
 =======================
-
-"The Little Prover"
 
 2016_05_26 @suharahiromichi
 
-# サンプルコードの実行まで
+# 環境
 
-## 環境
-
-### OS
+## OS
 
 FreeBSD/i386 で、故あって未だ32bit環境を使用している。
-64bit環境ならば、後のようにHeapサイズの不足は生じないだろう。
+64bit環境ならば、後のようにHeapの不足は生じないだろう。
 
 ```
 % uname -a
 FreeBSD faure 10.2-RELEASE FreeBSD 10.2-RELEASE #0 (略)  i386
 ```
 
-### Common Lisp
+## Common Lisp
 
 Common Lisp は既にインストール済みの SBCL を使用した。
 
@@ -29,7 +25,12 @@ This is SBCL 1.2.9, an implementation of ANSI Common Lisp.
 More information about SBCL is available at <http://www.sbcl.org/>.
 ```
 
-## acl2 のインストール
+## Emacs
+
+``GNU Emacs 24.5.2 (i386-portbld-freebsd10.2, GTK+ Version 2.24.28)``
+
+
+# ACL2 のインストール
 
 手順で示す。なお、~/WORK/proj/ というディレクトリは適宜読み替えてください。
 
@@ -39,12 +40,12 @@ More information about SBCL is available at <http://www.sbcl.org/>.
 acl2.sh のスクリプトは、``~/bin/`` に置いた。
 
 
-1. 入手
+## ACL2の入手
 
 http://www.cs.utexas.edu/users/moore/acl2/ から acl2-7.2.tar.gz
 
 
-2. コンパイルからインストールまでの手順
+## コンパイルからインストールまでの手順
 
 
 ```
@@ -95,17 +96,17 @@ exec "/usr/local/bin/sbcl" --dynamic-space-size 1600
 （見やすく改行した）
 
 
-### The Little Prover の実行
+# The Little Prover のサンプルコード (J-BOB) の実行
 
 
-1. サンプルの入手
+## J-BOBの入手
 
 ```
 % cd ~/WORK/proj
 % git clone https://github.com/the-little-prover/j-bob
 ```
 
-2. 実行例
+## J-BOBの実行例
 
 
 ``ACL2 !>`` がプロンプトである。
@@ -139,9 +140,9 @@ ACL2 !>^D
 %
 ```
 
-### Emacs インターフェース
+# Emacs インターフェース
 
-1. ~/.emacs の設定
+## ~/.emacs の設定
 
 ~/.emacs （または ~/init.el など) に以下を追加する。
 
@@ -154,34 +155,40 @@ ACL2 !>^D
 
 注意
 
-``emacs-acl2.el`` のパスは各自の環境にあわせるが、他のelispファイルに
-も依存するので、場所を移動してはいけない。
+``emacs-acl2.el`` のパスは各自の環境にあわせる。ただし、ACL2に含まれる
+他のelispファイルにも依存するので、場所を移動してはいけない。
 
 ``acl2.sh`` は上記の実行例と同じ起動スクリプトである。実行パスが通って
 いるところに置いてあるならば、フルパスで指定する必要はない。
 
 
-2. 主なコマンド
+## 起動方法
 
-``cd ~/WORK/proj/j-bob/acl2; emacs`` Emacsを起動する。Emacs を起動した
-ディレクトリが、実行時のカレントディレクトリ、すなわち、ACL2の
-include-book の起点になる。
+``cd ~/WORK/proj/j-bob/acl2; emacs``
+
+Emacsを起動する。Emacs を起動したディレクトリが実行時のカレントディレ
+クトリ、すなわち、ACL2のinclude-book の起点になる。
 
 
-``M-x run-acl2`` ACL2を実行するバッファ（実行バッファ）を開き、ACL2 を
-起動する。上記の設定の場合は``acl2.sh``。
+## 主なコマンド
+
+
+``M-x run-acl2`` -- ACL2を実行するバッファ（実行バッファ）を開き、ACL2
+を起動する。上記の設定の場合は``acl2.sh``。
 
 
 以降、プログラム（証明）の編集は任意のバッファでおこなう（編集バッ
 ファ）。編集バッファで以下のコマンドが使える。
 
 
-``C-t C-e`` カーソルのある定義などを実行バッファに送る。
+``C-t C-e`` -- カーソルのある定義などを実行バッファに送る。
 
-``C-t l`` リージョン（選択した範囲）を実行バッファに送る。
+``C-t l`` -- リージョン（選択した範囲）を実行バッファに送る。
 
 
-3. 説明
+## 補足説明
+
+ProofGeneral は、
 
 ``
 ACL2 Proof General is incomplete!  Please help improve it!
@@ -193,9 +200,10 @@ Please add improvements at http://proofgeneral.inf.ed.ac.uk/trac"
 以降を実行してもよい。このとき、acl2 関連のコマンドは ``*shell*`` バッ
 ファに送られる。
 
-いきなり ``*shell*`` バッファが開くのが嫌な場合は、上記の設定をすると、
-``M-x run-acl2`` で ``*inferior-acl2*`` バッファが開かれそこで acl2 が
-起動する。acl2 関連のコマンドは ``*inferior-acl2*`` バッファに送られる。
+いきなり ``*shell*`` バッファが開くのが嫌な場合は、``~/.emacs`` に上記
+の設定をする。すると、``M-x run-acl2`` で ``*inferior-acl2*`` バッファ
+が開かれそこで acl2 が起動する。acl2 関連のコマンドは
+``*inferior-acl2*`` バッファに送られる。
 
 
 ``acl2.sh`` が実行されたディレクトリがカレントディレクトリになり、
