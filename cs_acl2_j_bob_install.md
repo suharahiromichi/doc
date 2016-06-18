@@ -86,11 +86,11 @@ ACL2 !>(good-bye)
 #!/bin/sh
 # Saved May 27, 2016  23:13:34
 export SBCL_HOME="/usr/local/lib/sbcl"
-exec "/usr/local/bin/sbcl" --dynamic-space-size 1600
---control-stack-size 64
---core "/Users/suhara/WORK/proj/acl2-7.2/saved_acl2.core"
---end-runtime-options --no-userinit
---eval '(acl2::sbcl-restart)' "$@"
+exec "/usr/local/bin/sbcl" --dynamic-space-size 1600 \
+  --control-stack-size 64 \
+  --core "/Users/suhara/WORK/proj/acl2-7.2/saved_acl2.core" \
+  --end-runtime-options --no-userinit \
+  --eval '(acl2::sbcl-restart)' "$@"
 ```
 
 （見やすく改行した）
