@@ -26,6 +26,16 @@ ctx?の定義はCH7.3で、リストの要素に'?があるとき't、さもな�
 
 ## ctx? の定義 (CH7.3)
 
+```lisp:
+(defun ctx? (x)
+       (if (atom x)
+           (equal x '?)
+           (if (ctx? (car x))
+               't
+               (ctx? (cdr x)))))
+measure: (size x)
+```
+
 ``measure: (size x)`` は、引数のリスト ``x`` のサイズが減ることを停止性の根拠とすることを意味する。
 
 
@@ -197,9 +207,287 @@ Star InductionもNatual Inductionも一般的な術語ではない。
            't))
 ```
 
-これも、star induction で証明する。
+## Star Induction の適用 (CH7.31)。
 
+``C(y)`` ≡
+
+```lisp:
+(if (ctx? x)
+    (equal (ctx? x) 't)
+    't))
+```
+
+これも、star induction で証明する。``x``に対して帰納法を適用する。
+
+```lisp:
+(if (atom x)
+    (if (ctx? x)
+        (equal (ctx? x) 't)
+        't)
+    (if (if (ctx? (car x))
+            (equal (ctx? (car x)) 't)
+            't)
+        (if (if (ctx? (cdr x))
+            (equal (ctx? (cdr x)) 't)
+            't)
+            (if (ctx? x)
+                (equal (ctx? x) 't)
+                't)
+            't)
+        't))
+```
+
+もう少しわかりやすくいうと、
+(1) ``(atom x)`` が成立するとして、
+
+```lisp:
+(if (ctx? x)
+    (equal (ctx? x) 't)
+    't)
+```
+
+を証明する。
+
+(2) 帰納法の仮定
+
+```lisp:
+(if (ctx? (car x))
+    (equal (ctx? (car x)) 't)
+    't)
+```
+
+と
+
+```lisp:
+(if (ctx? (cdr x))
+    (equal (ctx? (cdr x)) 't)
+    't)
+```
+
+を前提として、
+
+```lisp:
+(if (ctx? x)
+    (equal (ctx? x) 't)
+    't)
+```
+
+を証明する。
+
+## サブゴール(1)の証明 CH7.32-34
+
+### CH7.32
+
+``(atom x)`` を前提とし、2箇所ある``(ctx? x)``をフォーカスにして、公理``if-nest-A``を適用する。ただし、``ctx?`` はその定義で展開することで、``(if (atom x) (equal x '?) ...)`` なので、それを使う。
+
+``if-nest-A``は``(dethm if-nest-A (x y z) (if x (equal (if x y z) y) 't))``で、フォーカスはif-A節にあるので、``(if (atom x) (equal x '?) ...)`` は、2箇所とも``(equal x '?)``と書き換えられる。
+
+### CH7.33
+
+``(equal x '?)`` を前提、``x``をフォーカスとして、公理``equal-if``を使用して``'?``と書き換える。
+
+### CH7.34
+
+```lisp:
+(if (equal x '?)
+    (equal (equal '? '?) 't) 't)
+```
+をフォーカスにして、
+
+公理``equal-same``を2回、公理``if-same``を1回使用して、``'t``と書き換える。
+
+以上で、サブゴール(1)は証明できた。
+
+
+## サブゴール(2)の証明 CH7.35-39
+
+### CH7.35
+
+``(atom x)`` を前提とし、2箇所ある``(ctx? x)``をフォーカスにして、公理``if-nest-E``を適用する。ただし、``ctx?`` はその定義で展開することで、以下なので、それを使う。（CH7.32 で if-nest-Aを使ったことに対応する。）
+
+```lisp:
+    (if (atom x)
+       ...
+       (if (ctx? (car x))
+           't
+           (ctx? (cdr x))))
+```
+
+### CH7.36
+
+p.67 の ``if Lifting`` を使う。これはif-Qをフォーカスの外に出すことである。CH7.36左のフォーカスを抜き出す。
+
+```lisp:
+(if (if (ctx? (car x))
+        (equal (ctx? (car x)) 't)
+        't)
+    ...
+    't)
+```
+
+これが ``if Lifting`` によって、
+
+```lisp:
+(if (ctx? (car x))
+    (if (equal (ctx? (car x)) 't)
+        ...          ;; A
+        't)
+    (if 't
+        ...          ;; E
+        't))
+```
+
+となる。``(if 't ... 't)`` は``...``になるので、
+
+```lisp:
+(if (ctx? (car x))
+    (if (equal (ctx? (car x)) 't)
+        ...          ;; A
+        't)
+    ...              ;; E
+```
+
+
+``...`` の部分は以下である。
+
+```lisp::
+        (if (if (ctx? (cdr x))
+                (equal (ctx? (cdr x)) 't)
+                't)
+            (if (if (ctx? (car x))
+                    't
+                    (ctx? (cdr x)))
+                (equal (if (ctx? (car x))
+                           't
+                           (ctx? (cdr x)))
+                       't)
+                't)
+            't)
+```
+
+Aに入る部分は、``(ctx? (car x))``が``'t``なので、公理``if-true``ほかで、以下のようになる。
+
+```lisp::
+        (if (if (ctx? (cdr x))
+                (equal (ctx? (cdr x)) 't)
+                't)
+            't
+            't)
+```
+
+Eに入る部分は、``(ctx? (car x))``が``'()``なので、公理``if-false``ほかで、以下のようになる。
+
+```lisp::
+        (if (if (ctx? (cdr x))
+                (equal (ctx? (cdr x)) 't)
+                't)
+            (if (ctx? (cdr x))
+                (equal (ctx? (cdr x)) 't)
+                't)
+            't)
+```
+
+全体をあわせると、CH7.36右のフォーカスの部分になる。
+
+```lisp:
+(if (ctx? (car x))
+    (if (equal (ctx? (car x)) 't)
+        (if (if (ctx? (cdr x))
+                (equal (ctx? (cdr x)) 't)
+                't)
+            't
+            't)
+        't)
+    (if (if (ctx? (cdr x))
+            (equal (ctx? (cdr x)) 't)
+            't)
+        (if (ctx? (cdr x))
+            (equal (ctx? (cdr x)) 't)
+            't)
+        't))
+```
+
+### CH.7.37
+
+公理``if-same``を3回適用すると、フォーカス全体が``'t``になる。
+
+
+### CH7.38
+
+``if Lifting`` を使う。
+
+CH7.38左のフォーカスを抜き出す。
+
+```lisp:
+(if (if (ctx? (cdr x))
+        (equal (ctx? (cdr x)) 't)
+        't)
+    ...
+    't)
+```
+
+これが ``if Lifting`` によって、
+
+```lisp:
+(if (ctx? (cdr x))
+    (if (equal (ctx? (cdr x)) 't)
+        ...               ;; A
+        't)
+    (if 't
+        ...               ;; E
+        't))
+```
+
+となる。``(if 't ... 't)`` は``...``になるので、
+
+```lisp:
+(if (ctx? (cdr x))
+    (if (equal (ctx? (cdr x)) 't)
+        ...               ;; A
+        't)
+    ...)                  ;; E
+```
+
+``...`` の部分は以下である。
+
+```lisp::
+        (if (ctx? (cdr x))
+            (equal (ctx? (cdr x)) 't)
+            't)
+```
+
+Aに入る部分は、``(ctx? (cdr x))``が``'t``なので、
+
+```lisp::
+        (equal (ctx? (cdr x)) 't)
+```
+
+Eに入る部分は、``(ctx? (cdr x))``が``'()``なので、
+
+```lisp::
+        't
+```
+
+全体を合わせると、
+
+```lisp:
+(if (ctx? (cdr x))
+    (if (equal (ctx? (cdr x)) 't)
+        (equal (ctx? (cdr x)) 't)
+        't)
+    't)
+```
+
+となり、CH7.38右のフォーカスの部分となる。
+
+
+### CH7.39
+
+if-Qの``(equal (ctx? (cdr x))``を前提として、そのif-Aの``(ctx? (cdr x))``をフォーカスして、公理``equal-if``を適用して、``'t``に書き換える。つまり``(equal (ctx? (cdr x)) 't)``が``(equal 't 't)``になる。
+
+さらに、公理``equal-same``を適用すると、``'t``になる。
+最後に、公理``if-same``を4回適用すると、全体が``'t``になる。
+
+以上で、サブゴール(2)は証明できた。Q.E.D.
 
 **以上**
-
-
