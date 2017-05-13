@@ -113,7 +113,7 @@
 
 変数 x の car と cdr の上の帰納法で、主張Cを証明するためには、
 
-(if (atom C) C (if C_car (if (C_cdr) C 't) 't)
+(if (atom x) C (if C_car (if (C_cdr) C 't) 't)
 
 を証明せよ。ここで、C_car は C の x を (car C)で置き換えたもので、
 C_cdr は C の x を (cdr C)で置き換えたものである。
