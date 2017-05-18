@@ -41,10 +41,23 @@ measure: (size x)
 
 ## totality claim の定義 (CH7.4)
 
-全域的であることの主張は CH7.4で示される。この命題を証明する。
-ctx?の定義から、その totality claim を求める方法は第8章で説明する。
+全域的であることの主張(totality claim)は、次のようなものになる。
 
-先生は、関数が全域的でなけれは、定義できない、という制約を言及している。
+```lisp:
+(if (natp (size x))
+    (if (atom x)
+        't
+        (if (< (size (car x)) (size x))
+            (if (ctx? (car x))
+                't
+                (< (size (cdr x)) (size x)))
+            '()))
+    '())
+```
+
+ctx?の定義から、この主張を求める方法は第8章で説明する。
+このフレームから、この命題を証明する。
+先生は、関数が全域的でなけれは、定義できない、という制約に言及している。
 
 
 ## totality claim の証明 (CH7.5)
@@ -55,7 +68,7 @@ ctx?の定義から、その totality claim を求める方法は第8章で説�
 
 具体的には、
 
-(1) ``(atom x)`` を前提に、``size/car``公理 （裏表紙参照）をつかって、最初の フォーカス の ``(< (size (car x)) (size x))`` を ``'t`` に書き換える。``size/car``公理
+(1) ``(atom x)`` を前提に、``size/car``公理 （裏表紙参照）を使って、最初の フォーカス の ``(< (size (car x)) (size x))`` を ``'t`` に書き換える。``size/car``公理
 
 ```lisp:
 (dethm size/car (x)
@@ -66,7 +79,7 @@ ctx?の定義から、その totality claim を求める方法は第8章で説�
 
 は、前提``(atom x)``のelse節では、``(< (size (car x)) (size x))`` を ``'t`` に書き換えられることを意味する。
 
-(2) ``(atom x)`` を前提に、``size/cdr``公理 （裏表紙参照）をつかって、最初の フォーカス の ``(< (size (cdr x)) (size x))`` を ``'t`` に書き換える。
+(2) ``(atom x)`` を前提に、``size/cdr``公理 （裏表紙参照）を使って、最初の フォーカス の ``(< (size (cdr x)) (size x))`` を ``'t`` に書き換える。
 
 
 ## totality claim の証明 (CH7.6)
