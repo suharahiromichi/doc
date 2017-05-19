@@ -317,9 +317,20 @@ Insight: Create Helpers for Induction - ヒント：帰納のヘルパーを作�
 
 ### CH7.32
 
-``(atom x)`` を前提とし、2箇所ある``(ctx? x)``をフォーカスにして、公理``if-nest-A``を適用する。ただし、``ctx?`` はその定義で展開することで、``(if (atom x) (equal x '?) ...)`` なので、それを使う。
+``(atom x)`` を前提とし、2箇所ある``(ctx? x)``はその定義で展開することで、``(if (atom x) (equal x '?) ...)`` なのでそれをフォーカスにして、どちらも公理``if-nest-A``を適用する。
 
-``if-nest-A``は``(dethm if-nest-A (x y z) (if x (equal (if x y z) y) 't))``で、フォーカスはif-A節にあるので、``(if (atom x) (equal x '?) ...)`` は、2箇所とも``(equal x '?)``と書き換えられる。
+```lisp:
+(dethm if-nest-A (x y z)
+       (if x
+           (equal (if x y z) y)
+           't))
+```
+
+``x = (atom x)``、``y = (equal x '?) ``、``z = ...`` で、前提``(atom x)``が成り立っているなら、
+公理``if-nest-A``から、``(equal (if (atom x) (equal x '?) ...) (equal x '?)))`` となる。
+
+これよりフォーカスの ``(if (atom x) (equal x '?) ...)`` は、2箇所とも``(equal x '?)`` と書き換えられる。
+
 
 ### CH7.33
 
@@ -329,20 +340,18 @@ Insight: Create Helpers for Induction - ヒント：帰納のヘルパーを作�
 
 ```lisp:
 (if (equal x '?)
-    (equal (equal '? '?) 't) 't)
+    (equal (equal '? '?) 't)
+    't)
 ```
-をフォーカスにして、
 
-公理``equal-same``を2回、公理``if-same``を1回使用して、``'t``と書き換える。
-
-以上で、サブゴール(1)は証明できた。
+をフォーカスにして、公理``equal-same``を2回、公理``if-same``を1回使用して、``'t``と書き換える。以上で、サブゴール(1)は証明できた。
 
 
 ## サブゴール(2)の証明 CH7.35-39
 
 ### CH7.35
 
-``(atom x)`` を前提とし、2箇所ある``(ctx? x)``をフォーカスにして、公理``if-nest-E``を適用する。ただし、``ctx?`` はその定義で展開することで、以下なので、それを使う。（CH7.32 で if-nest-Aを使ったことに対応する。）
+``(atom x)`` を前提とし、2箇所ある``(ctx? x)``はその定義で展開することで、
 
 ```lisp:
     (if (atom x)
@@ -351,6 +360,17 @@ Insight: Create Helpers for Induction - ヒント：帰納のヘルパーを作�
            't
            (ctx? (cdr x))))
 ```
+
+なので、それをフォーカスにして、どちらも公理``if-nest-E``を適用することで、2箇所とも
+
+```lisp:
+(if (ctx? (car x))
+    't
+    (ctx? (cdr x)))
+```
+
+に書き換えられる。これは、CH7.32 で if-nest-Aを使ったことに対応する。
+
 
 ### CH7.36
 
@@ -448,7 +468,7 @@ Eに入る部分は、``(ctx? (car x))``が``'()``なので、公理``if-false``
 
 ### CH.7.37
 
-公理``if-same``を3回適用すると、フォーカス全体が``'t``になる。
+公理``if-same``を2回適用すると、フォーカス全体が``'t``になる。
 
 
 ### CH7.38
