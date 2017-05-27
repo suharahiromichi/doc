@@ -2,6 +2,7 @@
 =======================
 
 2016_05_25 @suharahiromichi
+2017_05_25 @suharahiromichi
 
 # コラムの訳
 
@@ -156,22 +157,23 @@ C_cdr は C の x を (cdr C)で置き換えたものである。
   との連言である。
 
 
-### Constructing Totality Claims - 全域的な主張の構成
+### Constructing Totality Claims - 全域的ことの主張の構成
 
-関数 (defun name (x_1 ... x_n) body) が与えられ、測度が m であるとき、
-body の部分式についての主張は ：
+関数 (defun name (x_1 ... x_n) body) が与えられ、測度(measure)が m であるとき、
+body の部分式についての主張の構成は ：
 
 - 変数とクオットされたリテラルについては 't を使う。
 
-- (if Q A E) ここで QとAとEについての主張がc_qとc_aとc_eであり、もし、
-  c_a と c_e が同じなら、c_q と c_a の連言を使い、さもなければ、c_q と
-  (if Q c_a c_e) の連言を使う。
+- (if Q A E) ここで QとAとEについての主張がc_qとc_aとc_eであるものにつ
+  いては、
+  - もし c_a と c_e が同じなら、c_q と c_a の連言を使い、
+  - さもなければ、c_q と (if Q c_a c_e) の連言を使う。
 
 - それ以外の任意の式 Eについて、Eのなかのそれぞれの再帰的な関数適用
   (name e_1 ... e_n) を考える。
 
-  e_1 を x_1, ... e_n に置き換えることによる、mの中のx_nの再帰的な関数
-  適用の測度 m_r を構成する。
+  e_1 を x_1, ... e_n を x_n に置き換えることにより、mの中の再帰的な関
+  数適用の測度 m_r を構成する。
 
   Eについての主張は、Eのなかの再帰的な関数適用のそれぞれについての (<
   m_r m) の連言である。
@@ -238,7 +240,7 @@ Dethm の規則を通して、それらのステップと同じ書き換えを�
 | intuition  | 直観        | |
 | claim      | 主張        | |
 | total      | 全域的      | 全域関数 |
-| partial    | 部分的      | 部分関数 |
+| partial    | 部分的      | 一般に部分関数は全域関数を含む。 |
 | measure    | 測度        | |
 | conjunction | 連言       | |
 | inplication | 含意       | |
