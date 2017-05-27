@@ -4,6 +4,16 @@
 2016_05_25 @suharahiromichi
 2017_05_25 @suharahiromichi
 
+# はじめに
+
+以下は、プログラム証明の勉強会である「ProofCafe
+(http://proofcafe.org/) 」で、
+
+DanielP. Friedman, Carl Eastlund "The Little Prover" MIT Press
+
+を読んだときのメモです。内容については @suharahiromichi に責任があります。
+
+
 # コラムの訳
 
 ## Chapter 1
@@ -157,7 +167,7 @@ C_cdr は C の x を (cdr C)で置き換えたものである。
   との連言である。
 
 
-### Constructing Totality Claims - 全域的ことの主張の構成
+### Constructing Totality Claims - 全域的であることの主張の構成
 
 関数 (defun name (x_1 ... x_n) body) が与えられ、測度(measure)が m であるとき、
 body の部分式についての主張の構成は ：
@@ -166,7 +176,9 @@ body の部分式についての主張の構成は ：
 
 - (if Q A E) ここで QとAとEについての主張がc_qとc_aとc_eであるものにつ
   いては、
+  
   - もし c_a と c_e が同じなら、c_q と c_a の連言を使い、
+  
   - さもなければ、c_q と (if Q c_a c_e) の連言を使う。
 
 - それ以外の任意の式 Eについて、Eのなかのそれぞれの再帰的な関数適用
