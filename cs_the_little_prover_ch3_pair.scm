@@ -3,19 +3,13 @@
 ;;
 ;; (equal (first-of (pair a b)) a))
 ;;       
-;; M-x run-acl2     
-;;        S           C-t C-e          
-;;
-;; pair   first-of, second-of          
-;; a   b   pair      first-of   a              
+;; トップレベルのS式のそれぞれを順番に C-t C-e してみてください。
 ;;
 
-(in-package "ACL2")
-
-;; J-BOB          
+;; J-BOBをインクルードする。
 (include-book "j-bob")
 
-;;    pair                      't     
+;; 関数 pair を証明する。再帰関数でないので、かならず 't となる。
 (J-Bob/prove
  (prelude)
  '(((defun pair (x y)
@@ -23,8 +17,8 @@
     nil)))
 ;; 'T
 
-;;                 pair   J-BOB         
-;;       defun.pair           
+;; 証明できるとわかったので、関数 pair を J-BOBの環境に定義する。
+;; あたらしく defun.pair という環境ができる。
 (defun defun.pair ()
   (J-Bob/define
    (prelude)
@@ -32,8 +26,8 @@
         (cons x (cons y '())))
       nil))))
 
-;;        first-of   J-BOB         
-;;       defun.first-of           
+;; 同様に、関数 first-of を J-BOBの環境に定義する。
+;; あたらしく defun.first-of という環境ができる。
 (defun defun.first-of ()
   (J-Bob/define
    (defun.pair)
@@ -41,8 +35,8 @@
         (car x))
       nil))))
 
-;;        secnd-of   J-BOB         
-;;       defun.second-of           
+;; 同様に、関数 secnd-of を J-BOBの環境に定義する。
+;; あたらしく defun.second-of という環境ができる。
 (defun defun.second-of ()
   (J-Bob/define
    (defun.first-of)
@@ -51,8 +45,8 @@
       nil))))
 
 
-;; (equal (first-of (pair a b)) a))       
-;;                        
+;; (equal (first-of (pair a b)) a)) を証明する。
+;; まだなにもしていないので、ゴールが表示される。
 (J-Bob/prove
  (defun.second-of)
  '(((dethm first-of-pair (a b)
@@ -61,7 +55,7 @@
     ;; (EQUAL (FIRST-OF (PAIR A B)) A)
     )))
 
-;;    S  (1 1)    (pair a b)       
+;; ゴールS式の(1 1)にある (pair a b) を展開する。
 (J-Bob/prove
  (defun.second-of)
  '(((dethm first-of-pair (a b)
@@ -71,7 +65,7 @@
     ;; (EQUAL (FIRST-OF (CONS A (CONS B 'NIL))) A)
     )))
 
-;;    S  (1)    (first-of ...)       
+;; ゴールS式の(1)にある (first-of ...) を展開する。
 (J-Bob/prove
  (defun.second-of)
  '(((dethm first-of-pair (a b)
@@ -82,13 +76,13 @@
     ;; (EQUAL (CAR (CONS A (CONS B 'NIL))) A)
     )))
 
-;;    S  (1)     car/cons       
+;; ゴールS式の(1)に、公理 car/cons を適用する。
 ;; (equal (car (cons x y)) x)
-;;       
-;; (car/cons a (cons b '()))     
-;; (equal (car (cons a (cons b '()))) a)          
-;;         
-;; (EQUAL A A)     
+;; この場合は、
+;; (car/cons a (cons b '())) なので、
+;; (equal (car (cons a (cons b '()))) a) を適用することで、
+;; 新しいゴールは、
+;; (EQUAL A A) になる。
 (J-Bob/prove
  (defun.second-of)
  '(((dethm first-of-pair (a b)
@@ -100,13 +94,13 @@
     ;; (EQUAL A A)
     )))
 
-;;    S         equal-same       
+;; ゴールS式の全体に、公理 equal-same を適用する。
 ;; (equal (equal x x) 't)
-;;       
-;; (equal-same x)     
-;; (equal (equal a a) 't)          
-;;      
-;; 'T     
+;; この場合は、
+;; (equal-same x) なので、
+;; (equal (equal a a) 't) を適用することで、
+;; ゴールは、
+;; 'T になる。
 (J-Bob/prove
  (defun.second-of)
  '(((dethm first-of-pair (a b)
@@ -119,8 +113,8 @@
     ;; 'T
     )))
 
-;;                 first-of-pair   J-BOB       
-;;         dethm.first-of-pair           
+;; 証明できるとわかったので、定理 first-of-pair を J-BOBの環境に定義す
+;; る。あたらしく dethm.first-of-pair という環境ができる。
 (defun dethm.first-of-pair ()
   (J-Bob/define
    (defun.second-of)
@@ -132,8 +126,8 @@
       ((1) (car/cons a (cons b '())))
       (() (equal-same a))))))
 
-;;        second-of-pair   J-BOB              
-;; dethm.second-of-pair           
+;; 同様に、定理 second-of-pair を J-BOBの環境に定義する。あたらしく
+;; dethm.second-of-pair という環境ができる。
 (defun dethm.second-of-pair ()
   (J-Bob/define
    (dethm.first-of-pair)
@@ -146,8 +140,8 @@
       ((1) (car/cons b '()))
       (() (equal-same b))))))
 
-;; pair           '?                  
-;; in-pair?           't   nil     
+;; pair のどちらかにアトム '? が含まれているかをチェックする関数
+;; in-pair? を定義する。これは、't か nil を返す。
 (defun defun.in-pair? ()
   (J-Bob/define
    (dethm.second-of-pair)
@@ -155,10 +149,10 @@
         (if (equal (first-of xs) '?) 't (equal (second-of xs) '?)))
       nil))))
 
-;; '?       pair     in-pair?                 
+;; '? と任意もののpairに対して、in-pair? が真になるという定理を証明する。
 ;; (equal (in-pair? (pair '? b)) 't))
 
-;;      (EQUAL (IN-PAIR? (PAIR '? B)) 'T)     
+;; ゴールは (EQUAL (IN-PAIR? (PAIR '? B)) 'T) である。
 (J-Bob/prove
  (defun.in-pair?)
  '(((dethm in-first-of-pair (b)
@@ -263,8 +257,8 @@
     ;; 'T
     )))
 
-;;                 in-first-of-pair   J-BOB     
-;;           dethm.in-first-of-pair           
+;; 証明できるとわかったので、定理 in-first-of-pair を J-BOBの環境に定
+;; 義する。あたらしく dethm.in-first-of-pair という環境ができる。
 (defun dethm.in-first-of-pair ()
   (J-Bob/define
    (defun.in-pair?)
@@ -279,8 +273,8 @@
       ((1) (if-true 't (equal (second-of (cons '? (cons b '()))) '?)))
       (() (equal-same 't))))))
 
-;;        in-second-of-pair   J-BOB              
-;; dethm.in-second-of-pair           
+;; 同様に、定理 in-second-of-pair を J-BOBの環境に定義する。あたらしく
+;; dethm.in-second-of-pair という環境ができる。
 (defun dethm.in-second-of-pair ()
   (J-Bob/define (dethm.in-first-of-pair)
     '(((dethm in-second-of-pair (a)
