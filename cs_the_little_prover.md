@@ -113,7 +113,7 @@ DanielP. Friedman, Carl Eastlund "The Little Prover" MIT Press
 
 リスト x 上の帰納法で主張Cを証明するためには、
 
-(if (atom x) C (if C_cdr C '))
+(if (atom x) C (if C_cdr C 't))
 
 を証明せよ。ここで、C_cdr は C の x を (cdr C)で置き換えたものである。
 
