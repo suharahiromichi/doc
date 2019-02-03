@@ -1,7 +1,12 @@
 量子計算についての出鱈目なメモ　（ツッコミ謝絶）
 
-2019_02_02 @suharahiromichi
+2019_02_02 @suharahiromichi 
 
+$$
+\def\bra#1{\mathinner{\left\langle{#1}\right|}}
+\def\ket#1{\mathinner{\left|{#1}\right\rangle}}
+\def\braket#1#2{\mathinner{\left\langle{#1}\middle|#2\right\rangle}}
+$$
 
 ## 0-1テンソルの表現
 
