@@ -1,6 +1,6 @@
 量子計算についてのメモ
 
-2019_02_04 @suharahiromichi 
+2019_02_12 @suharahiromichi 
 
 $$
 \def\bra#1{\mathinner{\left\langle{#1}\right|}}
@@ -38,13 +38,12 @@ A_{10} & A_{11}
 データへの演算子の作用は、行列と縦ベクトルの積である。
 
 ```math
-A a
+A \ a
 ```
 
 ## テンソル積のフラットな表現
 
-2qubitのデータ、および、その演算子はそれぞれのテンソル積で得られる。しかし、テンソル積は、そのつど階数が増えるので、扱いにくい。
-そこで、「フラットな表現」として、データはn次の縦ベクトル、演算子はnxnの行列で表現する。これをクロネッカー積と呼ぶ。
+2qubitのデータ、および、その演算子はそれぞれのテンソル積で得られる。線型写像のテンソル積はクロネッカー積で与えられる。これは、データはn次の縦ベクトル、演算子はnxnの行列で表現され、「フラットな表現」と呼ばれることもある。
 
 |qubit    |テンソル  |縦ベクトル  |　例 |
 |:-:|----:|--:|:---------------:|
@@ -62,7 +61,7 @@ A a
 |4  |16階  |16x16  |　　A ⊗ B ⊗ C ⊗ D |
 |n  |2^n階  |(2^n)x(2^n)  |　
 
-テンソル積をフラットな表現で求めるときは、右側掛けるほうがマイナーに回ることに留意する。
+クロネッカー積は、右側掛けるほうがマイナーに回ることに留意する。
 
 ### qubit
 
@@ -113,7 +112,7 @@ w_{(ijk)} = a_i b_j c_k
 ここで (ij) は、2進数である。別な書き方では、
 
 ```math
-w_{(x)} = a_{x/2} b_{x\ mod\ 2}
+w_{x} = a_{(x/2)} b_{(x\ mod\ 2)}
 ```
 
 ### 演算子
@@ -160,7 +159,7 @@ T_{xy} = A_{(x/2)(y/2)} B_{(x\ mod\ 2)(y\ mod\ 2)}
 
 ## 内積
 
-随伴行列、またはエルミート転置　（エルミート行列ではない）
+随伴行列、adjoint　matrix、またはエルミート転置　（エルミート行列ではない）
 
 ```math
 \ket{\phi}^\dagger
@@ -210,6 +209,8 @@ a_1 b_1 c_1 d_1
 
 ### その2
 
+この式は、量子回路における信号の独立性を表している。
+
 ```math
 (A \otimes B) (\ket{a} \otimes \ket{b})
 =
@@ -224,6 +225,100 @@ A_{10} B_{00} a_0 b_0 + A_{10} B_{01} a_0 b_1 + A_{11} B_{00} a_1 b_0 + A_{11} B
 A_{10} B_{10} a_0 b_0 + A_{10} B_{11} a_0 b_1 + A_{11} B_{10} a_1 b_0 + A_{11} B_{11} a_1 b_1 \\
 \end{pmatrix}
 )
+```
+
+## swap (量子ビットの入れ替え）
+
+```math
+swap
+=
+\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{pmatrix}
+```
+をつかう。
+
+### 2量子ビットの場合
+
+```math
+swap \cdot (a \otimes b)
+=
+swap \cdot 
+\begin{pmatrix}
+a_0 b_0 \\
+a_0 b_1 \\
+a_1 b_0 \\
+a_1 b_1 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_0 b_0 \\
+a_1 b_0 \\
+a_0 b_1 \\
+a_1 b_1 \\
+\end{pmatrix}
+=
+b \otimes a
+```
+### 3量子ビットの場合
+
+```math
+(swap \otimes I) (a \otimes b \otimes c)
+=
+(swap \cdot (a \otimes b)) \otimes c
+=
+b \otimes a \otimes c
+```
+
+```math
+(I \otimes swap) (a \otimes b \otimes c)
+=
+a \otimes (swap \cdot (b \otimes c))
+=
+a \otimes c \otimes b
+```
+
+別のswapの場合は、これらを組み合わせて、
+
+```math
+\begin{eqnarray}
+&&
+(I \otimes swap)(swap \otimes I)(I \otimes swap)(a \otimes b \otimes c)
+\\ &=&
+(I \otimes swap)(swap \otimes I)(a \otimes c \otimes b)
+\\ &=&
+(I \otimes swap)(c \otimes a \otimes b)
+\\ &=&
+(c \otimes b \otimes a)
+\end{eqnarray}
+```
+
+より一般的に、
+
+```math
+(I \otimes swap)^p　(swap \otimes I)^q 　(I \otimes swap)^r
+```
+ここで、p, q, r は 0または1。
+
+### 4量子ビットの場合
+
+```math
+(swap \otimes I \otimes I)(a \otimes b \otimes c \otimes d)
+=
+(swap \cdot (a \otimes b)) \otimes c \otimes d
+=
+b \otimes a \otimes c \otimes d
+```
+
+```math
+(I \otimes swap \otimes I)(a \otimes b \otimes c \otimes d)
+=
+a \otimes (swap \cdot (b \otimes c)) \otimes d
+=
+a \otimes c \otimes b \otimes d
 ```
 
 ## 補足
