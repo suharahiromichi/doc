@@ -33,6 +33,12 @@ A^*\ ρ = A\ ρ\ A^\dagger
 (A \otimes B)^\dagger = A^\dagger \otimes B^\dagger
 ```
 
+また、
+
+```math
+I^*\ ρ　= ρ
+```
+
 ## swap の superoperator
 
 ```math
