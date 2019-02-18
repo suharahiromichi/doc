@@ -33,6 +33,29 @@ A^*\ ρ = A\ ρ\ A^\dagger
 (A \otimes B)^\dagger = A^\dagger \otimes B^\dagger
 ```
 
+## swap の superoperator
+
+```math
+
+swap^* ρ
+\\=
+swap
+\begin{pmatrix}
+ρ_{00} & ρ_{01} & p_{02} & p_{03}\\
+ρ_{10} & ρ_{11} & p_{12} & p_{13}\\
+ρ_{20} & ρ_{21} & p_{22} & p_{23}\\
+ρ_{30} & ρ_{31} & p_{32} & p_{33}\\
+\end{pmatrix}
+swap^\dagger
+\\=
+\begin{pmatrix}
+ρ_{00} & ρ_{01} & p_{02} & p_{03}\\
+ρ_{20} & ρ_{22} & p_{21} & p_{23}\\
+ρ_{10} & ρ_{12} & p_{11} & p_{13}\\
+ρ_{30} & ρ_{31} & p_{32} & p_{33}\\
+\end{pmatrix}
+```
+
 ## measure (計測） の superoperator
 
 ```math
