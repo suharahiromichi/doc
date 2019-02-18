@@ -17,7 +17,7 @@ A^*\ ρ = A\ ρ\ A^\dagger
 便利な公式
 
 ```math
-(A\ B)^*\ ρ = A^*\ (B^*\ ρ)
+(A\cdot B)^*\ ρ = A^*\ (B^*\ ρ)
 
 \\
 \\
@@ -25,9 +25,11 @@ A^*\ ρ = A\ ρ\ A^\dagger
 (A \otimes B)^* = A^* \otimes B^*
 ```
 
-2番目の式は、次から求められる。
+それぞれ、次から求められる。
 
 ```math
+(A \cdot B)^\dagger = B^\dagger A^\dagger
+\\
 (A \otimes B)^\dagger = A^\dagger \otimes B^\dagger
 ```
 
@@ -91,19 +93,20 @@ disc^*
 1 & -1 \\
 \end{pmatrix}
 )^* 
-\ket{0}\bra{0}
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
 ))
 ```
 
 ```math
 =
-disc^* 
-(meas^*
-(
-\frac{1}{2}
+disc^*\ 
+(meas^*\
 \begin{pmatrix}
-1 & 1 \\
-1 & 1 \\
+\frac{1}{2} & \frac{1}{2} \\
+\frac{1}{2} & \frac{1}{2} \\
 \end{pmatrix}
 )
 ```
