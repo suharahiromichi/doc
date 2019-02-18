@@ -41,7 +41,7 @@ A_{10} & A_{11}
 A \ a
 ```
 
-## テンソル積のフラットな表現
+## クロネッカー積
 
 2qubitのデータ、および、その演算子はそれぞれのテンソル積で得られる。線型写像のテンソル積はクロネッカー積で与えられる。これは、データはn次の縦ベクトル、演算子はnxnの行列で表現され、「フラットな表現」と呼ばれることもある。
 
@@ -63,7 +63,7 @@ A \ a
 
 クロネッカー積は、右側掛けるほうがマイナーに回ることに留意する。
 
-### qubit
+### qubit　（量子ビット）
 
 ```math
 a \otimes b
@@ -299,9 +299,20 @@ a \otimes c \otimes b
 より一般的に、
 
 ```math
-(I \otimes swap)^p　(swap \otimes I)^q 　(I \otimes swap)^r
+swap3(p, q, r) = (I \otimes swap)^p　(swap \otimes I)^q 　(I \otimes swap)^r
 ```
 ここで、p, q, r は 0または1。
+
+逆変換は、
+
+```math
+swap = swap^{-1}
+```
+なので、
+
+```math
+swap3(p, q, r)^{-1} = swap3(r, q, p)
+```
 
 ### 4量子ビットの場合
 
