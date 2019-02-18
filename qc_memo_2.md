@@ -37,11 +37,49 @@ A^*\ ρ = A\ ρ\ A^\dagger
 
 ```math
 
-meas^* \begin{pmatrix}
+meas^* ρ
+\\
+=
+(\ket{0}\bra{0})^*\ ρ
++
+(\ket{1}\bra{1})^*\ ρ
+\\=
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
 ρ_{00} & ρ_{01} \\
 ρ_{11} & ρ_{11} \\
 \end{pmatrix}
-=
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
++
+\begin{pmatrix}
+0 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{11} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+0 & 0 \\
+0 & 1 \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+ρ_{00} & 0 \\
+0 & 0 \\
+\end{pmatrix}
++
+\begin{pmatrix}
+0 & 0 \\
+0 & ρ_{11} \\
+\end{pmatrix}
+\\=
 \begin{pmatrix}
 ρ_{00} & 0 \\
 0 & ρ_{11} \\
@@ -52,11 +90,34 @@ meas^* \begin{pmatrix}
 
 ```math
 
-disc^* \begin{pmatrix}
+disc^* ρ
+\\=
+\ket{0}^*\ ρ + \ket{1}^*\ ρ
+\\=
+\begin{pmatrix}
+1 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
 ρ_{00} & ρ_{01} \\
 ρ_{11} & ρ_{11} \\
 \end{pmatrix}
-=
+\begin{pmatrix}
+1 \\
+0 \\
+\end{pmatrix}
++
+\begin{pmatrix}
+0 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{11} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+0 \\
+1 \\
+\end{pmatrix}
+\\=
 ρ_{00} + ρ_{11}
 ```
 
@@ -77,9 +138,16 @@ disc^* \begin{pmatrix}
 1 & 1 \\
 1 & -1 \\
 \end{pmatrix}
+\begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+\end{pmatrix}
 ))^*
 \ 
-\ket{0}\bra{0}
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
 ```
 
 ```math
@@ -90,9 +158,8 @@ disc^*
 \frac{1}{\sqrt{2}}
 \begin{pmatrix}
 1 & 1 \\
-1 & -1 \\
-\end{pmatrix}
-)^* 
+-1 & 1 \\
+\end{pmatrix})^* 
 \begin{pmatrix}
 1 & 0 \\
 0 & 0 \\
@@ -102,11 +169,32 @@ disc^*
 
 ```math
 =
+disc^* 
+(meas^*
+(
+\frac{1}{2}
+\begin{pmatrix}
+1 & 1 \\
+-1 & 1 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & -1 \\
+1 & 1 \\
+\end{pmatrix}
+)
+```
+
+```math
+=
 disc^*\ 
 (meas^*\
 \begin{pmatrix}
-\frac{1}{2} & \frac{1}{2} \\
-\frac{1}{2} & \frac{1}{2} \\
+\frac{1}{2} & -\frac{1}{2} \\
+-\frac{1}{2} & \frac{1}{2} \\
 \end{pmatrix}
 )
 ```
