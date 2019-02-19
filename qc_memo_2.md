@@ -11,13 +11,13 @@ $$
 ## superoperator (超演算子)
 
 ```math
-A^*\ ρ = A\ ρ\ A^\dagger
+A^*\cdot ρ = A\cdot ρ\cdot A^\dagger
 ```
 
 便利な公式
 
 ```math
-(A\cdot B)^*\ ρ = A^*\ (B^*\ ρ)
+(A\cdot B)^*\cdot ρ = A^*\cdot (B^*\cdot ρ)
 
 \\
 \\
@@ -28,7 +28,7 @@ A^*\ ρ = A\ ρ\ A^\dagger
 それぞれ、次から求められる。
 
 ```math
-(A \cdot B)^\dagger = B^\dagger A^\dagger
+(A \cdot B)^\dagger = B^\dagger \cdot A^\dagger
 \\
 (A \otimes B)^\dagger = A^\dagger \otimes B^\dagger
 ```
@@ -42,24 +42,24 @@ I^* = I
 cをスカラーとすると、
 
 ```math
-(c A)^* = c^2\ A^*
+(c\cdot A)^* = c^2\cdot A^*
 \\
-A^* (c\ ρ) = c\ A^*\ ρ
+A^*\cdot (c\cdot ρ) = c\cdot A^*\cdot ρ
 ```
 
 ## swap の superoperator
 
 ```math
 
-swap^* ρ
+swap^*\cdot ρ
 \\=
-swap
+swap\cdot
 \begin{pmatrix}
 ρ_{00} & ρ_{01} & p_{02} & p_{03}\\
 ρ_{10} & ρ_{11} & p_{12} & p_{13}\\
 ρ_{20} & ρ_{21} & p_{22} & p_{23}\\
 ρ_{30} & ρ_{31} & p_{32} & p_{33}\\
-\end{pmatrix}
+\end{pmatrix}\cdot
 swap^\dagger
 \\=
 \begin{pmatrix}
@@ -77,9 +77,9 @@ swap^\dagger
 meas^* ρ
 \\
 =
-(\ket{0}\bra{0})^*\ ρ
+(\ket{0}\bra{0})^*\cdot ρ
 +
-(\ket{1}\bra{1})^*\ ρ
+(\ket{1}\bra{1})^*\cdot ρ
 \\=
 \begin{pmatrix}
 1 & 0 \\
@@ -129,7 +129,7 @@ meas^* ρ
 
 disc^* ρ
 \\=
-\ket{0}^*\ ρ + \ket{1}^*\ ρ
+\ket{0}^*\cdot ρ + \ket{1}^*\cdot ρ
 \\=
 \begin{pmatrix}
 1 & 0 \\
@@ -239,15 +239,14 @@ a_{00}\ (b) & 0 \\
 
 ```math
 
-(disc\ (meas\ (H\ X))^*\  \ket{0}\bra{0}
+(disc\ (meas\ (H\cdot X))^*\  \ket{0}\bra{0}
 ```
 
 ```math
 =
 (disc\ (meas\ 
-\begin{eqnarray}
+(
 \frac{1}{\sqrt{2}}
-\end{eqnarray}
 \begin{pmatrix}
 1 & 1 \\
 1 & -1 \\
@@ -256,7 +255,7 @@ a_{00}\ (b) & 0 \\
 0 & 1 \\
 1 & 0 \\
 \end{pmatrix}
-))^*
+)))^*
 \ 
 \begin{pmatrix}
 1 & 0 \\
