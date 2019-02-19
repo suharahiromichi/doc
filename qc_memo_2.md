@@ -187,13 +187,15 @@ I & 0 \\
 
 ```math
 \begin{eqnarray}
-((ctrl\ A)(meas \otimes I))^*\ (a \otimes b)
+((ctrl\ A)\cdot(meas \otimes I))^* (a \otimes b)
 &=&
-(ctrl\ A)^*\ (meas \otimes I)^*\ (a \otimes b)
+(ctrl\ A)^* (meas \otimes I)^* (a \otimes b)
 \\ &=&
-(ctrl\ A)^*\ (meas^* a \otimes b)
+(ctrl\ A)^* (meas^* \otimes I^*)(a \otimes b)
 \\ &=&
-(ctrl\ A)^*\ (\begin{pmatrix}
+(ctrl\ A)^* (meas^* a \otimes b)
+\\ &=&
+(ctrl\ A)^* (\begin{pmatrix}
 a_{00} & 0 \\
 0 & a_{11} \\
 \end{pmatrix} \otimes b)
