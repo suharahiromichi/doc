@@ -36,7 +36,7 @@ A^*\ ρ = A\ ρ\ A^\dagger
 また、
 
 ```math
-I^*\ ρ　= ρ
+I^* = I
 ```
 
 ## swap の superoperator
@@ -79,7 +79,7 @@ meas^* ρ
 \end{pmatrix}
 \begin{pmatrix}
 ρ_{00} & ρ_{01} \\
-ρ_{11} & ρ_{11} \\
+ρ_{10} & ρ_{11} \\
 \end{pmatrix}
 \begin{pmatrix}
 1 & 0 \\
@@ -92,7 +92,7 @@ meas^* ρ
 \end{pmatrix}
 \begin{pmatrix}
 ρ_{00} & ρ_{01} \\
-ρ_{11} & ρ_{11} \\
+ρ_{10} & ρ_{11} \\
 \end{pmatrix}
 \begin{pmatrix}
 0 & 0 \\
@@ -128,7 +128,7 @@ disc^* ρ
 \end{pmatrix}
 \begin{pmatrix}
 ρ_{00} & ρ_{01} \\
-ρ_{11} & ρ_{11} \\
+ρ_{10} & ρ_{11} \\
 \end{pmatrix}
 \begin{pmatrix}
 1 \\
@@ -140,7 +140,7 @@ disc^* ρ
 \end{pmatrix}
 \begin{pmatrix}
 ρ_{00} & ρ_{01} \\
-ρ_{11} & ρ_{11} \\
+ρ_{10} & ρ_{11} \\
 \end{pmatrix}
 \begin{pmatrix}
 0 \\
