@@ -39,6 +39,14 @@ A^*\ ρ = A\ ρ\ A^\dagger
 I^* = I
 ```
 
+cをスカラーとすると、
+
+```math
+(c A)^* = c^2\ A^*
+\\
+A^* (c\ ρ) = c\ A^*\ ρ
+```
+
 ## swap の superoperator
 
 ```math
@@ -148,6 +156,83 @@ disc^* ρ
 \end{pmatrix}
 \\=
 ρ_{00} + ρ_{11}
+```
+
+## bit-control の superoperator
+
+Bit⊗Qubit -> Bit⊗Qubit のbit-controlは、次で定義される。
+
+```math
+ctrl\ A
+\\=
+(\ket{1}\bra{1}) \otimes A + (\ket{1}\bra{1}) \otimes I
+\\=
+\begin{pmatrix}
+0 & 0 \\
+0 & 1 \\
+\end{pmatrix} \otimes A
++
+\begin{pmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{pmatrix} \otimes I
+\\=
+\begin{pmatrix}
+I & 0 \\
+0 & A \\
+\end{pmatrix}
+```
+
+入力にあたるBit⊗Qubit型の密度行列は、meas⊗I を通ってくるので、　
+
+```math
+((ctrl\ A)(meas \otimes I))^*\ (a \otimes b)
+\\=
+(ctrl\ A)^*\ (meas \otimes I)^*\ (a \otimes b)
+\\=
+(ctrl\ A)^*\ (meas^* a \otimes b)
+\\=
+(ctrl\ A)^*\ (\begin{pmatrix}
+a_{00} & 0 \\
+0 & a_{11} \\
+\end{pmatrix} \otimes b)
+\\=
+(ctrl\ A)^*\ \begin{pmatrix}
+a_{00}\ (b) & 0 \\
+0 & a_{11}\ (b) \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+I & 0 \\
+0 & A \\
+\end{pmatrix}^*\ 
+\begin{pmatrix}
+a_{00}\ (b) & 0 \\
+0 & a_{11}\ (b) \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+I & 0 \\
+0 & A \\
+\end{pmatrix}
+\begin{pmatrix}
+a_{00}\ (b) & 0 \\
+0 & a_{11}\ (b) \\
+\end{pmatrix}
+\begin{pmatrix}
+I & 0 \\
+0 & A^\dagger \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+a_{00}\ (b) & 0 \\
+0 & a_{11}\ A\ (b)\ A^\dagger \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+a_{00}\ (b) & 0 \\
+0 & a_{11}\ A^* (b) \\
+\end{pmatrix}
 ```
 
 ##　例
