@@ -186,22 +186,23 @@ I & 0 \\
 入力にあたるBit⊗Qubit型の密度行列は、meas⊗I を通ってくるので、　
 
 ```math
+\begin{eqnarray}
 ((ctrl\ A)(meas \otimes I))^*\ (a \otimes b)
-\\=
+&=&
 (ctrl\ A)^*\ (meas \otimes I)^*\ (a \otimes b)
-\\=
+\\ &=&
 (ctrl\ A)^*\ (meas^* a \otimes b)
-\\=
+\\ &=&
 (ctrl\ A)^*\ (\begin{pmatrix}
 a_{00} & 0 \\
 0 & a_{11} \\
 \end{pmatrix} \otimes b)
-\\=
+\\ &=&
 (ctrl\ A)^*\ \begin{pmatrix}
 a_{00}\ (b) & 0 \\
 0 & a_{11}\ (b) \\
 \end{pmatrix}
-\\=
+\\ &=&
 \begin{pmatrix}
 I & 0 \\
 0 & A \\
@@ -210,7 +211,7 @@ I & 0 \\
 a_{00}\ (b) & 0 \\
 0 & a_{11}\ (b) \\
 \end{pmatrix}
-\\=
+\\ &=&
 \begin{pmatrix}
 I & 0 \\
 0 & A \\
@@ -223,27 +224,26 @@ a_{00}\ (b) & 0 \\
 I & 0 \\
 0 & A^\dagger \\
 \end{pmatrix}
-\\=
+\\ &=&
 \begin{pmatrix}
 a_{00}\ (b) & 0 \\
 0 & a_{11}\ A\ (b)\ A^\dagger \\
 \end{pmatrix}
-\\=
+\\ &=&
 \begin{pmatrix}
 a_{00}\ (b) & 0 \\
 0 & a_{11}\ A^* (b) \\
 \end{pmatrix}
+\end{eqnarray}
 ```
 
 ##　例
 
 ```math
-
+\begin{eqnarray}
+&&
 (disc\ (meas\ (H\cdot X))^*\  \ket{0}\bra{0}
-```
-
-```math
-=
+\\ &=&
 (disc\ (meas\ 
 (
 \frac{1}{\sqrt{2}}
@@ -261,10 +261,7 @@ a_{00}\ (b) & 0 \\
 1 & 0 \\
 0 & 0 \\
 \end{pmatrix}
-```
-
-```math
-=
+\\ &=&
 disc^* 
 (meas^*
 ((
@@ -278,10 +275,7 @@ disc^*
 0 & 0 \\
 \end{pmatrix}
 ))
-```
-
-```math
-=
+\\ &=&
 disc^* 
 (meas^*
 (
@@ -299,10 +293,7 @@ disc^*
 1 & 1 \\
 \end{pmatrix}
 )
-```
-
-```math
-=
+\\ &=&
 disc^*\ 
 (meas^*\
 \begin{pmatrix}
@@ -310,25 +301,20 @@ disc^*\
 -\frac{1}{2} & \frac{1}{2} \\
 \end{pmatrix}
 )
-```
-
-```math
-=
+\\ &=&
 disc^* 
 
 \begin{pmatrix}
 \frac{1}{2} & 0 \\
 0 & \frac{1}{2} \\
 \end{pmatrix}
-```
-
-```math
-=
+\\ &=&
 \frac{1}{2}
 +
 \frac{1}{2}
-=
+\\ &=&
 1
+\end{eqnarray}
 ```
 
 以上
