@@ -11,13 +11,13 @@ $$
 ## superoperator (超演算子)
 
 ```math
-A^*\cdot ρ = A\cdot ρ\cdot A^\dagger
+A^* ρ = A\cdot ρ\cdot A^\dagger
 ```
 
 便利な公式
 
 ```math
-(A\cdot B)^*\cdot ρ = A^*\cdot (B^*\cdot ρ)
+(A\cdot B)^* ρ = A^* (B^* ρ)
 
 \\
 \\
@@ -44,14 +44,160 @@ cをスカラーとすると、
 ```math
 (c\cdot A)^* = c^2\cdot A^*
 \\
-A^*\cdot (c\cdot ρ) = c\cdot A^*\cdot ρ
+A^* (c\cdot ρ) = c\cdot A^* ρ
+```
+
+## unitary の superoperator
+
+```math
+
+X^* ρ
+\\=
+\begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{10} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+0 & 1 \\
+1 & 0 \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+ρ_{11} & ρ_{10} \\
+ρ_{01} & ρ_{00} \\
+\end{pmatrix}
+
+```
+
+```math
+
+Y^* ρ
+\\=
+\begin{pmatrix}
+0 & -i \\
+i & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{10} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+0 & i \\
+-i & 0 \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+-ρ_{11} & ρ_{10} \\
+ρ_{01} & -ρ_{00} \\
+\end{pmatrix}
+
+```
+
+```math
+
+Z^* ρ
+\\=
+\begin{pmatrix}
+1 & 0 \\
+0 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{10} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 \\
+0 & -1 \\
+\end{pmatrix}
+\\=
+\begin{pmatrix}
+ρ_{00} & -ρ_{01} \\
+-ρ_{10} & ρ_{11} \\
+\end{pmatrix}
+
+```
+
+```math
+
+H^* ρ
+\\=
+\frac{1}{2}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}
+\begin{pmatrix}
+ρ_{00} & ρ_{01} \\
+ρ_{10} & ρ_{11} \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{pmatrix}
+\\=
+\frac{1}{2}
+\begin{pmatrix}
+ρ_{00}+ρ_{01}+ρ_{10}+ρ_{11} &
+ρ_{00}-ρ_{01}+ρ_{10}-ρ_{11} \\
+ρ_{00}+ρ_{01}-ρ_{10}-ρ_{11} &
+ρ_{00}-ρ_{01}-ρ_{10}+ρ_{11} \\
+\end{pmatrix}
+
+```
+
+
+## CNOT の superoperator
+
+```math
+CNOT
+=
+\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 \\
+\end{pmatrix}
+```
+
+```math
+CNOT^* ρ
+\\=
+CNOT\cdot
+\begin{pmatrix}
+ρ_{00} & ρ_{01} & p_{02} & p_{03}\\
+ρ_{10} & ρ_{11} & p_{12} & p_{13}\\
+ρ_{20} & ρ_{21} & p_{22} & p_{23}\\
+ρ_{30} & ρ_{31} & p_{32} & p_{33}\\
+\end{pmatrix}\cdot
+CNOT^\dagger
+\\=
+\begin{pmatrix}
+ρ_{00} & ρ_{01} & p_{02} & p_{03}\\
+ρ_{10} & ρ_{11} & p_{12} & p_{13}\\
+ρ_{20} & ρ_{21} & p_{22} & p_{23}\\
+ρ_{30} & ρ_{31} & p_{32} & p_{33}\\
+\end{pmatrix}
 ```
 
 ## swap の superoperator
 
 ```math
+swap
+=
+\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{pmatrix}
+```
 
-swap^*\cdot ρ
+```math
+swap^* ρ
 \\=
 swap\cdot
 \begin{pmatrix}
@@ -77,9 +223,9 @@ swap^\dagger
 meas^* ρ
 \\
 =
-(\ket{0}\bra{0})^*\cdot ρ
+(\ket{0}\bra{0})^* ρ
 +
-(\ket{1}\bra{1})^*\cdot ρ
+(\ket{1}\bra{1})^* ρ
 \\=
 \begin{pmatrix}
 1 & 0 \\
@@ -129,7 +275,7 @@ meas^* ρ
 
 disc^* ρ
 \\=
-\ket{0}^*\cdot ρ + \ket{1}^*\cdot ρ
+\ket{0}^* ρ + \ket{1}^* ρ
 \\=
 \begin{pmatrix}
 1 & 0 \\
@@ -189,9 +335,9 @@ I & 0 \\
 \begin{eqnarray}
 ((ctrl\ A)\cdot(meas \otimes I))^* (a \otimes b)
 &=&
-(ctrl\ A)^* (meas \otimes I)^* (a \otimes b)
+(ctrl\ A)^* ((meas \otimes I)^* (a \otimes b))
 \\ &=&
-(ctrl\ A)^* (meas^* \otimes I^*)(a \otimes b)
+(ctrl\ A)^* ((meas^* \otimes I^*)(a \otimes b))
 \\ &=&
 (ctrl\ A)^* (meas^* a \otimes b)
 \\ &=&
@@ -244,57 +390,35 @@ a_{00}\ (b) & 0 \\
 ```math
 \begin{eqnarray}
 &&
-(disc\ (meas\ (H\cdot X))^*\  \ket{0}\bra{0}
+disc^*\ (meas^*\ ((H\cdot X)^*\  \ket{0}\bra{0}))
 \\ &=&
-(disc\ (meas\ 
-(
-\frac{1}{\sqrt{2}}
-\begin{pmatrix}
-1 & 1 \\
-1 & -1 \\
-\end{pmatrix}
-\begin{pmatrix}
-0 & 1 \\
-1 & 0 \\
-\end{pmatrix}
-)))^*
-\ 
-\begin{pmatrix}
-1 & 0 \\
-0 & 0 \\
-\end{pmatrix}
-\\ &=&
-disc^* 
-(meas^*
-((
-\frac{1}{\sqrt{2}}
-\begin{pmatrix}
-1 & 1 \\
--1 & 1 \\
-\end{pmatrix})^* 
+disc^*\ 
+(meas^*\ 
+((H\cdot X)^*
 \begin{pmatrix}
 1 & 0 \\
 0 & 0 \\
 \end{pmatrix}
 ))
 \\ &=&
-disc^* 
-(meas^*
-(
-\frac{1}{2}
-\begin{pmatrix}
-1 & 1 \\
--1 & 1 \\
-\end{pmatrix}
+disc^*\ 
+(meas^*\ 
+(H^*\ (X^*
 \begin{pmatrix}
 1 & 0 \\
 0 & 0 \\
 \end{pmatrix}
+)))
+\\ &=&
+disc^* 
+(meas^*\ 
+(
+H^*
 \begin{pmatrix}
-1 & -1 \\
-1 & 1 \\
+0 & 0 \\
+0 & 1 \\
 \end{pmatrix}
-)
+))
 \\ &=&
 disc^*\ 
 (meas^*\
