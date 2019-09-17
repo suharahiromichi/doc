@@ -32,19 +32,41 @@ MakeCode のランタイムルーチン([4.])とで動作しています。
 # サンプルコード
 
 サンプルコードを図に示します。
+(実際にQiitaに投稿するなら、「ブロック」の絵にすること。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/12303/de05e82f-7908-942a-b0cd-5f6285385e29.png)
+```
+input.onButtonPressed(Button.A, function () {
+    while (true) {
+        basic.showString("AAAAA")
+        basic.pause(100)
+    }
+})
+input.onButtonPressed(Button.B, function () {
+    while (true) {
+        basic.showString("BBBBB")
+        basic.pause(100)
+    }
+})
+let count = 0
+basic.forever(function () {
+    count += 1
+    basic.showNumber(count % 10)
+})
+```
+
 
 - LEDに0〜9までの数字を繰返して表示する。（数字表示と呼ぶ)
 - ボタンAが押されたら``AAAAA``のスクロール表示を繰返す。(AAAAA表示と呼ぶ)
 - ボタンBが押されたら``BBBBB``のスクロール表示を繰返す。(BBBBB表示と呼ぶ)
 
 
-全体に wait (一時停止）を入れていないこと。
 ボタン押下で起動する処理のなかで無限ループを実行していることがポイントです。
 
 このプログラムは、次のように動作します。
 micro:bit のボードがなくても、MakeCodeのシミュレータで試すことができ、同じ結果になります。
+（当初、ボタンAとボタンBの処理にwaitを入れていなかったら、
+シミュレータと実機で違う結果になった。実機ではAAAAAの繰返しだけ）
+
 
 1. リセットすると、数字表示する。
 
