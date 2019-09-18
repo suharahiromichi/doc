@@ -1,3 +1,16 @@
+ここの記載した内容は
+
+https://lancaster-university.github.io/microbit-docs/concepts/
+https://makecode.microbit.org/reference
+
+に大体記載されていた。
+
+ずっと Forever
+コードをずっとバックグラウンドで繰り返します。
+繰り返しの1回ごとに、ほかのコードを実行する時間を与えます。
+
+
+
 micro:bit のタスク制御
 =================
 2019_09_17
