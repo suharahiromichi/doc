@@ -1,0 +1,330 @@
+# データ
+
+```
+{ value ... }           collection
+[ value ... ]           tuple
+<C value ...>           inductive data  , C は id
+[| value ... |]         tensor
+{|[key value] ...|}     hash map
+```
+
+
+# match
+
+```
+(match     M M {[p M] ...})
+(match-all M M  [p M]     )
+
+TARGET                    M
+TYPE                      M
+MATCH-CLAUSE              [p M]
+MATCH-CLAUSE-PATTERN      p ::= _ | $x | ,M |  <C p ... >
+MATCH-CLAUSE-BODY         M
+```
+
+## 例
+
+```
+(match-all {1 2 3} (list integer) [<join $xs $ys> [xs ys]])
+TARGET               : {1 2 3}
+TYPE                 : (list integer)
+MATCH-CLAUSE-PATTERN : <join $xs $ys>
+MATCH-CLAUSE-BODY    : [xs ys]
+
+(match-all primes (list integer) [<join _ <cons $p <cons ,(+ p 2) _>>> [p (+ p 2)]]))
+TARGET               : primes
+TYPE                 : (list integer)
+MATCH-CLAUSE-PATTERN : <join _ <cons $p <cons ,(+ p 2) _>>>
+MATCH-CLAUSE-BODY    : [p (+ p 2)]
+
+(match-all b (matcher {[$ something {[<True> {e1}] [<False> {e2}]}]}) [$x x])
+TARGET               : b
+TYPE                 : (matcher {[$ something {[<True> {e1}] [<False> {e2}]}]})
+MATCH-CLAUSE-PATTERN : $x
+MATCH-CLAUSE-BODY    : x
+
+(match-all (take n (repeat 0)) (multiset integer) [<insert $x <insert ,(+ x 1) _>> x])
+TARGET               : (take n (repeat 0))
+TYPE                 : (multiset integer)
+MATCH-CLAUSE-PATTERN : <insert $x <insert ,(+ x 1) _>>
+MATCH-CLAUSE-BODY    : x
+
+
+(match-all {1 2 3} (list integer) [<cons $x $rs> [x rs]])
+TARGET               : {1 2 3}
+TYPE                 : (list integer)
+MATCH-CLAUSE-PATTERN : [<cons $x $rs>
+MATCH-CLAUSE-BODY    : [x rs]
+
+(match-all {1 2 3} (multiset integer) [<cons $x $rs> [x rs]])
+TARGET               : {1 2 3}
+TYPE                 : (multiset integer)
+MATCH-CLAUSE-PATTERN : [<cons $x $rs>
+MATCH-CLAUSE-BODY    : [x rs]
+
+(match-all {1 2 3} (set integer) [<cons $x $rs> [x rs]])
+TARGET               : {1 2 3}
+TYPE                 : (set integer)
+MATCH-CLAUSE-PATTERN : [<cons $x $rs>
+MATCH-CLAUSE-BODY    : [x rs]
+
+(match-all {1 2 3} (multiset integer) [,{2 1 3} "Matched"])
+TARGET               : {1 2 3}
+TYPE                 : (multiset integer)
+MATCH-CLAUSE-PATTERN : ,{2 1 3}
+MATCH-CLAUSE-BODY    : "Matched"
+
+(match-all <Pair 2 5> (unordered-pair integer) [<pair ,5 $x> x])
+TARGET               : <Pair 2 5>
+TYPE                 : (unordered-pair integer)
+MATCH-CLAUSE-PATTERN : <pair ,5 $x>
+MATCH-CLAUSE-BODY    : x
+
+(match poly math-expr
+       {[<+ <* $n <,cos $x>^,2 $y> <* ,n <,sin ,x>^,2 ,y> $r>
+              (rewrite-rule-for-cos-and-sin-poly <+' r <*' n y>>)]
+       [_ poly]})
+TARGET               : poly
+TYPE                 : math-expr
+MATCH-CLAUSE-PATTERN : <+ <* $n <,cos $x>^,2 $y> <* ,n <,sin ,x>^,2 ,y> $r>
+MATCH-CLAUSE-BODY    : (rewrite-rule-for-cos-and-sin-poly <+' r <*' n y>>)
+MATCH-CLAUSE-PATTERN : _
+MATCH-CLAUSE-BODY    : poly
+
+(match-all {2 8 2} (multiset integer) [<cons $m <cons ,m _>> m])
+TARGET               : {2 8 2}
+TYPE                 : (multiset integer)
+MATCH-CLAUSE-PATTERN : <cons $m <cons ,m _>>
+MATCH-CLAUSE-BODY    : m
+
+(match-all nats (set integer) [<cons $m <cons $n _>> [m n]])
+TARGET               : nats
+TYPE                 : (set integer)
+MATCH-CLAUSE-PATTERN : <cons $m <cons $n _>>
+MATCH-CLAUSE-BODY    : [m n]
+
+(match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])]}]
+TARGET               : tgt
+TYPE                 : (list a)
+MATCH-CLAUSE-PATTERN : <join $hs <cons $x $ts>>
+MATCH-CLAUSE-BODY    : [x (append hs ts)]
+
+(match [val tgt] [(list a) (multiset a)]
+{
+        [[<nil> <nil>] {[]}]
+        [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+        [[_ _] {}]
+})
+TARGET               : [val tgt]
+TYPE                 : [(list a) (multiset a)]
+MATCH-CLAUSE-PATTERN : [<nil> <nil>]
+MATCH-CLAUSE-BODY    : {[]}
+MATCH-CLAUSE-PATTERN : [<cons $x $xs> <cons ,x ,xs>]
+MATCH-CLAUSE-BODY    : {[]}
+MATCH-CLAUSE-PATTERN : [_ _]
+MATCH-CLAUSE-BODY    : {}
+
+(match [val tgt] [(multiset a) (multiset a)]
+{
+        [[<nil> <nil>] <true>]
+        [[<cons $x $xs> <cons ,x ,xs>] <true>]
+        [[_ _] <false>]
+})
+TARGET               : [val tgt]
+TYPE                 : [(multiset a) (multiset a)]
+MATCH-CLAUSE-PATTERN : [<nil> <nil>]
+MATCH-CLAUSE-BODY    : <true>
+MATCH-CLAUSE-PATTERN : <cons $x $xs> <cons ,x ,xs>
+MATCH-CLAUSE-BODY    : <true>
+MATCH-CLAUSE-PATTERN : [_ _]
+MATCH-CLAUSE-BODY    : <false>
+
+```
+
+# matcher
+
+```
+(matcher {[pp M {[dp M] ...}] ... })
+
+PRIMITIVE-PATTERN PATTERN               pp ::= $ | ,$x | ,M |  <C pp ... >
+NEXT-MATCHER EXPRESSIONS                M
+PRIMITIVE-DATA-MATCH CLAUSES            [dp M]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY    dp ::= $x |  <C dp ... >
+PRIMITIVE-DATA EXPRESSION               M
+```
+
+## 例
+
+```
+(matcher {[$ something {[<True> {e1}] [<False> {e2}]}]})
+PRIMITIVE-PATTERN PATTERN            : $
+NEXT-MATCHER EXPRESSIONS             : something
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <True>
+PRIMITIVE-DATA EXPRESSION            : {e1}
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <False>
+PRIMITIVE-DATA EXPRESSION            : {e2}
+
+(matcher {
+                [<pair $ $> [a a]       {[<Pair $x $y> {[x y] [y x]}]}]
+                [$          [something] {[$tgt         {tgt}]}]
+         }
+)
+PRIMITIVE-PATTERN PATTERN            : <pair $ $>
+NEXT-MATCHER EXPRESSIONS             : [a a]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Pair $x $y>
+PRIMITIVE-DATA EXPRESSION            : {[x y] [y x]}
+PRIMITIVE-PATTERN PATTERN            : $
+NEXT-MATCHER EXPRESSIONS             : [something]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : {tgt}
+
+
+(matcher
+        {[<nil> [] {[{} {[]}] [_ {}]}]
+         [<cons $ $> [a (multiset a)]
+               {[$tgt (match-all tgt (list a)
+                                 [<join $hs <cons $x $ts>>
+                                 [x (append hs ts)]])]}]
+         [,$val []
+               {[$tgt (match [val tgt] [(list a) (multiset a)]
+                                  {[[<nil> <nil>] {[]}]
+                                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                                  [[_ _] {}]})]}]
+         [$ [something] {[$tgt {tgt}]}]})
+
+PRIMITIVE-PATTERN PATTERN            : <nil>
+NEXT-MATCHER EXPRESSIONS             : []
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : {}
+PRIMITIVE-DATA EXPRESSION            : {[]}
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : _
+PRIMITIVE-DATA EXPRESSION            : {}
+
+PRIMITIVE-PATTERN PATTERN            : <cons $ $>
+NEXT-MATCHER EXPRESSIONS             : [a (multiset a)]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            :
+               (match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])
+PRIMITIVE-PATTERN PATTERN            : ,$val
+NEXT-MATCHER EXPRESSIONS             : []
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : (match [val tgt] [(list a) (multiset a)]
+                                                 {[[<nil> <nil>] {[]}]
+                                                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                                                  [[_ _] {}]})
+PRIMITIVE-PATTERN PATTERN            : $
+NEXT-MATCHER EXPRESSIONS             : [something]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : {tgt}
+
+
+(matcher {[,$n [] {[$tgt (if (eq? tgt n) {[]} {})]}]
+          [<lt ,$n> [] {[$tgt (if (lt? tgt n) {[]} {})]}]
+          [$ [something] {[$tgt {tgt}]}]}))
+
+PRIMITIVE-PATTERN PATTERN            : ,$n
+NEXT-MATCHER EXPRESSIONS             : []
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : (if (eq? tgt n) {[]} {})
+PRIMITIVE-PATTERN PATTERN            : <lt ,$n>
+NEXT-MATCHER EXPRESSIONS             : []
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : (if (lt? tgt n) {[]} {})
+PRIMITIVE-PATTERN PATTERN            : $
+NEXT-MATCHER EXPRESSIONS             : [sometihg]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA EXPRESSION            : {tgt}
+```
+
+
+# 補足
+
+cut pattern は廃止された。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+M     taeget                    <Pair 2 5>
+M     type                     (unordered-pair integer)
+[p M] match claseuse            [<pair ,5 $x> x]
+p     match claseuse pattern    <pair ,5 $x>
+M     match claseuse body       x
+
+(match-all <Pair 2 5>                                 target     
+           (unordered-pair integer)                   type
+           [<pair ,5 $x> x]                           match clause pattern/body
+)
+
+(match-all tgt
+           (list a)
+           [<join $hs <cons $x $ts>>       [x (append hs ts)]]
+)
+
+
+(match     [val tgt]                                  target
+           [(list a) (multiset a)]                    matcher
+           {
+           [[<nil> <nil>]                 {[]}]       match clause pattern/body
+           [[<cons $x $xs> <cons ,x ,xs>] {[]}]       match clause pattern/body
+           [[_ _] {}]
+           }
+)
+
+(define $unordered-pair (lambda [$a]
+
+(matcher 
+{
+[<pair $ $> [a a]       { [<Pair $x $y> {[x y] [y x]}]           }]
+[$          [something] { [$tgt         {tgt}]                   }]
+}
+)
+))
+
+(matcher
+{
+[<nil>           []                       { [{} {[]}] [_ {}]      }]
+[<cons $ $>      [a (multiset a)]         { [$tgt match-all ○]   }]
+[,$val           []                       { [$tgt match ○]       }]
+[$              [something]               { [$tgt {tgt}]          }]
+}
+)
+
+
+トリプル
+φ      matcher clause  ::= [pp M {[dp M} ...}]
+pp      primitive-pattern pattern               <pair $ $>
+M       next-matcher expressions                [a a]
+[dp M]  primitive-data-match clauses            {[<Pair $x $y> {[x y] [y x]}]}]
+dp      primitive-data patterns respectively    <Pair $x $y>
+M       primitive-data expression               {[x y] [y x]}
+
+
+
+
+
+
+φ matcher clauses,
+pp primitive-pattern patterns
+dp primitive-data patterns respectively
+
+
+----
+
