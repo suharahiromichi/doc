@@ -135,6 +135,7 @@ TARGET               : <Pair 2 5>
 TYPE                 : (unordered-pair integer)
 MATCH-CLAUSE-PATTERN : <pair ,5 $x>
 MATCH-CLAUSE-BODY    : x
+出力                 : {2}
 ```
 
 ### 10
@@ -230,6 +231,60 @@ MATCH-CLAUSE-BODY    : <true>
 MATCH-CLAUSE-PATTERN : [_ _]
 MATCH-CLAUSE-BODY    : <false>
 
+```
+
+
+### 17
+
+<True> なら 1 , <False> なら 0 を返す matcher を経由して、
+<True> なら True, <False> なら False を反す。
+
+```
+(match <False> (matcher {[$ something {[<True> {1}] [<False> {0}]}]})
+{
+        [,1 True]
+        [,0 False]
+})
+TARGET               : <False>
+TYPE                 : (matcher {[$ something {[<True> {1}] [<False> {0}]}]})
+MATCH-CLAUSE-PATTERN : ,1
+MATCH-CLAUSE-BODY    : True
+MATCH-CLAUSE-PATTERN : ,0
+MATCH-CLAUSE-BODY    : False
+```
+
+
+### 18
+
+Unordered Pairs の matcher を使って、1を含むか判定する。
+
+```
+(match <Pair 1 2> (matcher {[$ something {[<Pair $x $y> {[x y] [y x]}]}]})
+{[[,1 ,_] YES] [_ NO]})
+TARGET               : <Pair 1 2>
+TYPE                 : (matcher {[$ something {[<Pair $x $y> {[x y] [y x]}]}]})
+MATCH-CLAUSE-PATTERN : [,1 _]
+MATCH-CLAUSE-BODY    : YES
+MATCH-CLAUSE-PATTERN : _
+MATCH-CLAUSE-BODY    : NO
+出力                 : YES
+```
+
+### 18'
+
+Unordered Pairs の matcher を使って、1を含むか判定する。
+PRIMITIVE-PATTERN PATTERN をちゃんと書いた例で、Pair と pair の使い分けに注意せよ。
+
+```
+(match <Pair 1 2> (matcher {[<pair $ $> [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]}) {[<pair ,1 _> YES] [_ NO]})
+TARGET               : <Pair 1 2>
+TYPE                 :
+         (matcher {[<pair $ $] [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]})
+MATCH-CLAUSE-PATTERN : <pair ,1 _>
+MATCH-CLAUSE-BODY    : YES
+MATCH-CLAUSE-PATTERN : _
+MATCH-CLAUSE-BODY    : NO
+出力                 : YES
 ```
 
 # matcher
@@ -347,3 +402,6 @@ PRIMITIVE-DATA EXPRESSION            : {tgt}
 # 補足
 
 cut pattern は廃止された。
+
+
+以上
