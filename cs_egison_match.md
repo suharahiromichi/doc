@@ -236,8 +236,8 @@ MATCH-CLAUSE-BODY    : <false>
 
 ### 17
 
-<True> なら 1 , <False> なら 0 を返す matcher を経由して、
-<True> なら True, <False> なら False を反す。
+``<True>`` なら 1 , ``<False>`` なら 0 を返す matcher を経由して、
+``<True>`` なら True, ``<False>`` なら False を反す。
 
 ```
 (match <False> (matcher {[$ something {[<True> {1}] [<False> {0}]}]})
@@ -298,6 +298,9 @@ PRIMITIVE-DATA-MATCH CLAUSES            [dp M]
 PRIMITIVE-DATA PATTERNS RESPECTIVELY    dp ::= $x |  <C dp ... >
 PRIMITIVE-DATA EXPRESSION               M
 ```
+
+PRIMITIVE-DATA EXPRESSION はコレクションであること。
+
 
 ## 例
 
