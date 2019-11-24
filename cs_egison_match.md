@@ -170,7 +170,7 @@ MATCH-CLAUSE-PATTERN : <cons $m <cons $n _>>
 MATCH-CLAUSE-BODY    : [m n]
 ```
 
-### 13
+### 13 (multiset の matcherの一部)
 ```
 (match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])]}]
 TARGET               : tgt
@@ -179,7 +179,7 @@ MATCH-CLAUSE-PATTERN : <join $hs <cons $x $ts>>
 MATCH-CLAUSE-BODY    : [x (append hs ts)]
 ```
 
-### 14
+### 14 (multiset の matcherの一部)
 
 val と tgt が空でないコレクションで順列の関係であるとき {[]} を返す。さもなければ {} を返す。
 例 6' を参照せよ。
@@ -278,8 +278,7 @@ PRIMITIVE-PATTERN PATTERN をちゃんと書いた例で、Pair と pair の使�
 ```
 (match <Pair 1 2> (matcher {[<pair $ $> [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]}) {[<pair ,1 _> YES] [_ NO]})
 TARGET               : <Pair 1 2>
-TYPE                 :
-         (matcher {[<pair $ $] [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]})
+TYPE     : (matcher {[<pair $ $] [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]})
 MATCH-CLAUSE-PATTERN : <pair ,1 _>
 MATCH-CLAUSE-BODY    : YES
 MATCH-CLAUSE-PATTERN : _
@@ -288,6 +287,8 @@ MATCH-CLAUSE-BODY    : NO
 ```
 
 # matcher
+
+### 0
 
 ```
 (matcher {[pp M {[dp M] ...}] ... })
@@ -303,6 +304,9 @@ PRIMITIVE-DATA EXPRESSION はコレクションであること。
 
 
 ## 例
+
+matcherが反すのは、可能なマッチの結果のコレクションで、失敗なら{}。
+コレクションの中身は、NEXT-MATCHER EXPRESSON である。
 
 ### 1
 
@@ -347,13 +351,12 @@ multiset の matcher である。
         {[<nil> [] {[{} {[]}] [_ {}]}]
          [<cons $ $> [a (multiset a)]
                {[$tgt (match-all tgt (list a)
-                                 [<join $hs <cons $x $ts>>
-                                 [x (append hs ts)]])]}]
+                                 [<join $hs <cons $x $ts>> [x (append hs ts)]])]}]
          [,$val []
                {[$tgt (match [val tgt] [(list a) (multiset a)]
                                   {[[<nil> <nil>] {[]}]
-                                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
-                                  [[_ _] {}]})]}]
+                                   [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                                   [[_ _] {}]})]}]
          [$ [something] {[$tgt {tgt}]}]})
 
 PRIMITIVE-PATTERN PATTERN            : <nil>
@@ -400,6 +403,106 @@ NEXT-MATCHER EXPRESSIONS             : [sometihg]
 PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
 PRIMITIVE-DATA EXPRESSION            : {tgt}
 ```
+
+### 5
+```
+(define $operator (algebraic-data-matcher {<plus> <mult>}))
+
+(define $operator
+  (matcher
+    {[<plus> []     {[<Plus> {[]}] [_ {}]}]
+     [<mult> []     {[<Mult> {[]}] [_ {}]}]
+     [$ [something] {[$tgt {tgt}]}]}))
+
+PRIMITIVE-PATTERN PATTERN            : <plus>
+NEXT-MATCHER EXPRESSIONS             : []
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Plus>
+PRIMITIVE-DATA EXPRESSION            : {[]}
+PRIMITIVE-PATTERN PATTERN            : _
+NEXT-MATCHER EXPRESSIONS             : {}
+(略)
+```
+
+### 6
+```
+(define $term
+  (algebraic-data-matcher
+    {<var string>
+     <int integer>
+     <op operator term term>
+     <lam string term>
+     <app term term>
+     }))
+
+(define $term
+  (matcher
+    {[<var $> [string]
+      {[<Var $x> {x}]
+       [_ {}]}]
+     [<int $> [integer]
+      {[<Int $x> {x}]
+       [_ {}]}]
+     [<op $ $ $> [operator term term]
+      {[<Op $op $t1 $t2>] {[op t1 t2]}
+       [_ {}]}]
+     [<lam $ $> [string term]
+      {[<Lam $x $t> {[x t]}]
+       [_ {}]}]
+     [<app $ $> [term term]
+      {[<App $s $t> {[s t]}]
+       [_ {}]}]
+     [$ [something]
+      {[$tgt {tgt}]}]}))
+
+PRIMITIVE-PATTERN PATTERN            : <var $>
+NEXT-MATCHER EXPRESSIONS             : [string]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Var $x>
+PRIMITIVE-DATA EXPRESSION            : {x}
+PRIMITIVE-PATTERN PATTERN            : _
+NEXT-MATCHER EXPRESSIONS             : {}
+
+PRIMITIVE-PATTERN PATTERN            : <abs $ $>
+NEXT-MATCHER EXPRESSIONS             : [string term]
+PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Abs $x $t>
+PRIMITIVE-DATA EXPRESSION            : {[x t]}
+PRIMITIVE-PATTERN PATTERN            : _
+NEXT-MATCHER EXPRESSIONS             : {}
+
+(略)
+```
+
+# ラムダ計算の例
+
+```
+(define $op-reduce
+  (match-lambda operator
+    {[<plus> (match-lambda [term term]
+               {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})]
+     [<mult> (match-lambda [term term]
+               {[[<int $i1> <int $i2>] <Int (* i1 i2)>]})]}))
+
+
+TARGET               : match-lambdaの変数
+TYPE                 : operator
+MATCH-CLAUSE-PATTERN : <plus>   ; matcher が 非{}を返せば、BODYが実行される。
+MATCH-CLAUSE-BODY  : (match-lambda [term term] {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})
+MATCH-CLAUSE-PATTERN : <mult>
+MATCH-CLAUSE-BODY  : (match-lambda [term term] {[[<int $i1> <int $i2>] <Int (* i1 i2)>]})
+```
+
+
+```
+(match-lambda [term term]
+               {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})]
+
+TARGET               : match-lambdaの変数
+TYPE                 : [term term]
+MATCH-CLAUSE-PATTERN : [<int $i1> <int $i2>]
+MATCH-CLAUSE-BODY    : <Int (+ i1 i2)>
+```
+
+そもそも、(algebraic-data-matcher {<plus> <mult>})) が何を反すのかわからない。
+MATCH-CLAUSE-BODY がλ式なら、それに渡されるのが何かわからない。
 
 
 # 補足
