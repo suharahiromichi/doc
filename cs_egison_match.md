@@ -24,7 +24,8 @@ M ::=                                                  ; expression
   M1 は target
   M2 は matcher
   [p M] は match clause
-
+  p  は pattern
+  M  は body
 
 
 p ::= _ | $x | ,M | <c p ...>                          ; pattern
@@ -53,11 +54,12 @@ pp ::= $ | ,$x | <c pp ...>                            ; primitive-pattern patte
 
 dp := $x       | <C dp ...>                            ; primitive-data pattern
 
+   $x は pattern variable
    C は data constructor
 
 ```
 
-# matcher のコードの読み方
+# matcher のコード例
 
 ```
 (define unordered-pairs (lambda [$a]
@@ -78,561 +80,68 @@ dp := $x       | <C dp ...>                            ; primitive-data pattern
                                       {[[<nil> <nil>] {[]}]
                                        [[<cons $x $xs> <cons ,x ,xs>] {[]}]
                                        [[_ _] {}]})]}]
-                                       [$ [something] {[$tgt {tgt}]}]})))
+                        [$ [something] {[$tgt {tgt}]}]})))
 ```
 
 
-matcher clause ``[pp M1 {[dp M2] ...}]`` に注目する。
+# matcher clause ``[pp M1 {[dp M2] ...}]`` の tuple の対応について
 
-## pp が pattern constructor から始まる場合：
+M2 は collectionであること。これは複数解を許すためで、空 ``{}`` は失敗を示す。
 
-- pp のなかの $ (pattern hole) の数が n だとすると、
+以下はすべて要素の数が同じであること。
 
-- M1 (next-matcher exp.) は n個の要素のtaple であり、
+- pp のなかの $ の数。ただし、,$x は数えない。
 
-- M2 (primitive-data exp.) は n個の要素のtaple の collection である。
-M2 が collection なのは複数解を許すためで、空は失敗を示す。
+- M1 の評価結果の tuple の要素の数。
 
+- (dp のなかの $x の数 ... これは、他と一致しなくてもよい)
 
-- dp (primitive-data pattern) が、実際のターゲットの一部または全部とマッチする。
+- M1 評価結果の collection の各要素の tuple の要素の数。
 
-``<Pair 1 2>`` vs. ``<Pair $1 $2>``
 
-- そのマッチのもとで、M2 (primitive-data exp.) が計算される。
 
-``{[1 2] [2 1]}``
+# matcher clause ``[pp M1 {[dp M2] ...}]`` の計算例
 
+- pp が、match の pattern から選ばれて、
 
-- M2 の collection のひとつの tuple が、対応する M1 (next-matcher exp.) 
+- dp が、match の target とマッチした場合：
 
-``[1 2]`` vs. ``[integer integer]``
+- そのマッチのもとで、M2 の collection が計算される。
+  このとき pp が ,$x なら、x を通して、match pattern が参照できる。
 
+- そのマッチの結果 (pattern は pattern として、target は M1 のcollection のひとつ）が、
+  M1 をなすtupleの対応する要素の matcher に送られる。
 
-- それぞれが pp の $ (pattern hole) に送られる。
+- それぞれの matcher から戻ってきた結果が、対応する pp の $ に送られる。
 
 
-## pp が value-pattern pattern の場合：
-
-- M1 (next-matcher exp.) は [] である。
-
-- M2 (primitive-data exp.) は {[]} または {} である。
-
-- pp の変数 を経由してターゲットが参照される。これと dp の変数の一致を判定する。
-  一致なら {[]} 、不一致なら {} を反す。
-
-
-
-
---------------------------------------------------
---------------------------------------------------
---------------------------------------------------
---------------------------------------------------
-
-# データ
-
-```
-{ value ... }           collection
-[ value ... ]           tuple
-<C value ...>           inductive data  , C は id
-[| value ... |]         tensor
-{|[key value] ...|}     hash map
-```
-
-
-# match
-
-```
-(match     M M {[p M] ...})
-(match-all M M  [p M]     )
-
-TARGET                    M
-TYPE                      M
-MATCH-CLAUSE              [p M]
-MATCH-CLAUSE-PATTERN      p ::= _ | $x | ,M |  <C p ... >
-MATCH-CLAUSE-BODY         M
-```
-
-## 例
-
-### 1
-
-```
-(match-all {1 2 3} (list integer) [<join $xs $ys> [xs ys]])
-TARGET               : {1 2 3}
-TYPE                 : (list integer)
-MATCH-CLAUSE-PATTERN : <join $xs $ys>
-MATCH-CLAUSE-BODY    : [xs ys]
-```
-
-### 2
-```
-(match-all primes (list integer) [<join _ <cons $p <cons ,(+ p 2) _>>> [p (+ p 2)]]))
-TARGET               : primes
-TYPE                 : (list integer)
-MATCH-CLAUSE-PATTERN : <join _ <cons $p <cons ,(+ p 2) _>>>
-MATCH-CLAUSE-BODY    : [p (+ p 2)]
-```
-
-### 3
-```
-(match-all b (matcher {[$ something {[<True> {e1}] [<False> {e2}]}]}) [$x x])
-TARGET               : b
-TYPE                 : (matcher {[$ something {[<True> {e1}] [<False> {e2}]}]})
-MATCH-CLAUSE-PATTERN : $x
-MATCH-CLAUSE-BODY    : x
-```
-
-### 4
-```
-(match-all (take n (repeat 0)) (multiset integer) [<insert $x <insert ,(+ x 1) _>> x])
-TARGET               : (take n (repeat 0))
-TYPE                 : (multiset integer)
-MATCH-CLAUSE-PATTERN : <insert $x <insert ,(+ x 1) _>>
-MATCH-CLAUSE-BODY    : x
-```
-
-### 5
-```
-(match-all {1 2 3} (list integer) [<cons $x $rs> [x rs]])
-TARGET               : {1 2 3}
-TYPE                 : (list integer)
-MATCH-CLAUSE-PATTERN : [<cons $x $rs>
-MATCH-CLAUSE-BODY    : [x rs]
-```
-
-### 6
-```
-(match-all {1 2 3} (multiset integer) [<cons $x $rs> [x rs]])
-TARGET               : {1 2 3}
-TYPE                 : (multiset integer)
-MATCH-CLAUSE-PATTERN : [<cons $x $rs>
-MATCH-CLAUSE-BODY    : [x rs]
-出力                 : {[1 {2 3}] [2 {1 3}] [3 {1 2}]} 
-```
-
-### 6'
-
-これは成功する。multiset なので {1 2} と {3 2} は一致する。
-
-```
-(match {1 2 3} (multiset integer) {[<cons ,1 ,{3 2}> {[]}] [_ {}]})
-TARGET               : {1 2 3}
-TYPE                 : (multiset integer)
-MATCH-CLAUSE-PATTERN : [<cons ,1 ,{3 2}>
-MATCH-CLAUSE-BODY    : {[]}
-MATCH-CLAUSE-PATTERN : _
-MATCH-CLAUSE-BODY    : {}
-出力                 : {[]}
-```
-
-
-### 7
-```
-(match-all {1 2 3} (set integer) [<cons $x $rs> [x rs]])
-TARGET               : {1 2 3}
-TYPE                 : (set integer)
-MATCH-CLAUSE-PATTERN : [<cons $x $rs>
-MATCH-CLAUSE-BODY    : [x rs]
-出力                 : {[1 {1 2 3}] [2 {1 2 3}] [3 {1 2 3}]}
-```
-
-### 7'
-
-これは成功する。set なので {1 2 3} と {3 2 1} は一致する。
-
-```
-(match {1 2 3} (set integer) {[<cons ,1 ,{3 2 1} {[]}] [_ {}]})
-TARGET               : {1 2 3}
-TYPE                 : (set integer)
-MATCH-CLAUSE-PATTERN : [<cons $x $rs>
-MATCH-CLAUSE-BODY    : [x rs]
-出力                 : {[]}
-```
-
-### 8
-```
-(match-all {1 2 3} (multiset integer) [,{2 1 3} "Matched"])
-TARGET               : {1 2 3}
-TYPE                 : (multiset integer)
-MATCH-CLAUSE-PATTERN : ,{2 1 3}
-MATCH-CLAUSE-BODY    : "Matched"
-```
-
-### 9
-```
-(match-all <Pair 2 5> (unordered-pair integer) [<pair ,5 $x> x])
-TARGET               : <Pair 2 5>
-TYPE                 : (unordered-pair integer)
-MATCH-CLAUSE-PATTERN : <pair ,5 $x>
-MATCH-CLAUSE-BODY    : x
-出力                 : {2}
-```
-
-### 10
-```
-(match poly math-expr
-       {[<+ <* $n <,cos $x>^,2 $y> <* ,n <,sin ,x>^,2 ,y> $r>
-              (rewrite-rule-for-cos-and-sin-poly <+' r <*' n y>>)]
-       [_ poly]})
-TARGET               : poly
-TYPE                 : math-expr
-MATCH-CLAUSE-PATTERN : <+ <* $n <,cos $x>^,2 $y> <* ,n <,sin ,x>^,2 ,y> $r>
-MATCH-CLAUSE-BODY    : (rewrite-rule-for-cos-and-sin-poly <+' r <*' n y>>)
-MATCH-CLAUSE-PATTERN : _
-MATCH-CLAUSE-BODY    : poly
-```
-
-### 11
-```
-(match-all {2 8 2} (multiset integer) [<cons $m <cons ,m _>> m])
-TARGET               : {2 8 2}
-TYPE                 : (multiset integer)
-MATCH-CLAUSE-PATTERN : <cons $m <cons ,m _>>
-MATCH-CLAUSE-BODY    : m
-```
-
-### 12
-```
-(match-all nats (set integer) [<cons $m <cons $n _>> [m n]])
-TARGET               : nats
-TYPE                 : (set integer)
-MATCH-CLAUSE-PATTERN : <cons $m <cons $n _>>
-MATCH-CLAUSE-BODY    : [m n]
-```
-
-### 13 (multiset の matcherの一部)
-```
-(match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])]}]
-TARGET               : tgt
-TYPE                 : (list a)
-MATCH-CLAUSE-PATTERN : <join $hs <cons $x $ts>>
-MATCH-CLAUSE-BODY    : [x (append hs ts)]
-```
-
-### 14 (multiset の matcherの一部)
-
-val と tgt が空でないコレクションで順列の関係であるとき {[]} を返す。さもなければ {} を返す。
-例 6' を参照せよ。
-左側のlist の [1 {3 2}] とマッチしないようにみえるが、そのようなことはない。
-
-```
-(match-all [val tgt] [(list a) (multiset a)] [[<cons $x $xs> <cons ,x ,xs>] {[]}])
-TARGET               : [val tgt]
-TYPE                 : [(list a) (multiset a)]
-MATCH-CLAUSE-PATTERN : [<cons $x $xs> <cons ,x ,xs>]
-MATCH-CLAUSE-BODY    : {[]}
-```
-
-### 15
-
-上記を match で書き、かつ 両方が {} である場合も {[]} を返すようにする。
-
-```
-(match [val tgt] [(list a) (multiset a)]
-{
-        [[<nil> <nil>] {[]}]
-        [[<cons $x $xs> <cons ,x ,xs>] {[]}]
-        [[_ _] {}]
-})
-TARGET               : [val tgt]
-TYPE                 : [(list a) (multiset a)]
-MATCH-CLAUSE-PATTERN : [<nil> <nil>]
-MATCH-CLAUSE-BODY    : {[]}
-MATCH-CLAUSE-PATTERN : [<cons $x $xs> <cons ,x ,xs>]
-MATCH-CLAUSE-BODY    : {[]}
-MATCH-CLAUSE-PATTERN : [_ _]
-MATCH-CLAUSE-BODY    : {}
-```
-
-### 16
-```
-(match [val tgt] [(multiset a) (multiset a)]
-{
-        [[<nil> <nil>] <true>]
-        [[<cons $x $xs> <cons ,x ,xs>] <true>]
-        [[_ _] <false>]
-})
-TARGET               : [val tgt]
-TYPE                 : [(multiset a) (multiset a)]
-MATCH-CLAUSE-PATTERN : [<nil> <nil>]
-MATCH-CLAUSE-BODY    : <true>
-MATCH-CLAUSE-PATTERN : <cons $x $xs> <cons ,x ,xs>
-MATCH-CLAUSE-BODY    : <true>
-MATCH-CLAUSE-PATTERN : [_ _]
-MATCH-CLAUSE-BODY    : <false>
-
-```
-
-
-### 17
-
-``<True>`` なら 1 , ``<False>`` なら 0 を返す matcher を経由して、
-``<True>`` なら True, ``<False>`` なら False を反す。
-
-```
-(match <False> (matcher {[$ something {[<True> {1}] [<False> {0}]}]})
-{
-        [,1 True]
-        [,0 False]
-})
-TARGET               : <False>
-TYPE                 : (matcher {[$ something {[<True> {1}] [<False> {0}]}]})
-MATCH-CLAUSE-PATTERN : ,1
-MATCH-CLAUSE-BODY    : True
-MATCH-CLAUSE-PATTERN : ,0
-MATCH-CLAUSE-BODY    : False
-```
-
-
-### 18
-
-Unordered Pairs の matcher を使って、1を含むか判定する。
-
-```
-(match <Pair 1 2> (matcher {[$ something {[<Pair $x $y> {[x y] [y x]}]}]})
-{[[,1 ,_] YES] [_ NO]})
-TARGET               : <Pair 1 2>
-TYPE                 : (matcher {[$ something {[<Pair $x $y> {[x y] [y x]}]}]})
-MATCH-CLAUSE-PATTERN : [,1 _]
-MATCH-CLAUSE-BODY    : YES
-MATCH-CLAUSE-PATTERN : _
-MATCH-CLAUSE-BODY    : NO
-出力                 : YES
-```
-
-### 18'
-
-Unordered Pairs の matcher を使って、1を含むか判定する。
-PRIMITIVE-PATTERN PATTERN をちゃんと書いた例で、Pair と pair の使い分けに注意せよ。
-
-```
-(match <Pair 1 2> (matcher {[<pair $ $> [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]}) {[<pair ,1 _> YES] [_ NO]})
-TARGET               : <Pair 1 2>
-TYPE     : (matcher {[<pair $ $] [integer integer] {[<Pair $x $y> {[x y] [y x]}]}]})
-MATCH-CLAUSE-PATTERN : <pair ,1 _>
-MATCH-CLAUSE-BODY    : YES
-MATCH-CLAUSE-PATTERN : _
-MATCH-CLAUSE-BODY    : NO
-出力                 : YES
-```
-
-# matcher
-
-### 0
-
-```
-(matcher {[pp M {[dp M] ...}] ... })
-
-PRIMITIVE-PATTERN PATTERN               pp ::= $ | ,$x | ,M |  <C pp ... >
-NEXT-MATCHER EXPRESSIONS                M
-PRIMITIVE-DATA-MATCH CLAUSES            [dp M]
-PRIMITIVE-DATA PATTERNS                 dp ::= $x |  <C dp ... >
-PRIMITIVE-DATA EXPRESSION               M
-```
-
-PRIMITIVE-DATA EXPRESSION はコレクションであること。
-
-
-## 例
-
-matcherが反すのは、可能なマッチの結果のコレクションで、失敗なら{}。
-コレクションの中身は、NEXT-MATCHER EXPRESSON である。
-
-### 1
-
-(if b e1 e2) のマクロを示す matcher である。
-
-```
-(matcher {[$ something {[<True> {e1}] [<False> {e2}]}]})
-PRIMITIVE-PATTERN PATTERN            : $
-NEXT-MATCHER EXPRESSIONS             : something
-PRIMITIVE-DATA PATTERNS              : <True>
-PRIMITIVE-DATA EXPRESSION            : {e1}
-PRIMITIVE-DATA PATTERNS              : <False>
-PRIMITIVE-DATA EXPRESSION            : {e2}
-```
-
-### 2
-
-Unordered Pairs の matcher である。
-
-```
-(matcher {
-                [<pair $ $> [a a]       {[<Pair $x $y> {[x y] [y x]}]}]
-                [$          [something] {[$tgt         {tgt}]}]
-         }
-)
-PRIMITIVE-PATTERN PATTERN            : <pair $ $>
-NEXT-MATCHER EXPRESSIONS             : [a a]
-PRIMITIVE-DATA PATTERNS              : <Pair $x $y>
-PRIMITIVE-DATA EXPRESSION            : {[x y] [y x]}
-PRIMITIVE-PATTERN PATTERN            : $
-NEXT-MATCHER EXPRESSIONS             : [something]
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : {tgt}
-```
-
-### 3
-
-multiset の matcher である。
-
-```
-(matcher
-        {[<nil> [] {[{} {[]}] [_ {}]}]
-         [<cons $ $> [a (multiset a)]
-               {[$tgt (match-all tgt (list a)
-                                 [<join $hs <cons $x $ts>> [x (append hs ts)]])]}]
-         [,$val []
-               {[$tgt (match [val tgt] [(list a) (multiset a)]
-                                  {[[<nil> <nil>] {[]}]
-                                   [[<cons $x $xs> <cons ,x ,xs>] {[]}]
-                                   [[_ _] {}]})]}]
-         [$ [something] {[$tgt {tgt}]}]})
-
-PRIMITIVE-PATTERN PATTERN            : <nil>
-NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS              : {}
-PRIMITIVE-DATA EXPRESSION            : {[]}
-PRIMITIVE-DATA PATTERNS              : _
-PRIMITIVE-DATA EXPRESSION            : {}
-
-PRIMITIVE-PATTERN PATTERN            : <cons $ $>
-NEXT-MATCHER EXPRESSIONS             : [a (multiset a)]
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            :
-               (match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])
-PRIMITIVE-PATTERN PATTERN            : ,$val
-NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : (match [val tgt] [(list a) (multiset a)]
-                                                 {[[<nil> <nil>] {[]}]
-                                                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
-                                                  [[_ _] {}]})
-PRIMITIVE-PATTERN PATTERN            : $
-NEXT-MATCHER EXPRESSIONS             : [something]
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : {tgt}
-```
-
-### 4
-```
-(matcher {[,$n [] {[$tgt (if (eq? tgt n) {[]} {})]}]
-          [<lt ,$n> [] {[$tgt (if (lt? tgt n) {[]} {})]}]
-          [$ [something] {[$tgt {tgt}]}]}))
-
-PRIMITIVE-PATTERN PATTERN            : ,$n
-NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : (if (eq? tgt n) {[]} {})
-PRIMITIVE-PATTERN PATTERN            : <lt ,$n>
-NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : (if (lt? tgt n) {[]} {})
-PRIMITIVE-PATTERN PATTERN            : $
-NEXT-MATCHER EXPRESSIONS             : [sometihg]
-PRIMITIVE-DATA PATTERNS              : $tgt
-PRIMITIVE-DATA EXPRESSION            : {tgt}
-```
-
-### 5
-```
-(define $operator (algebraic-data-matcher {<plus> <mult>}))
-
-(define $operator
-  (matcher
-    {[<plus> []     {[<Plus> {[]}] [_ {}]}]
-     [<mult> []     {[<Mult> {[]}] [_ {}]}]
-     [$ [something] {[$tgt {tgt}]}]}))
-
-PRIMITIVE-PATTERN PATTERN            : <plus>
-NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS              : <Plus>
-PRIMITIVE-DATA EXPRESSION            : {[]}
-PRIMITIVE-PATTERN PATTERN            : _
-NEXT-MATCHER EXPRESSIONS             : {}
-(略)
 ```
-
-### 6
+(match {2 8 2} (mulitset integer) {[<cons $m <cons ,m _> m]})
 ```
-(define $term
-  (algebraic-data-matcher
-    {<var string>
-     <int integer>
-     <op operator term term>
-     <lam string term>
-     <app term term>
-     }))
-
-(define $term
-  (matcher
-    {[<var $> [string]
-      {[<Var $x> {x}]
-       [_ {}]}]
-     [<int $> [integer]
-      {[<Int $x> {x}]
-       [_ {}]}]
-     [<op $ $ $> [operator term term]
-      {[<Op $op $t1 $t2>] {[op t1 t2]}
-       [_ {}]}]
-     [<lam $ $> [string term]
-      {[<Lam $x $t> {[x t]}]
-       [_ {}]}]
-     [<app $ $> [term term]
-      {[<App $s $t> {[s t]}]
-       [_ {}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]}))
 
-PRIMITIVE-PATTERN PATTERN            : <var $>
-NEXT-MATCHER EXPRESSIONS             : [string]
-PRIMITIVE-DATA PATTERNS              : <Var $x>
-PRIMITIVE-DATA EXPRESSION            : {x}
-PRIMITIVE-PATTERN PATTERN            : _
-NEXT-MATCHER EXPRESSIONS             : {}
 
-PRIMITIVE-PATTERN PATTERN            : <abs $ $>
-NEXT-MATCHER EXPRESSIONS             : [string term]
-PRIMITIVE-DATA PATTERNS              : <Abs $x $t>
-PRIMITIVE-DATA EXPRESSION            : {[x t]}
-PRIMITIVE-PATTERN PATTERN            : _
-NEXT-MATCHER EXPRESSIONS             : {}
+|:-------------------------|:------------------------------------------|:---------------|
+|                      |             |                                      |
+|:-------------------------|:------------------------------------------|:---------------|
+| <cons $m <cons ,m _>>    | <cons $ $>                                |                |
 
-(略)
-```
+| {2 8 2}                  | $tgt                     |                |
 
-# ラムダ計算の例
+|                          | {[2 {8 2}] [8 {2 2}] [2 {2 8}]}       | M2の計算 |
 
-```
-(define $op-reduce
-  (match-lambda operator
-    {[<plus> (match-lambda [term term]
-               {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})]
-     [<mult> (match-lambda [term term]
-               {[[<int $i1> <int $i2>] <Int (* i1 i2)>]})]}))
+| <cons ,m _>    [m:=2]    | <cons $ $>                         |                |
 
+| {2 8}                    | $tgt                               |                |
 
-TARGET               : match-lambdaの変数
-TYPE                 : operator
-MATCH-CLAUSE-PATTERN : <plus>   ; matcher が 非{}を返せば、BODYが実行される。
-MATCH-CLAUSE-BODY  : (match-lambda [term term] {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})
-MATCH-CLAUSE-PATTERN : <mult>
-MATCH-CLAUSE-BODY  : (match-lambda [term term] {[[<int $i1> <int $i2>] <Int (* i1 i2)>]})
-```
+|                          | {[2 8] [8 2]}                       | M2の計算 |
 
+| ,m             [m=2]     |  ,$val                           |                |
 
-```
-(match-lambda [term term]
-               {[[<int $i1> <int $i2>] <Int (+ i1 i2)>]})]
+| 2                        | $tgt                             |                |
 
-TARGET               : match-lambdaの変数
-TYPE                 : [term term]
-MATCH-CLAUSE-PATTERN : [<int $i1> <int $i2>]
-MATCH-CLAUSE-BODY    : <Int (+ i1 i2)>
-```
+|                          |  {[]}                                 | M2の計算 |
+|:-------------------------|:------------------------------------------|:---------------|
 
-そもそも、(algebraic-data-matcher {<plus> <mult>})) が何を反すのかわからない。
-MATCH-CLAUSE-BODY がλ式なら、それに渡されるのが何かわからない。
 
 
 # 補足
