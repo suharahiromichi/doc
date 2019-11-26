@@ -80,7 +80,15 @@ dp := $x       | <C dp ...>                            ; primitive-data pattern
                                       {[[<nil> <nil>] {[]}]
                                        [[<cons $x $xs> <cons ,x ,xs>] {[]}]
                                        [[_ _] {}]})]}]
-                        [$ [something] {[$tgt {tgt}]}]})))
+                        [$ [something] {[$tgt {tgt}]}]
+                 })))
+
+(define $integer
+        (matcher {
+                        [,$val [] {[$tgt (if (eq? val tgt) {[]} {})]}]
+                        [$ [something]      {[$tgt {tgt}]}]
+                 }))
+
 ```
 
 
@@ -115,22 +123,36 @@ M2 は collectionであること。これは複数解を許すためで、空 ``
 - それぞれの matcher から戻ってきた結果が、対応する pp の $ に送られる。
 
 
-```
-(match {2 8 2} (mulitset integer) {[<cons $m <cons ,m _> m]})
-```
+この matcher が再帰的に呼ばれる部分をプログラム変換的に示すと：
 
-|                          |                                           |                |
-|:-------------------------|:------------------------------------------|:---------------|
-| <cons $m <cons ,m _>>    | <cons $ $>                                |                |
-| {2 8 2}                  | $tgt                                    |                |
-|                          | {[2 {8 2}] [8 {2 2}] [2 {2 8}]}       | M2の計算 |
-| <cons ,m _>    [m:=2]    | <cons $ $>                         |                |
-| {2 8}                    | $tgt                               |                |
-|                          | {[2 8] [8 2]}                       | M2の計算 |
-| ,m             [m=2]     |  ,$val                           |                |
-| 2                        | $tgt                             |                |
-|                          |  {[]}                                 | M2の計算 |
 
+``
+(match-all {2 8 2} (multiset integer) [<cons $m <cons ,m _>> m]) ;=> {2 2}
+
+(match-all {8 2}   (multiset integer) [<cons ,2 _> []]) ;=> {[]}
+
+(match-all 2       integer            [,2          []]) ;=> {[]}
+
+``
+
+match 側の pattern と target と matcher 側の clause の対応を示すと：
+
+
+
+|          | match 側                 |          | matcher 側                       | 備考              |
+|:---------|:-------------------------|:---------|:---------------------------------|:------------------|
+| pattern  | <cons $m <cons ,m _>>    |   pp     | <cons $ $>                       |  |
+|          |                          |   M1     | [integer (multiset integer)      |                 |
+| target   | {2 8 2}                  |   dp     | $tgt                             |                |
+|          |                          |   M2     | {[2 {8 2}] [8 {2 2}] [2 {2 8}]}  | 計算結果 |
+| pattern  | <cons ,m _>    [m:=2]    |   pp     | <cons $ $>                       |   |
+|          |                          |   M1     | [integer (multiset integer)      |                 |
+| target   | {2 8}                    |   dp     | $tgt                             |                |
+|          |                          |   M2     | {[2 8] [8 2]}                    | 計算結果 |
+| patten   | ,m             [m=2]     |   pp     |  ,$val                           |                |
+|          |                          |   M1     | integer                          |                 |
+| target   | 2                        |   dp     | $tgt                             |          |
+|          |                          |   M2     |  {[]}                            | 計算結果        |
 
 
 # 補足
