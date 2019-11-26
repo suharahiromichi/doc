@@ -1,3 +1,133 @@
+Edison 文法メモ
+=======================
+
+2019_11_26 @suharahiromichi
+
+
+# 文法
+
+数字は説明のためのもの。
+
+```
+M ::=                                                  ; expression
+      | x | c | (lambda [$x ...] M) | (M M)
+      | [M ...]                                        ; tuple
+      | {M ...}                                        ; collection
+      | <C M ...>                                      ; inductive data
+      | [| M ... |]                                    ; tensor
+      | {|[key M] ...|}                                ; hash map
+      | (match-all M1 M2  [p M])
+      | (match     M1 M2 {[p M] ...})
+      | something
+      | (matcher {φ ...})
+
+  M1 は target
+  M2 は matcher
+  [p M] は match clause
+
+
+
+p ::= _ | $x | ,M | <c p ...>                          ; pattern
+       
+  $x は pattern variable
+  ,M は value pattern
+  c  は pattern constructor
+
+
+
+φ ::= [pp M1 {[dp M2] ...}]                           ; matcher clause
+
+   pp      は primitive-pattern pattern
+   M1      は next-matcher exp.
+   [dp M2] は primitive-data-match clause
+   dp      は primitive-data pattern
+   M2      は primitive-data exp.
+
+
+pp ::= $ | ,$x | <c pp ...>                            ; primitive-pattern pattern
+
+   $   は pattern hole
+   $,x は value-pattern pattern
+   c   は pattern constructor
+   
+
+dp := $x       | <C dp ...>                            ; primitive-data pattern
+
+   C は data constructor
+
+```
+
+# matcher のコードの読み方
+
+```
+(define unordered-pairs (lambda [$a]
+    (matcher {
+                [<pair $ $> [a a]       {[<Pair $x $y> {[x y] [y x]}]}]
+                [$          [something] {[$tgt         {tgt}]}]
+             })))
+
+
+(define $multiset (lambda [$a]
+        (matcher {
+                        [<nil> [] {[{} {[]}] [_ {}]}]
+                        [<cons $ $> [a (multiset a)]
+                               {[$tgt (match-all tgt (list a)
+                                       [<join $hs <cons $x $ts> [x (append hs ts)]])]}]
+                        [,$val []
+                               {[$tgt (match [val tgt] [(list a) (multiset a)]
+                                      {[[<nil> <nil>] {[]}]
+                                       [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                                       [[_ _] {}]})]}]
+                                       [$ [something] {[$tgt {tgt}]}]})))
+```
+
+
+matcher clause ``[pp M1 {[dp M2] ...}]`` に注目する。
+
+## pp が pattern constructor から始まる場合：
+
+- pp のなかの $ (pattern hole) の数が n だとすると、
+
+- M1 (next-matcher exp.) は n個の要素のtaple であり、
+
+- M2 (primitive-data exp.) は n個の要素のtaple の collection である。
+M2 が collection なのは複数解を許すためで、空は失敗を示す。
+
+
+- dp (primitive-data pattern) が、実際のターゲットの一部または全部とマッチする。
+
+``<Pair 1 2>`` vs. ``<Pair $1 $2>``
+
+- そのマッチのもとで、M2 (primitive-data exp.) が計算される。
+
+``{[1 2] [2 1]}``
+
+
+- M2 の collection のひとつの tuple が、対応する M1 (next-matcher exp.) 
+
+``[1 2]`` vs. ``[integer integer]``
+
+
+- それぞれが pp の $ (pattern hole) に送られる。
+
+
+## pp が value-pattern pattern の場合：
+
+- M1 (next-matcher exp.) は [] である。
+
+- M2 (primitive-data exp.) は {[]} または {} である。
+
+- pp の変数 を経由してターゲットが参照される。これと dp の変数の一致を判定する。
+  一致なら {[]} 、不一致なら {} を反す。
+
+
+
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
 # データ
 
 ```
@@ -296,7 +426,7 @@ MATCH-CLAUSE-BODY    : NO
 PRIMITIVE-PATTERN PATTERN               pp ::= $ | ,$x | ,M |  <C pp ... >
 NEXT-MATCHER EXPRESSIONS                M
 PRIMITIVE-DATA-MATCH CLAUSES            [dp M]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY    dp ::= $x |  <C dp ... >
+PRIMITIVE-DATA PATTERNS                 dp ::= $x |  <C dp ... >
 PRIMITIVE-DATA EXPRESSION               M
 ```
 
@@ -316,9 +446,9 @@ matcherが反すのは、可能なマッチの結果のコレクションで、�
 (matcher {[$ something {[<True> {e1}] [<False> {e2}]}]})
 PRIMITIVE-PATTERN PATTERN            : $
 NEXT-MATCHER EXPRESSIONS             : something
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <True>
+PRIMITIVE-DATA PATTERNS              : <True>
 PRIMITIVE-DATA EXPRESSION            : {e1}
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <False>
+PRIMITIVE-DATA PATTERNS              : <False>
 PRIMITIVE-DATA EXPRESSION            : {e2}
 ```
 
@@ -334,11 +464,11 @@ Unordered Pairs の matcher である。
 )
 PRIMITIVE-PATTERN PATTERN            : <pair $ $>
 NEXT-MATCHER EXPRESSIONS             : [a a]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Pair $x $y>
+PRIMITIVE-DATA PATTERNS              : <Pair $x $y>
 PRIMITIVE-DATA EXPRESSION            : {[x y] [y x]}
 PRIMITIVE-PATTERN PATTERN            : $
 NEXT-MATCHER EXPRESSIONS             : [something]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : {tgt}
 ```
 
@@ -361,26 +491,26 @@ multiset の matcher である。
 
 PRIMITIVE-PATTERN PATTERN            : <nil>
 NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : {}
+PRIMITIVE-DATA PATTERNS              : {}
 PRIMITIVE-DATA EXPRESSION            : {[]}
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : _
+PRIMITIVE-DATA PATTERNS              : _
 PRIMITIVE-DATA EXPRESSION            : {}
 
 PRIMITIVE-PATTERN PATTERN            : <cons $ $>
 NEXT-MATCHER EXPRESSIONS             : [a (multiset a)]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            :
                (match-all tgt (list a) [<join $hs <cons $x $ts>> [x (append hs ts)]])
 PRIMITIVE-PATTERN PATTERN            : ,$val
 NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : (match [val tgt] [(list a) (multiset a)]
                                                  {[[<nil> <nil>] {[]}]
                                                   [[<cons $x $xs> <cons ,x ,xs>] {[]}]
                                                   [[_ _] {}]})
 PRIMITIVE-PATTERN PATTERN            : $
 NEXT-MATCHER EXPRESSIONS             : [something]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : {tgt}
 ```
 
@@ -392,15 +522,15 @@ PRIMITIVE-DATA EXPRESSION            : {tgt}
 
 PRIMITIVE-PATTERN PATTERN            : ,$n
 NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : (if (eq? tgt n) {[]} {})
 PRIMITIVE-PATTERN PATTERN            : <lt ,$n>
 NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : (if (lt? tgt n) {[]} {})
 PRIMITIVE-PATTERN PATTERN            : $
 NEXT-MATCHER EXPRESSIONS             : [sometihg]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : $tgt
+PRIMITIVE-DATA PATTERNS              : $tgt
 PRIMITIVE-DATA EXPRESSION            : {tgt}
 ```
 
@@ -416,7 +546,7 @@ PRIMITIVE-DATA EXPRESSION            : {tgt}
 
 PRIMITIVE-PATTERN PATTERN            : <plus>
 NEXT-MATCHER EXPRESSIONS             : []
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Plus>
+PRIMITIVE-DATA PATTERNS              : <Plus>
 PRIMITIVE-DATA EXPRESSION            : {[]}
 PRIMITIVE-PATTERN PATTERN            : _
 NEXT-MATCHER EXPRESSIONS             : {}
@@ -456,14 +586,14 @@ NEXT-MATCHER EXPRESSIONS             : {}
 
 PRIMITIVE-PATTERN PATTERN            : <var $>
 NEXT-MATCHER EXPRESSIONS             : [string]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Var $x>
+PRIMITIVE-DATA PATTERNS              : <Var $x>
 PRIMITIVE-DATA EXPRESSION            : {x}
 PRIMITIVE-PATTERN PATTERN            : _
 NEXT-MATCHER EXPRESSIONS             : {}
 
 PRIMITIVE-PATTERN PATTERN            : <abs $ $>
 NEXT-MATCHER EXPRESSIONS             : [string term]
-PRIMITIVE-DATA PATTERNS RESPECTIVELY : <Abs $x $t>
+PRIMITIVE-DATA PATTERNS              : <Abs $x $t>
 PRIMITIVE-DATA EXPRESSION            : {[x t]}
 PRIMITIVE-PATTERN PATTERN            : _
 NEXT-MATCHER EXPRESSIONS             : {}
