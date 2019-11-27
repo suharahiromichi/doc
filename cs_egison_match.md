@@ -123,17 +123,93 @@ M2 は collectionであること。これは複数解を許すためで、空 ``
 - それぞれの matcher から戻ってきた結果が、対応する pp の $ に送られる。
 
 
+## unordered-pairs の例
+
+この matcher が再帰的に呼ばれる部分をプログラム変換的に示すと：
+
+```
+(match-all <Pair 1 2> (unordered-pair integer) [<pair ,2 $a> a]) ;=> {1}
+
+(match-all 2          (multiset integer) [,2 []]) ;=> {[]}
+
+(match-all 1       integer            [$a           m) ;=> {1}
+
+(match-all 1       something          [$a          []) ;=> {[]} a=1が確定する。
+````
+
+paper の書き方
+
+| #        | MState                                                       | env       | 備考  |
+|:---------|:-------------------------------------------------------------|:----------|:------------------|
+|1         | {[<pair ,2 $a> (unordered-pair integer) <Pair 1 2>}         |  {}       |       |
+|2-1        | {[,2 integer 1]    [$a integer 2]}      |  {}       |       |
+|2-2        | {[,2 integer 2]    [$a integer 1]}      |  {}       |       |
+|3         | {[$a something 1]}      |  {}       |  a=1 が確定する。   |
+
+
+
+
+
+match 側の pattern と target と matcher 側の clause の対応を示すと：
+
+|          | match 側                 |          | matcher 側                       | 備考              |
+|:---------|:-------------------------|:---------|:---------------------------------|:------------------|
+| pattern  | <pair ,2 $a>             |   pp     | <pair $ $>                       |  |
+|          |                          |   M1     | [integer integer]                |                 |
+| target   | <Pair 1 2>               |   dp     | <Pair $x $y>                    |                |
+|          |                          |   M2     | {[1 2] [2 1]}                   | 計算結果 |
+| pattern  | ,2                       |   pp     | ,$val                            |  |
+|          |                          |   M1     | integer                          |                 |
+| target   | 2                        |   dp     | $tgt                             |                |
+|          |                          |   M2     | {[]}                             | 計算結果 |
+| pattern  | $a                       |   pp     | $                                |  |
+|          |                          |   M1     | integer                        |                 |
+| target   | 1                        |   dp     | $tgt                             |                |
+|          |                          |   M2     | {1}                            | 計算結果 |
+| pattern  | $a                       |   pp     | -                                |  |
+|          |                          |   M1     | something                        |                 |
+| target   | 1                        |   dp     | -                               |                |
+|          |                          |   M2     | {[]}                            | a=1 が確定する。 |
+
+
+
+
+
+
+## multiset の例
+
 この matcher が再帰的に呼ばれる部分をプログラム変換的に示すと：
 
 
-``
+```
 (match-all {2 8 2} (multiset integer) [<cons $m <cons ,m _>> m]) ;=> {2 2}
+
+(match-all 2       integer            [$m           m) ;=> {2}
+
+(match-all 2       something          [$m          []) ;=> {[]} m=2が確定する。
 
 (match-all {8 2}   (multiset integer) [<cons ,2 _> []]) ;=> {[]}
 
 (match-all 2       integer            [,2          []]) ;=> {[]}
 
-``
+```
+
+paper の書き方
+
+| #        | MState                                                       | env       | 備考  |
+|:---------|:-------------------------------------------------------------|:----------|:------------------|
+|1         | {[<cons $m <cons ,m _>> (multiset integer) {2 8 2}]}         |  {}       |       |
+|2-1       | {[$m integer 2]    [<cons ,m _> (multiset integer) {8 2}]}      |  {}       |       |
+|2-2       | {[$m integer 8]    [<cons ,m _> (multiset integer) {2 2}]}      |  {}       |       |
+|2-3       | {[$m integer 2]    [<cons ,m _> (multiset integer) {2 8}]}      |  {}       |       |
+|3         | {[$m something 2]    [<cons ,m _> (multiset integer) {8 2}]}      |  {}       | m=2が確定する。    |
+|4         | {[<cons ,m _> (multiset integer) {8 2}]}      |  {[m 2]}       |       |
+|5-1       | {[,m integer 8]    [_ (multiset integer) {2}]} | {[m 2]}  |         |
+|5-2       | {[,m integer 2]    [_ (multiset integer) {8}]} | {[m 2]}  |         |
+|6         | {[_ (multiset integer) {8}]}                 | {[m 2]} |         |
+|7         | {[_ something {8}]}                        |  {[m 2]} |         |
+|8         | {}| {[m 2]}                              |         |
+
 
 match 側の pattern と target と matcher 側の clause の対応を示すと：
 
@@ -142,11 +218,19 @@ match 側の pattern と target と matcher 側の clause の対応を示すと�
 |          | match 側                 |          | matcher 側                       | 備考              |
 |:---------|:-------------------------|:---------|:---------------------------------|:------------------|
 | pattern  | <cons $m <cons ,m _>>    |   pp     | <cons $ $>                       |  |
-|          |                          |   M1     | [integer (multiset integer)      |                 |
+|          |                          |   M1     | [integer (multiset integer)]     |                 |
 | target   | {2 8 2}                  |   dp     | $tgt                             |                |
 |          |                          |   M2     | {[2 {8 2}] [8 {2 2}] [2 {2 8}]}  | 計算結果 |
+| pattern  | $m                       |   pp     | $                                |  |
+|          |                          |   M1     | integer                          |                 |
+| target   | 2                        |   dp     | $tgt                             |                |
+|          |                          |   M2     | {2}                              | 計算結果 |
+| pattern  | $m                       |   pp     | -                                |  |
+|          |                          |   M1     | something                        |                 |
+| target   | 2                        |   dp     | -                               |                |
+|          |                          |   M2     | {[]}                            | a=1 が確定する。 |
 | pattern  | <cons ,m _>    [m:=2]    |   pp     | <cons $ $>                       |   |
-|          |                          |   M1     | [integer (multiset integer)      |                 |
+|          |                          |   M1     | [integer (multiset integer)]     |                 |
 | target   | {2 8}                    |   dp     | $tgt                             |                |
 |          |                          |   M2     | {[2 8] [8 2]}                    | 計算結果 |
 | patten   | ,m             [m=2]     |   pp     |  ,$val                           |                |
