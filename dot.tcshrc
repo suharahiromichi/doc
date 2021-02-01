@@ -1,0 +1,19 @@
+#       .tcshrc        H.Suhara
+#       $Id: .tcshrc,v 1.1 2018/09/10 21:24:57 suhara Exp $
+
+if ( $?prompt ) then
+
+	source ~/.cshrc
+
+	alias h history 100
+	set history = 100000
+	set savehist = (100000 merge)
+	set histfile = ~/.history
+
+	set correct=all
+	set symlinks = ignore
+
+	bindkey "^S" i-search-fwd
+	bindkey "^R" i-search-back
+	bindkey "^Z" run-fg-editor
+endif
