@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8 -*-
 ;;; .emacs for Emacs23
-;;; $Id: .emacs,v 1.9 2019/11/27 14:42:42 suhara Exp suhara $
+;;; $Id: .emacs,v 1.10 2021/02/25 11:23:25 suhara Exp suhara $
 
 ;;; Function Keys
 (global-set-key [f1] 'delete-other-windows)
@@ -16,6 +16,7 @@
 
 ;;; Key Bindings
 (global-set-key [?\C-\ ] 'toggle-input-method)
+(global-set-key [?\C-x?\C-b] 'ibuffer)
 (global-set-key "\^\\" 'set-mark-command)
 (global-set-key "\^h" 'delete-backward-char)
 (global-set-key "\^t" 'call-last-kbd-macro)
@@ -116,7 +117,7 @@
 ;; 
 ;; ProofGneral に適したウィンドウを開く。
 ;;
-(defun coq-windows ()
+(defun coq-windows-1 ()
   "Setup Windows for Proof General"
   (interactive)
   (delete-other-windows)
@@ -125,7 +126,22 @@
   (split-window-vertically)
   (switch-to-buffer "*goals*")
   (other-window 1)
-  (switch-to-buffer "*response*"))
+  (switch-to-buffer "*response*")
+  (other-window 1))
+
+(defun coq-windows ()
+  "Setup Windows for Proof General"
+  (interactive)
+  (toggle-frame-fullscreen)
+  (delete-other-windows)
+  (split-window-horizontally)
+  (other-window 1)
+  (switch-to-buffer "*goals*")
+  (split-window-vertically)
+  (other-window 1)
+  (switch-to-buffer "*response*")
+  (other-window 1))
+
 ;; end
 
 ;;
