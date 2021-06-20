@@ -1,6 +1,6 @@
 ;;; -*- coding: utf-8 -*-
 ;;; .emacs for Emacs23
-;;; $Id: .emacs,v 1.10 2021/02/25 11:23:25 suhara Exp suhara $
+;;; $Id: .emacs,v 1.13 2021/04/29 07:21:32 suhara Exp $
 
 ;;; Function Keys
 (global-set-key [f1] 'delete-other-windows)
@@ -12,7 +12,6 @@
 (global-set-key [f8] 'replace-regexp)
 (global-set-key [f10] 'kill-buffer)
 (global-set-key [down-mouse-3] 'mouse-buffer-menu)
-
 
 ;;; Key Bindings
 (global-set-key [?\C-\ ] 'toggle-input-method)
@@ -26,6 +25,12 @@
 (global-set-key "\^[s" 'shell)
 (global-set-key "\^[y" 'yank-rectangle)
 (global-set-key "\^[\^[" 'what-line)
+;;(global-set-key "\^[o" 'other-window)
+;; ^X-o と逆にする。
+(global-set-key "\^[o" 'previous-multiframe-window)
+;; PGで上書きされる。
+;;(global-set-key "\^[p" 'previous-multiframe-window)
+;;(global-set-key "\^[n" 'next-multiframe-window)
 
 ;;; GnuEmacs
 (setq menu-coding-system 'euc-jp)
@@ -79,9 +84,9 @@
 
 
 ;;; OCaml
+(load "~/.opam/4.07.1/share/emacs/site-lisp/tuareg-site-file")
 (setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
 (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
-
 
 ;;; C
 (defun my-c-mode-common-hook ()
@@ -114,6 +119,7 @@
 ;;
 (load-file "/usr/local/share/emacs/site-lisp/ProofGeneral/generic/proof-site.el")
 (load-file "/usr/local/share/emacs/site-lisp/pg-ssr.el")
+(setq coq-prog-args '("-emacs" "-impredicative-set"))
 ;; 
 ;; ProofGneral に適したウィンドウを開く。
 ;;
@@ -132,7 +138,8 @@
 (defun coq-windows ()
   "Setup Windows for Proof General"
   (interactive)
-  (toggle-frame-fullscreen)
+  (set-frame-parameter nil 'fullscreen 'fullboth) ; 恒久的
+;;(toggle-frame-fullscreen)
   (delete-other-windows)
   (split-window-horizontally)
   (other-window 1)
