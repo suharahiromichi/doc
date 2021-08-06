@@ -1,4 +1,4 @@
-Coq/SSReflect/MathCompの資料
+Coq/SSReflect/MathCompの文献
 
 @suharahiromichi
 
@@ -60,7 +60,9 @@ https://math-comp.github.io/mcb/
 A Small Scale Reflection Extension for the Coq system
 https://hal.inria.fr/inria-00258384v16/document
 
-- Coqの公式リファッレンスマニュアルと同じ内容です。
+- [GMT15] は、Coqの公式リファッレンスマニュアルと、はじめの部分を除いて、概ね同じ内容です。
+
+``coq.inria.fr`` からは、``Reference Manual`` → ``Basic proof writing`` → ``The SSReflect proof language`` でたどれます。直リンクは以下です。
 
 Georges Gonthier, Assia Mahboubi, Enrico Tassi,
 The SSReflect proof language
