@@ -4,8 +4,13 @@ Coq/SSReflect/MathCompの文献
 
 2021/08/04
 2021/08/05
+2021/08/08　- SSReflectのリファレンスマニュアルはオンライン版を推奨するように訂正した。
+2021/08/13　- MathCompライブラリの論文を追加した。
 
 ------------
+
+本資料は、私がMathCompを習得するにあたって参考にした資料を列挙したものですが、最新の情報が正しく反映されていない、との指摘がありました（ご指摘ありがとうございます）。
+取り急ぎ指摘を反映しましたが、さらに少し時間を頂いて、よりよく、改訂させていただきます。
 
 # whoami
 
@@ -54,7 +59,8 @@ https://math-comp.github.io/mcb/
 
 ## SSReflect
 
-- キモいとさえ言われるSSReflectの文法ですが、公式のユーザズマニュアルがあります。お勧め。
+- キモいとさえ言われるSSReflectの文法ですが、公式のユーザズマニュアルがあります。
+ただし、古い版のSSReflectで改訂が止まっているので、最新の情報は次のオンライン・リファレンスマニュアルを参照してください。
 
 [GMT15] Georges Gonthier, Assia Mahboubi, Enrico Tassi,
 A Small Scale Reflection Extension for the Coq system
@@ -77,11 +83,22 @@ https://hal.inria.fr/inria-00515548v4/document
 
 ## MathComp ライブラリ
 
-- MathCompライブラリの原理といえる``Packed Class``の説明です。お勧め。
+- MathCompライブラリの原理といえる``Packed Class``の説明です。
 
-Francois Garillot, Georges Gonthier, Assia Mahboubi, Laurence Rideau,
+[GGMR09]　Francois Garillot, Georges Gonthier, Assia Mahboubi, Laurence Rideau,
 Packaging mathematical structures
 http://www.normalesup.org/~garillot/tphols09.pdf
+
+- [GGMR09] は multiple inheritance に関する説明が十分でないとの指摘を頂いています。次のふたつの論文を併読するとよいそうです。私はまだ読んでいませんが、参考になりそうです。（ふたつめの論文を追加しました。）
+
+Reynald Affeldt, Cyril Cohen, Marie Kerjean, Assia Mahboubi, Damien,　Rouhling, Kazuhiko Sakaguchi,
+Competing inheritance paths in dependent type theory: a case study in functional analysis
+https://hal.inria.fr/hal-02463336v2/document
+
+Kazuhiko Sakaguchi,
+Validating Mathematical Structures
+https://arxiv.org/pdf/2002.00620.pdf
+
 
 - ``Packed Class``を実現するために使われる``Canonical Structure``の解説ですが、表題に反して内容は難しいです。私は読めていません。
 
@@ -103,7 +120,7 @@ https://ilyasergey.net/pnp/pnp.pdf
 
 # Coqと共通な話題
 
-- βδι簡約をおこなう``simpl``タクティク(``rewrite /=``)の説明です。お勧め。
+- βδι簡約をおこなう``simpl``タクティク(``rewrite /=``)の説明です。
 
 Pierre Boutillier,
 Simple simpl
