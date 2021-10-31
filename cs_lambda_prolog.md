@@ -53,6 +53,10 @@ highly recommended
 
 メイン実装とされるが、開発は停止しているかも。
 
+[https://github.com/teyjus/teyjus/wiki/TeyjusManual]
+
+リファレンスマニュアル。
+
 
 - ELPI (Embeddable λProlog Interpreter)
 
