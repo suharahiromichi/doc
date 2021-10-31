@@ -83,7 +83,7 @@ plus := fun m =>
 
 ```
 S (S (fix pl := fun n => case n of
-                         | 0
+                         | x
                          | fun n' => S (pl n')
                          end
       y))
