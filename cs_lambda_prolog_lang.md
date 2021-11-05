@@ -103,19 +103,34 @@ Formulas are terms of type ``o``
 
 ### First-Order Restrictions:
 
+- 項変数の型は0階、かつ、``o``でないこと。関数または1階のformulaの量化はありません。
+
+- 式は1階以下である。値コンストラクターへの関数引数も関数抽象化もありません。
+
+- ``o``は、式のターゲット型以外に使えません。値コンストラクターへの引数をformulaにすることはできません。
+
+- 型変数の置換は0階の式であり、``o``ではありません。それ以外の項は 「> 1」の項であるか、高階述語を示します。
 
 
 # Proof Search Strategy
 
+Goal reduction と Backcahining を交互におこなう。
 
 ## Goal reduction:
 
+右-Inference Rules を使って、ゴールを分解していく。
+
+
 ## Backchaining:
+
+goalがatomicな場合、
+
+1. decideルールを使って、プログラム節を選択する。
+
+2. 選ばれた節にinitialルールまたはbackchainingルールを適用する。
 
 
 # Inference Rules
 
 
 END
-
-
