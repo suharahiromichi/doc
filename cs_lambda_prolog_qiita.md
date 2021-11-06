@@ -8,8 +8,8 @@
 
 # はじめに
 
-λPrologは高階のHereditary Harrop式の自動証明を原理にするProlog言語です。
-これに対して、一般的なProlog言語（SWI-Prolog [1] など　DEC-10 Prologの子孫）は、第1階のHorn節のかたちの論理式の自動証明を原理にしています。これに伴い、DEC-10 Prologと比べて、以下の特長があります。
+λProlog[1]は高階のHereditary Harrop式の自動証明を原理にするProlog言語です。
+これに対して、一般的なProlog言語（SWI-Prologなど　DEC-10 Prologの子孫）は、第1階のHorn節のかたちの論理式の自動証明を原理にしています。これに伴い、DEC-10 Prologと比べて、以下の特長があります。
 
 1. 述語や関数に型が書ける。ただし、省略してもよい。
 2. 高階の述語が書ける。DEC-10 Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
@@ -18,10 +18,10 @@
 
 4を除いて、DEC-10 Prologとの互換性は考慮されているようです。appendとかは同じように動きます。
 
-また、最近(2017年）から、定理証明支援系 Coq[2] や Matita[3] の拡張用言語として採用され、処理系（EPLI　： Embeddable Lambda Prolog Interpreter)が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
+また、最近(2017年）から、定理証明支援系 Coq[11][34] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31][32][33] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
 本資料は、すでにPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
-λPrologの言語仕様については、とても解りやすいページ[6]と書籍[7]があるので、ごく簡単な説明にとどめます。
+λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、ごく簡単な説明にとどめます。
 
 # λPrologについて
 
@@ -39,18 +39,18 @@
 
 λPrologは言語の名前であり、実装は複数あります。
 
-- Teyjus [8]
-- ELPI
-- Makam　[9]
-- 早稲田大学上田研のLMNtalで実装されたサブセット　[11]
+- Teyjus [21]
+- ELPI [31][32]
+- Markam　[41]
+- 早稲田大学上田研のLMNtalで実装されたサブセット　[51]
 
-Teyjusが一般的な実装とされていて、ELPIとTeyjusの違いは[10]にまとめられています。
+Teyjusが一般的な実装とされていて、ELPIとTeyjusの違いは[35]にまとめられています。
 ELPIは次章で説明します。
-[11]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
+[51]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
 
 # λProlog言語
 
-言語仕様については、解りやすい[6]と、より詳しく知りたい場合書籍[7]を参照してください。ここでは、DEC-10 Prologを知っていることを前提に、間違いやすい点を説明します。
+言語仕様については、解りやすい[2]と、より詳しく知りたい場合書籍[3]を参照してください。ここでは、DEC-10 Prologを知っていることを前提に、間違いやすい点を説明します。
 大文字と小文字、``_`` の使い方は DEC-10 Prologと同じですが、次節でしめす binding operator で束縛する変数は大文字で小文字でも区別はありません。
 どちらであっても binding operator のスコープの外には影響しません。
 
@@ -140,18 +140,37 @@ HOHC @>>> HOHC
 ```
 
 
-
 # 文献
 
-[1] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
+## λProlog
 
-[6] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
+[1] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
+[2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
+[3] Dale Miller and Gopalan Nadathur, "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol] PwHOL
 
-[8] Teyjus, [https://github.com/teyjus/teyjus]
-[8] Teyjus Manual, [https://github.com/teyjus/teyjus/wiki/TeyjusManual]
-[9] Markam, [http://astampoulis.github.io/makam/]
+# 定理証明支援系
 
-[10] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
+[11] "The Coq Proof Assistant", [https://coq.inria.fr]
+[12] "Matita", [http://matita.cs.unibo.it/]
 
-[11] Alimujiang Yasen, Kazunori Ueda, "Implementing a subset of Lambda Prolog in HyperLMNtal", [http://jssst.or.jp/files/user/taikai/2014/PPL/PPL6-4.pdf]
+# Teyjus
+
+[21] Teyjus, [https://github.com/teyjus/teyjus]
+[22] Teyjus Manual, [https://github.com/teyjus/teyjus/wiki/TeyjusManual]
+
+# ELPI
+
+[31] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
+[32] ELPI, [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
+[33] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+[34] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
+[35] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
+
+# Markam
+
+[41] Markam, [http://astampoulis.github.io/makam]
+
+# 上田研
+
+[51] Alimujiang Yasen, Kazunori Ueda, "Implementing a subset of Lambda Prolog in HyperLMNtal", [http://jssst.or.jp/files/user/taikai/2014/PPL/PPL6-4.pdf]
 
