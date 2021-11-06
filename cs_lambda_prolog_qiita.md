@@ -50,6 +50,85 @@ ELPIは次章で説明します。
 
 # λProlog言語
 
+言語仕様については、解りやすい[6]と、より詳しく知りたい場合書籍[7]を参照してください。ここでは、DEC-10 Prologを知っていることを前提に、間違いやすい点を説明します。
+大文字と小文字、``_`` の使い方は DEC-10 Prologと同じですが、次節でしめす binding operator で束縛する変数は大文字で小文字でも区別はありません。
+どちらであっても binding operator のスコープの外には影響しません。
+
+本資料では、説明のために、任意の式(formula)を表すために、A, G, D という文字を使用します。
+
+## binding operator
+
+「λ x : τ.  G」を binding operator ``\`` を使用して ``x : τ \ G`` と書きます。ここで ``: τ`` は型注釈であり省略できます。
+binding operator の優先順位（結合度）は、次節にしめす``,``、``;``や``:-``、``=>`` のシグネチャより低く、``sigma``や``pi``より高いことに注意してください。
+ただじ、本資料では、誤解を咲けるために、冗長に括弧``()``をつける場合があります。
+
+
+## 型システム
+
+kind と type が定義でき、以下で定義できます。<type expression> には、変数を使うことができます。
+
+- ``kind <kind id> <kind expression>``
+- ``type <type id> <type expression>``
+
+
+例：リストとreverse 述語は以下で定義されます。
+
+```
+kind list       type -> type.
+type cons       A -> list A -> list A.
+type reverse    list A -> list A -> o.
+```
+
+述語(formula)は ``o`` で終わります。このときの「->」は、入出力 (i/o) をしめすわけではありません。
+i/oを規程する場合は以下のようにします。
+
+```
+pred reverse    i:list A, o:list A.
+```
+
+
+## シグネチャ
+
+- ``:-`` に加えて、逆をしめす``=>``が使えます。論文などで数学記号として書く場合は「⇐」と「⊃」を使います。
+両者は向きが違うだけで同じように使用できますが、本資料では、説明を単純にするために ``=>`` は使わないようにします。
+
+- 全称をしめす``pi``と、存在をしめす``sigma``が導入されます。binding operatorと併用して使います。
+数学記号として書く場合は「∀」と「∃」を使いますが、「λ」を省略した普通の書き方をするようです。
+
+``pi (x \ G)`` は、「∀x.G」の意味です。
+
+- 数学記号
+  ``∀x.[p(X) ⇐ ∀y.[q(x), r(y,x)]]``
+
+- DEC-10 Prolog
+  ``p(X) :- q(Y), r(Y, X)``
+
+- piとbinding operatorを使う。
+  ``sigma (x \ (p x :- (sigma (y \ (q y, r y x)))))``
+
+- 不要な括弧を省く。
+  ``sigma x \ p x :- sigma y \ q y, r y x``
+
+- piとbinding operatorを使わない。
+  ``p X :- q Y, r Y X``
+
+
+
+
+
+## Hereditary Harrop式
+
+Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人名。
+
+``D :- G``
+
+において、``G``に ``G :- D`` と ``sigma (x \ G)`` 「∀x.G x」 が書けるようになります。
+
+説明を補足すること。
+
+
+## λスクエア
+
 $\require{AMScd}$
 
 ```math
