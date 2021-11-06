@@ -48,6 +48,19 @@ Teyjusが一般的な実装とされていて、ELPIとTeyjusの違いは[10]に
 ELPIは次章で説明します。
 [11]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
 
+# λProlog言語
+
+$\require{AMScd}$
+
+```math
+\begin{CD}
+FOHH @>>> HOHH \\
+@AAA      @AAA \\
+HOHC @>>> HOHC
+\end{CD}
+```
+
+
 
 # 文献
 
