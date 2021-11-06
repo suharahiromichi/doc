@@ -57,6 +57,11 @@ Formulas are terms of type ``o``
 
 ### binding operator
 
+- ``,`` ``;`` ``:-`` ``=>``のシグネチャよりも結合度が低い。
+
+- 変数名大文字でも小文字でもよい。どちらでも、外側から参照できない。
+
+
 ## Program ``P``
 
 ## Goal ``G``
@@ -74,21 +79,39 @@ Formulas are terms of type ``o``
 
 ### G と D (``D ∈ P``)
 
-| G                    |      note     |  DEC-10 Prolog  |
-|:---------------------:|:-------------:|:--------------:|
-| tt                   | hc, hh        |  true   |
-| G, G                 | hc, hh        |  g, g  |
-| G; G                 | hc, hh        |  g; g  |
-| sigma (x:τ \ G)     | hc, hh        |  g(X)  |
-| D => G               | hhのみ         |  なし    |
-| pi (x:τ \ G)        | hhのみ         |   なし   |
+| G                    |      note     | 
+|:---------------------:|:-------------:|
+| tt                   | hc, hh        | 
+| G, G                 | hc, hh        | 
+| G; G                 | hc, hh        | 
+| sigma (x:τ \ G)     | hc, hh        | 
+| D => G               | hhのみ         |
+| pi (x:τ \ G)        | hhのみ         |
 
-| D                     |     note      | DEC-10 Prolog  |
-|:---------------------:|:-------------:|:--------------:|
-| A                     | hc, hh       |  (atomic) 
-| G => D                | hc, hh       |  d :- g
-| D; D                  | hc, hh       |  d; d
-| pi (x:τ \ D)         | hc, hh        | d(X)
+| D                     |     note      |
+|:---------------------:|:-------------:|
+| A                     | hc, hh       |
+| G => D                | hc, hh       |
+| D; D                  | hc, hh       |
+| pi (x:τ \ D)         | hc, hh        | 
+
+- A はアトミックな論理式とする。
+
+- (通常のHorn節の表記から) 変数名を大文字にする場合は、
+  - G の最外側の ``sigma (X \ G)`` の sigma や binding op は省略できる。
+  - D の最外側の ``pi (X \ D)`` の pi や binding op は省略できる。
+  
+
+（PwHOL p.46）formula内では、抽象化によって明示的にバインドされていな
+いトークンは、大文字で始まる場合は変数と見なされます。プログラムを構成
+する明確な節のコレクションは、それらを順番に書くことによってPrologに示
+され、各節はピリオドで終了します。これらのいずれの節も明示的なscopeが
+与えられていない変数は、それらが出現する節全体にわたって全称記号である
+と見なされます。
+
+上記では、Dのpiについてしか述べていないが、Gのsigmaについても節全般に
+渡って存在記号としてみなされるはずである。
+
 
 
 ### Modular programming and hypothetical reasoning:
