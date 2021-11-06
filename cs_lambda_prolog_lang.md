@@ -82,16 +82,16 @@ Formulas are terms of type ``o``
 | G                    |      note     | 
 |:---------------------:|:-------------:|
 | tt                   | hc, hh        | 
-| G, G                 | hc, hh        | 
+| G, G  または G & G   | hc, hh        | 
 | G; G                 | hc, hh        | 
 | sigma (x:τ \ G)     | hc, hh        | 
-| D => G               | hhのみ         |
+| D => G  または G :- D | hhのみ         |
 | pi (x:τ \ G)        | hhのみ         |
 
 | D                     |     note      |
 |:---------------------:|:-------------:|
 | A                     | hc, hh       |
-| G => D                | hc, hh       |
+| G => D または D :- G  | hc, hh       |
 | D; D                  | hc, hh       |
 | pi (x:τ \ D)         | hc, hh        | 
 
