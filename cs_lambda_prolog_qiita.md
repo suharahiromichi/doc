@@ -56,12 +56,6 @@ ELPIは次章で説明します。
 
 本資料では、説明のために、任意の式(formula)を表すために、A, G, D という文字を使用します。
 
-## binding operator
-
-「λ x : τ.  G」を binding operator ``\`` を使用して ``x : τ \ G`` と書きます。ここで ``: τ`` は型注釈であり省略できます。
-binding operator の優先順位（結合度）は、次節にしめす``,``、``;``や``:-``、``=>`` のシグネチャより低く、``sigma``や``pi``より高いことに注意してください。
-ただじ、本資料では、誤解を咲けるために、冗長に括弧``()``をつける場合があります。
-
 
 ## 型システム
 
@@ -71,7 +65,7 @@ kind と type が定義でき、以下で定義できます。<type expression> 
 - ``type <type id> <type expression>``
 
 
-例：リストとreverse 述語は以下で定義されます。
+## 例：リストとreverse 述語の定義
 
 ```
 kind list       type -> type.
@@ -86,6 +80,12 @@ i/oを規程する場合は以下のようにします。
 pred reverse    i:list A, o:list A.
 ```
 
+## binding operator
+
+「λ x : τ.  G」を binding operator ``\`` を使用して ``x : τ \ G`` と書きます。ここで ``: τ`` は型注釈であり省略できます。
+binding operator の優先順位（結合度）は、次節にしめす``,``、``;``や``:-``、``=>`` のシグネチャより低く、``sigma``や``pi``より高いことに注意してください。
+ただじ、本資料では、誤解を咲けるために、冗長に括弧``()``をつける場合があります。
+
 
 ## シグネチャ
 
@@ -95,25 +95,7 @@ pred reverse    i:list A, o:list A.
 - 全称をしめす``pi``と、存在をしめす``sigma``が導入されます。binding operatorと併用して使います。
 数学記号として書く場合は「∀」と「∃」を使いますが、「λ」を省略した普通の書き方をするようです。
 
-``pi (x \ G)`` は、「∀x.G」の意味です。
-
-- 数学記号
-  ``∀x.[p(X) ⇐ ∀y.[q(x), r(y,x)]]``
-
-- DEC-10 Prolog
-  ``p(X) :- q(Y), r(Y, X)``
-
-- piとbinding operatorを使う。
-  ``sigma (x \ (p x :- (sigma (y \ (q y, r y x)))))``
-
-- 不要な括弧を省く。
-  ``sigma x \ p x :- sigma y \ q y, r y x``
-
-- piとbinding operatorを使わない。
-  ``p X :- q Y, r Y X``
-
-
-
+``pi (x \ G)`` は、「∀x.G」 です。
 
 
 ## Hereditary Harrop式
@@ -124,7 +106,49 @@ Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人
 
 において、``G``に ``G :- D`` と ``sigma (x \ G)`` 「∀x.G x」 が書けるようになります。
 
-説明を補足すること。
+
+## 例1
+
+全称記号を大文字の変数に置き換える例。
+
+- 数学記号
+  ``∀x.[p(X) ⇐ ∀y.[q(x), r(y,x)]]``
+
+これは``:-``の右側の``G``に全称があるため、Horn節では表せませんが、Hereditary Harrop式なら表すことができます。
+
+- piとbinding operatorを使う。
+  ``sigma (x \ (p x :- (sigma (y \ (q y, r y x)))))``
+
+- 不要な括弧を省く。
+  ``sigma x \ p x :- sigma y \ q y, r y x``
+
+抽象化によって明示的にバインドされていないトークンは、大文字で始まる場合は変数と見なされます。（中略）それらが出現する節全体にわたって全称記号であると見なされます。(PwHOL p.46)
+
+- 大文字の変数にして、sigmaを削除する。もちろん束縛された変数が同じなら削除できません。
+  ``p X :- q Y, r Y X``
+
+結局、DEC-10 Prologの表記と同じになります。
+
+- DEC-10 Prolog
+  ``p(X) :- q(Y), r(Y, X)``
+
+
+## 例2
+
+``P ⇐ (Q ⇐ R)''
+
+これは``:-``の右側の``G``に``:-``があるため、Horn節では表せませんが、Hereditary Harrop式なら表すことができます。``(Q :- R)`` の括弧は省くことはできません。
+
+``P :- (Q :- R)``
+
+これは、直感的には次の意味になります。
+
+```
+R.
+P :- Q
+```
+
+ただし、Rが有効になる(assertされる)のは、``P :- (Q :- R)`` が選択されたタイミングです。
 
 
 ## λスクエア
@@ -173,4 +197,3 @@ HOHC @>>> HOHC
 # 上田研
 
 [51] Alimujiang Yasen, Kazunori Ueda, "Implementing a subset of Lambda Prolog in HyperLMNtal", [http://jssst.or.jp/files/user/taikai/2014/PPL/PPL6-4.pdf]
-
