@@ -100,6 +100,8 @@ rev nil L L.
 rev (X :: L) K M :- rev L K (X :: M).
 ```
 
+``->``は右結合です。
+
 述語式(formula)は、``-> o`` で終わります。しかし、その左側の引数については、入出力(i/o)を示してはいません。i/oを指定する場合は以下のようにします。
 
 ```
@@ -108,7 +110,9 @@ pred reverse    i:list A, o:list A.
 
 ## 文法の拡張
 
-Horn節の範囲ですが、関数型言語に置ける``λx.F``にあたる表記や、全称・存在の表記、``:-``の逆の表記が導入されています。
+DEC-10 Prolog と同じく、``,`` と ``;`` は右結合で、``,``のほうが優先度が高いです。
+
+関数型言語に置ける``λx.F``にあたる表記や、全称・存在の表記、``:-``の逆の表記が導入されています。
 
 ### binding operator
 
@@ -166,6 +170,8 @@ DEC-10 Prolog で次の表記、これは当然FOHCですが、
 
 ``:-`` に加えて、逆をしめす``=>``が使えます。テキストで数学記号として書く場合は「⇐」と「⊃」を使います。両者は向きが違うだけで同じように使用できます。
 
+``:-`` は左結合、``=>``は右結合で、``=>``のほうが優先度が高いです。
+
 
 ## Hereditary Harrop式
 
@@ -192,12 +198,10 @@ type	reverse list A -> list A -> o.
 
 reverse L K :-
         pi rev \ (
-                    (
-                        (pi l \
-                            rev nil l l),
-                        (pi x \ pi l \ pi k \ pi m \
-                            (rev (cons x l) k m :- rev l k (cons x m)))
-                    )
+                    (pi l \
+                        rev nil l l),
+                    (pi x \ pi l \ pi k \ pi m \
+                        (rev (cons x l) k m :- rev l k (cons x m)))
                  ) => rev L K nil.
 ```
 
