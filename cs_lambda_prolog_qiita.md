@@ -90,8 +90,16 @@ HOHC @>>> HOHC
 例：リストとreverse 述語の定義
 
 ```
-kind list       type -> type.
-type cons       A -> list A -> list A.
+kind    list     type -> type.
+type    ons      A -> list A -> list A.
+type	reverse  list A -> list A -> o.
+type	rev	 list A -> list A -> list A -> o.
+
+reverse L K :- rev L K nil.
+rev nil L L.
+rev (X :: L) K M :- rev L K (X :: M).
+```
+
 type reverse    list A -> list A -> o.
 ```
 
@@ -170,17 +178,49 @@ DEC-10 Prolog で次の表記、これは当然FOHCですが、
 
 Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人名です。
 
-``D :- G``
+Prologのプログラムの節、「頭部 :- 尾部」
 
-において、``G``に ``G :- D`` と ``sigma (x \ G)`` （∀x.G x） が書けるようになります。
+``D :- G.``
+
+とすると、尾部``G``に入れ子にして、``G :- D`` や ``D => G`` を書くことができます。
+また、尾部``G``に``pi (x \ G)``（∀x.G x） が書けるようになります。
+
 これを応用すると、ローカル述語が定義できるようになります。これを Moduler Programming と呼ぶようです。
 
+前節の``reverse``の定義では、``reserve``の中からしか使わない述語``rev``が定義されていました。revをreverseのローカルな述語とするには、以下のようにします。
 
+```
+kind    list    type -> type.
+type    cons    A -> list A -> list A.
+type    nil     list A.
+type	reverse list A -> list A -> o.
 
+reverse L K :-
+        pi rev \ (
+                    (
+                        (pi l \
+                            rev nil l l),
+                        (pi x \ pi l \ pi k \ pi m \
+                            (rev (cons x l) k m :- rev l k (cons x m)))
+                    )
+                 ) => rev L K nil.
+```
+
+これは、reverse述語の尾部に``=>``や``pi``があるため、Horn節ではないことが判ります。
+reverseの定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
+``pi l \ rev nil l l`` も``rev nil L2 L2``に変更できます。ただし、外側の``L``と重ならない変数名``L2``にします。
+``pi x \ pi l \ pi k \ pi m \ ...`` の…の部分はFOHHでありFOHCでないので、大文字から始まる変数に直すことはできません。
 
 
 ## 高階述語
 
+
+# ELPI の設置と実行
+
+
+
+
+# Coq
 
 
 
