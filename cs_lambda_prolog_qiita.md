@@ -87,7 +87,7 @@ HOHC @>>> HOHC
 - ``kind <kind id> <kind expression>``
 - ``type <type id> <type expression>``
 
-例：リストとreverse 述語の定義
+例1：リストとreverse 述語の定義
 
 ```
 kind    list     type -> type.
@@ -189,6 +189,8 @@ Prologのプログラムの節、「頭部 :- 尾部」
 
 前節の``reverse``の定義では、``reserve``の中からしか使わない述語``rev``が定義されていました。revをreverseのローカルな述語とするには、以下のようにします。
 
+例2: ``reverse.epli``
+
 ```
 kind    list    type -> type.
 type    cons    A -> list A -> list A.
@@ -214,15 +216,73 @@ reverseの定義の一番外側の全体は、大文字から始まる変数名`
 
 ## 高階述語
 
+例3: ``sublist.epli``
 
-# ELPI の設置と実行
+高階述語の扱いについては、とくに難しいことはありません。
 
+```
+type    sublist	        (A -> o) -> list A -> list A -> o.
+type    flagged         A -> o.
+type    v, w, x, y, z   A.
 
+sublist P (X :: L) (X :: K) :- P X, sublist P L K.
+sublist P (_ :: L) K :- sublist P L K.
+sublist _ nil nil.
+
+flagged x.
+flagged y.
+flagged z.
+```
+
+# ELPI
+
+## インストール
+
+インストールはopamからおこなうのが簡単です。
+
+```
+% opam install elpi
+```
+
+## 実行
+
+引数にソースコードのファイル名を指定して実行すれば、それを読み込んだうえで対話モードになります。
+
+実行例は以下です。
+
+- 例2
+
+```
+% elpi reverse.elpi
+goal> reverse [1, 2, 3] X.
+X = [3, 2, 1].
+```
+
+または
+
+```
+% elpi reverse.elpi
+goal> reverse X [1, 2, 3].
+X = [3, 2, 1].
+```
+
+- 例3
+
+```
+% elpi sublist.elpi
+goal> sublist flagged [v,x,w,y,z] X.
+X = [x, y, z]
+```
+
+## 開発
+
+VSCodeとVimのシンタックスハイライトに対応しているようです。[32]を参照してください。
+Emascへの言及はありませんが、とりあえず prolog-mode でなんとかならないこともありません。
 
 
 # Coq
 
-
+ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[33]開発されました。プラグインとして作られたのは[34]です。
 
 
 # 文献
