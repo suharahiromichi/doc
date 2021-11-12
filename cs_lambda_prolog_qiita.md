@@ -11,7 +11,7 @@
 λProlog[1]は高階のHereditary Harrop式の自動証明を原理にするProlog言語です。
 これに対して、一般的なProlog言語（SWI-Prologなど　DEC-10 Prologの子孫）は、第1階のHorn節のかたちの論理式の自動証明を原理にしています。これに伴い、DEC-10 Prologと比べて、以下の特長があります。
 
-1. 述語や関数に型が書ける。ただし、省略してもよい。
+1. 述語や関数に型が書ける。省略してもよいが、推論されるわけではない。
 2. 高階の述語が書ける。DEC-10 Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
 3. Horn節を拡張した、Hereditary Harrop式が書ける。上位互換なので、Horn節だけでも書ける。
 4. ``p(x,f(y))`` ではなく、``p x (f x)`` の関数型言語風の表記である。
@@ -44,8 +44,7 @@
 - Markam　[41]
 - 早稲田大学上田研のLMNtalで実装されたサブセット　[51]
 
-Teyjusが一般的な実装とされていて、ELPIとTeyjusの違いは[35]にまとめられています。
-ELPIは次章で説明します。
+Teyjusが一般的な実装とされていて、書籍[3]でも参照されています。ELPIとTeyjusの違いは[35]にまとめられています。ELPIは次章で説明します。
 [51]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
 
 # λProlog言語
@@ -287,25 +286,33 @@ ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言�
 ## λProlog
 
 [1] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
+
 [2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
+
 [3] Dale Miller and Gopalan Nadathur, "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol] PwHOL
 
 # 定理証明支援系
 
 [11] "The Coq Proof Assistant", [https://coq.inria.fr]
+
 [12] "Matita", [http://matita.cs.unibo.it/]
 
 # Teyjus
 
 [21] Teyjus, [https://github.com/teyjus/teyjus]
+
 [22] Teyjus Manual, [https://github.com/teyjus/teyjus/wiki/TeyjusManual]
 
 # ELPI
 
 [31] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
+
 [32] ELPI, [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
+
 [33] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+
 [34] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
+
 [35] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
 
 # Markam
