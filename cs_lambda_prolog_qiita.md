@@ -18,7 +18,7 @@
 
 4を除いて、DEC-10 Prologとの互換性は考慮されているようです。appendとかは同じように動きます。
 
-また、最近(2018年〜)、定理証明支援系 Coq[11][34] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31][32][33] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
+また、最近(2018年〜)、定理証明支援系 Coq[11][34] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
 本資料は、すでにPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
 λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、ごく簡単な説明にとどめます。
@@ -40,11 +40,11 @@
 λPrologは言語の名前であり、実装は複数あります。
 
 - Teyjus [21]
-- ELPI [31][32]
+- ELPI [31]
 - Markam　[41]
 - 早稲田大学上田研のLMNtalで実装されたサブセット　[51]
 
-Teyjusが一般的な実装とされていて、書籍[3]でも参照されています。ELPIとTeyjusの違いは[36]にまとめられています。ELPIは次章で説明します。
+Teyjusが一般的な実装とされていて、書籍[3]でも参照されています。ELPIとTeyjusの違いは[33]にまとめられています。ELPIは次章で説明します。
 [51]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
 
 # λProlog言語
@@ -256,7 +256,7 @@ flagged z.
 
 # ELPI
 
-ELPI固有の機能の説明は [35] が必読です。
+ELPI固有の機能の説明は [32] が必読です。
 
 ## インストール
 
@@ -298,19 +298,19 @@ X = [x, y, z]
 
 ## 開発
 
-VSCodeとVimのシンタックスハイライトに対応しているようです。[32]を参照してください。
+VSCodeとVimのシンタックスハイライトに対応しているようです。[31]を参照してください。
 Emascへの言及はありませんが、とりあえず prolog-mode でなんとかならないこともありません。
 
 
-# Coq
+# Coq-ELPI
 
-ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[37]開発されました。プラグインとして作られたのは[39]です。
+ELPI[31]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[36]開発されました。プラグインとして作られたのは[39]です。
 Coqの中からELPIを使う方法は[38]を参照してください。
 
 
 # 文献
 
-速習したい場合は、λProlog [2]、ELPI [35]、Coq-ELPI [38] を順番で読むとよいです。
+速習したい場合は、λProlog [2]、ELPI [32]、Coq-ELPI [38] を順番で読むとよいです。
 
 ## λProlog
 
@@ -336,21 +336,20 @@ Coqの中からELPIを使う方法は[38]を参照してください。
 
 # ELPI
 
-[31] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
+[31] ELPI, [https://github.com/LPCIC/elpi]
 
-[32] ELPI, [https://github.com/LPCIC/elpi]
+[32] "Extensions to λProlog implemented in ELPI", [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
 
-[35] "Extensions to λProlog implemented in ELPI", [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
-
-[36] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
+[33] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
 
 
 # Coq-ELPI
 
-[37] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+[36] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+
+[37] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
 
 [38] Enrico Tassi. "Tutorial on the Elpi programming language", [https://lpcic.github.io/coq-elpi/tutorial_elpi_lang.html]
-
 
 [39] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
 
