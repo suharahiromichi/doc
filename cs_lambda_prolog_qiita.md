@@ -44,7 +44,7 @@
 - Markam　[41]
 - 早稲田大学上田研のLMNtalで実装されたサブセット　[51]
 
-Teyjusが一般的な実装とされていて、書籍[3]でも参照されています。ELPIとTeyjusの違いは[35]にまとめられています。ELPIは次章で説明します。
+Teyjusが一般的な実装とされていて、書籍[3]でも参照されています。ELPIとTeyjusの違いは[36]にまとめられています。ELPIは次章で説明します。
 [51]の実装は公開されていないようですが、論文の2章でλPrologの言語仕様が説明されています。
 
 # λProlog言語
@@ -256,6 +256,8 @@ flagged z.
 
 # ELPI
 
+ELPI固有の機能の説明は [35] が必読です。
+
 ## インストール
 
 インストールはopamからおこなうのが簡単です。
@@ -302,16 +304,21 @@ Emascへの言及はありませんが、とりあえず prolog-mode でなん�
 
 # Coq
 
-ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[33]開発されました。プラグインとして作られたのは[34]です。
+ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[37]開発されました。プラグインとして作られたのは[39]です。
+Coqの中からELPIを使う方法は[38]を参照してください。
 
 
 # 文献
+
+速習したい場合は、λProlog [2]、ELPI [35]、Coq-ELPI [38] を順番で読むとよいです。
 
 ## λProlog
 
 [1] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
 [2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
+全般に解りやすい資料ですが、Logic Comparison の
+ページの ``reverse L K`` の引用にミスがあります。
 
 [3] Dale Miller and Gopalan Nadathur, "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol] PwHOL
 
@@ -331,13 +338,22 @@ ELPI[32]は、λPrologをCoqの拡張言語（あるいはプラグイン用言�
 
 [31] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
 
-[32] ELPI, [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
+[32] ELPI, [https://github.com/LPCIC/elpi]
 
-[33] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+[35] "Extensions to λProlog implemented in ELPI", [https://github.com/LPCIC/elpi/blob/master/ELPI.md]
 
-[34] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
+[36] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
 
-[35] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
+
+# Coq-ELPI
+
+[37] coq-elpi, [https://github.com/LPCIC/coq-elpi]
+
+[38] Enrico Tassi. "Tutorial on the Elpi programming language", [https://lpcic.github.io/coq-elpi/tutorial_elpi_lang.html]
+
+
+[39] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
+
 
 # Markam
 
