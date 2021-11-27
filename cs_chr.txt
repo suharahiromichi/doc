@@ -1,0 +1,35 @@
+https://www.ueda.info.waseda.ac.jp/~sumiya/wiki/index.php?初学者向けCHRの使い方まとめ
+
+
+例題1 基本的な問題
+
+
+ルール：
+reflexivity  @ X leq X          <=> true.    X leq X          とマッチしたらtrueに置換
+antisymmetry @ X leq Y, Y leq X <=> X = Y.   X leq Y, Y leq X とマッチしたらX = Yに置換
+transitivity @ X leq Y, Y leq Z ==> X leq Z. X leq Y, Y leq Z とマッチしたらX leq Zを追加
+idempotence  @ X leq Y \ X leq Y <=> true.   X leq Y とマッチしたら X leq Y を trueに置換
+
+
+制約：
+A leq B, B leq C, C leq A
+
+
+CHRの動作：
+
+A leq B, B leq C,          C leq A
+--------------------------           transitivity
+A leq B, B leq C, A leq C, C leq A
+                  -----------------  antisymmetry
+A leq B, B leq C, A = C
+              ---                    A = C
+A leq B, B leq A, A = C.
+-----------------                    antisymmetry
+A = B,            A = C
+
+
+出力：
+A = B, A = C
+
+以上
+
