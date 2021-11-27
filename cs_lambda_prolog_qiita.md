@@ -8,15 +8,16 @@
 
 # はじめに
 
-λProlog[1]は高階のHereditary Harrop式の自動証明を原理にするProlog言語です。
-これに対して、一般的なProlog言語（SWI-Prologなど　DEC-10 Prologの子孫）は、第1階のHorn節のかたちの論理式の自動証明を原理にしています。これに伴い、DEC-10 Prologと比べて、以下の特長があります。
+λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。
+これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog、以下ISO Prolog）は、
+第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
 
 1. 述語や関数に型が書ける。省略してもよいが、推論されるわけではない。
-2. 高階の述語が書ける。DEC-10 Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
-3. Horn節を拡張した、Hereditary Harrop式が書ける。上位互換なので、Horn節だけでも書ける。
+2. 高階の述語が書ける。ISO Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
+3. Horn Clauseを拡張した、Hereditary Harrop Formulaが書ける。後者は前者の上位互換なので、Horn Clauseだけでも書ける。
 4. ``p(x,f(y))`` ではなく、``p x (f x)`` の関数型言語風の表記である。
 
-4を除いて、DEC-10 Prologとの互換性は考慮されているようです。appendとかは同じように動きます。
+4を除いて、ISO Prologとの互換性は考慮されているようです。appendとかmemberなどは同じように動きます（ご安心ください）。
 
 また、最近(2018年〜)、定理証明支援系 Coq[11][34] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
@@ -49,22 +50,34 @@ Teyjusが一般的な実装とされていて、書籍[3]でも参照されて�
 
 # λProlog言語
 
-言語仕様については、解りやすい[2]と、より詳しく知りたい場合書籍[3]を参照してください。ここでは、DEC-10 Prologを知っていることを前提に、間違いやすい点を説明します。
-大文字と小文字の使い方分けは DEC-10 Prologと同じですが、次節でしめす binding operator で束縛する変数では区別ありません（binding の節を参照してください）。
+言語仕様については、解りやすい[2]と、より詳しく知りたい場合書籍[3]を参照してください。ここでは、ISO Prologを知っていることを前提に、間違いやすい点を説明します。
+大文字と小文字の使い方分けは ISO Prologと同じですが、次節でしめす binding operator で束縛する変数では区別ありません（binding の節を参照してください）。
+ISO Prolog同様に、改行やインデントの制限はありません（オフサイドルールではない）。
+ISO Prolog同様に、Clause(節)の末尾は``.``で終わります。
 
 ELPIの固有の拡張として、アンダースコアから始まる名前は変数ではなく、ワイルドカードとして扱われます。
 
-また、改行やインデントの制限はありませんが、プログラムやゴールの末尾は ``.`` で終わります。
+
+## Clause vs. Formula
+
+C言語風の文法のプログラミング言語では、文の終わりを``;``で示します。逆にいうと``;``で終わる文法単位（通常一行に書く）を「文」と呼ぶわけです。
+ISO Prologのプログラムは Horn Cluaseの終わりを``.``で示します。このため、``.``で終わる文法単位（通常一行に書く）を"Clause"や「節」と呼びます。
+
+Prologのプログラムの（``.``で終わる）一行（あるいはその部分）のことを節と呼ぶのは、Prologプログラマの習慣のようなものですが、
+λPrologは、Horn Cluaseではなく、Hereditary Harrop Formulaなので、節とは呼べず（注）"formula" と呼ぶことになります。
+これを「式」と呼ぶと紛らわしいので、困りますね。
+
+（注）Hereditary Harrop Formula は Horn Cluase のスーパーセットであるため。
 
 
 ## λスクエア
 
-λPrologでは、以下の式(formula)を扱うことができます。
+λPrologでは、以下の formula を扱うことができます。
 
-- 一階のHorn節   (FOHC)    First Order Horn Clause
-- 高階のHorn節   (HOHC)    Higher Order Horn Clause
-- 一階のHereditary Harrop式   (FOHH)  First Order Hereditary Harrop Formula
-- 高階のHereditary Harrop式   (HOHH)  Higher Order Hereditary Harrop Formula
+- 一階のHorn Clause (FOHC) First Order Horn Clause
+- 高階のHorn Clause (HOHC) Higher Order Horn Clause
+- 一階のHereditary Harrop Formula (FOHH) First Order Hereditary Harrop Formula
+- 高階のHereditary Harrop Formula (HOHH) Higher Order Hereditary Harrop Formula
 
 これは、図のようなスクエアをかたち作ります。
 
@@ -129,7 +142,7 @@ prod rev      o:list A, o:list A, o:list A.
 
 ## 文法の拡張
 
-FOHCの範囲でのλPrologのシンタックスは次のようになります。<A> はアトミックな論理式(atomic formula)、<T>は型システムで定義した型、<X>は変数名とします。
+FOHCの範囲でのλPrologのシンタックスは次のようになります。<A> はアトミックなformula(tomic formula)、<T>は型システムで定義した型、<X>は変数名とします。
 
 ```
 <G> ::= true | <A> | <G1> , <G2> | <G1> ; <G2> | sigma <X> : <T> \ <G>
@@ -146,7 +159,7 @@ FOHCの範囲でのλPrologのシンタックスは次のようになります�
 ```
 
 <G>を Goal Clause または 「頭部」、<D>をDefine Clause または「尾部」と呼びます。<D>を「.」で区切って並べたものがPrologのプログラムとなります。
-DEC-10 Prolog と同じく、``,`` と ``;`` は右結合で、``,``のほうが優先度が高いです。
+ISO Prolog と同じく、``,`` と ``;`` は右結合で、``,``のほうが優先度が高いです。
 
 関数型言語に置ける``λx.F``にあたる表記や、全称・存在の表記、``:-``の逆の表記が導入されています。以下、順番に説明します。
 
@@ -166,7 +179,7 @@ ELPIの拡張機能として、複数の変数を並べて書くこともでき�
 
 ``pi (x \ G)`` は、「∀x.G」 です。
 
-DEC-10 Prolog で次の表記、これは当然FOHCですが、
+ISO Prolog で次の表記、これは当然FOHCですが、
 
 ``p(X, Z) :- q(X, Y), r(Y, Z).``
 
@@ -183,7 +196,7 @@ DEC-10 Prolog で次の表記、これは当然FOHCですが、
 
 ``p X Z :- q X Y, r Y Z.``
 
-と書くことができ、結局DEC-10 Prologと同じになります。
+と書くことができ、結局ISO Prologと同じになります。
 
 
 また、ゴールに書く式、
@@ -212,7 +225,7 @@ DEC-10 Prolog で次の表記、これは当然FOHCですが、
 ``:-`` は左結合、``=>``は右結合で、``=>``のほうが優先度が高いです。
 
 
-## Hereditary Harrop式
+## Hereditary Harrop Formula
 
 Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人名です。
 
@@ -252,7 +265,7 @@ reverse L K :-
                  ) => rev L K nil.
 ```
 
-これは、reverse述語の尾部に``=>``や``pi``があるため、Horn節ではないことが判ります。
+これは、reverse述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
 reverseの定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
 ``pi l \ rev nil l l`` も``rev nil L2 L2``に変更できます。ただし、外側の``L``と重ならない変数名``L2``にします。
 ``pi x \ pi l \ pi k \ pi m \ ...`` の…の部分はFOHHでありFOHCでないので、大文字から始まる変数に直すことはできません。
