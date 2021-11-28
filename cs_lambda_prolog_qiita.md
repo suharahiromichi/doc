@@ -9,7 +9,7 @@
 # はじめに
 
 λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。
-これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog、以下ISO Prolog）は、
+これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog[0]、以下ISO Prolog）は、
 第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
 
 1. 述語や関数に型が書ける。省略してもよいが、推論されるわけではない。
@@ -19,7 +19,7 @@
 
 4を除いて、ISO Prologとの互換性は考慮されているようです。appendとかmemberなどは同じように動きます（ご安心ください）。
 
-また、最近(2018年〜)、定理証明支援系 Coq[11][34] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
+また、最近(2018年〜)、定理証明支援系 Coq[11] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
 本資料は、すでにPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
 λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、ごく簡単な説明にとどめます。また、ELPI独自の拡張[32][33]についてもすこし触れます。
@@ -111,11 +111,11 @@ FOHC @>>> HOHC
 kind    list     type -> type.
 type    ons      A -> list A -> list A.
 type	reverse  list A -> list A -> o.
-type	rev	 list A -> list A -> list A -> o.
+type	rev	 list A -> list A -> o.
 
-reverse L K :- rev L K nil.
-rev nil L L.
-rev (X :: L) K M :- rev L K (X :: M).
+reverse L K :- rv L nil.
+rv nil K :- !.
+rv (X :: N) M :- rv N (X :: M).
 ```
 
 ``->``は右結合です。
@@ -252,7 +252,9 @@ Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人
 すなわち、尾部``G``に入れ子にして、``G :- D`` や ``D => G`` (D ⊃ G) を書くことができます。また、尾部``G``に``pi (x \ G)``（∀x.G x） が書けるようになります。
 これを応用すると、ローカル述語が定義できるようになります。これを Moduler Programming と呼ぶようです。
 
-前節の``reverse``の定義では、``reserve``の中からしか使わない述語``rev``が定義されていました。revをreverseのローカルな述語とするには、以下のようにします。
+前節の``reverse``の定義では、``reserve``の中からしか使わない述語``rv``が定義されていました。rvをreverseのローカルな述語とするには、以下のようにします。
+なお、この例は[3]を参考にしていますが、``reverse``の決定性を定義するためにカットオペレータを追加しています。
+これがないと``reverse2 X [1,2]``に対して ``X = [2,1]``を求めることはできても、バックトラックして別解を求めようとすると無限再帰に陥ってしまいます。
 
 例2: ``reverse.epli``
 
@@ -262,19 +264,22 @@ type    cons    A -> list A -> list A.
 type    nil     list A.
 type	reverse list A -> list A -> o.
 
-reverse L K :-
-        pi rev \ (
-                    (pi l \
-                        rev nil l l),
-                    (pi x \ pi l \ pi k \ pi m \
-                        (rev (cons x l) k m :- rev l k (cons x m)))
-                 ) => rev L K nil.
+pred reverse2  o:list A, o:list A.
+
+reverse2 L K :-
+        pi rv \ (
+                   (rv nil K :- !),
+                   (pi x \ pi n \ pi m \
+                       (rv (x :: n) m :- rv n (x :: m)))
+                ) => rv L nil.
 ```
 
 これは、reverse述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
 reverseの定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
-``pi l \ rev nil l l`` も``rev nil L2 L2``に変更できます。ただし、外側の``L``と重ならない変数名``L2``にします。
-``pi x \ pi l \ pi k \ pi m \ ...`` の…の部分はFOHHでありFOHCでないので、大文字から始まる変数に直すことはできません。
+``pi x \ pi n \ pi m \ …`` の部分はFOHHでありFOHCでないので(注)、大文字から始まる変数に直すことはできません。
+また、再帰の基底にあたる ``rv nil K`` で ``K`` を参照しているため、単純な書き換えでISO Prologに書き直すことができません。
+
+(注) ``=>``の左辺の``<G>``のなかでの``pi …``の出現であるため。
 
 
 ## 高階述語
