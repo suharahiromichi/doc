@@ -370,7 +370,7 @@ Emascへの言及はありませんが、とりあえず prolog-mode でなん�
 ELPI[31]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[36]開発されました。プラグインとして作られたのは[39]です。
 
 Coqに（Vernacular にというべきでしょうか) ``Elpi`` コマンドが追加され、``*.v`` ファイルにELPIのプログラムが書くことができるようになります。
-また、その中からCoqのゴールなどにアクセスすることができ、タクティクスをELPIで書くことができます。
+また、その中からCoqのコンテキストやゴールなどにアクセスすることができ、タクティクをELPIで書くことができます。
 
 詳細は[38]と、そこから参照されているページを参照してください。
 
@@ -429,6 +429,6 @@ Coqに（Vernacular にというべきでしょうか) ``Elpi`` コマンドが�
 
 [41] Markam, [http://astampoulis.github.io/makam]
 
-# 上田研
+# そのほか
 
 [51] Alimujiang Yasen, Kazunori Ueda, "Implementing a subset of Lambda Prolog in HyperLMNtal", [http://jssst.or.jp/files/user/taikai/2014/PPL/PPL6-4.pdf]
