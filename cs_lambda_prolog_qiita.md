@@ -21,9 +21,9 @@
 
 また、最近(2018年〜)、定理証明支援系 Coq[11] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
-本資料は、すでにPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
-λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、ごく簡単な説明にとどめます。また、ELPI独自の拡張[32][33]についてもすこし触れます。
-CoqとELPIの連携[36]については記載しません。
+本資料は、基本的なPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
+λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、簡単な説明にとどめます。また、ELPI独自の拡張[32][33]についてもすこし触れます。
+CoqとELPIの連携については、文献を参照してください。
 
 なお、ELPIは現時点でも開発が進んでおり、記述が古くなってしまっている場合があります。ご注意願います。
 
@@ -367,12 +367,12 @@ Emascへの言及はありませんが、とりあえず prolog-mode でなん�
 
 # Coq-ELPI
 
-ELPI[31]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[36]開発されました。プラグインとして作られたのは[39]です。
+ELPI[31]は、λPrologをCoqの拡張言語（あるいはプラグイン用言語）として使うために[36]開発されました。その成果は[39]です。
 
-Coqに（Vernacular にというべきでしょうか) ``Elpi`` コマンドが追加され、``*.v`` ファイルにELPIのプログラムが書くことができるようになります。
-また、その中からCoqのコンテキストやゴールなどにアクセスすることができ、タクティクをELPIで書くことができます。
+Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンドが追加され、``*.v`` ファイルのなかにELPIのプログラムを書くことができるようになります。
+その中からCoqのコンテキストやゴールなどにアクセスすることができ、タクティクをELPIで書くことができます。
 
-詳細は[38]と、そこから参照されているページを参照してください。
+詳細は[38][38.1][38.2][38.3]と、そこから参照されているページを参照してください。
 
 
 # 文献
@@ -420,7 +420,13 @@ Coqに（Vernacular にというべきでしょうか) ``Elpi`` コマンドが�
 
 [37] Enrico Tassi, "Elpi: an extension language for Coq”, [https://hal.inria.fr/hal-01637063/document]
 
-[38] Enrico Tassi. "Tutorial on the Elpi programming language", [https://lpcic.github.io/coq-elpi/tutorial_elpi_lang.html]
+[38] Enrico Tassi, "Tutorial on the Elpi programming language", [https://lpcic.github.io/coq-elpi/tutorial_elpi_lang.html]
+
+[38.1] Enrico Tassi, "Tutorial on the HOAS for Coq terms", [https://lpcic.github.io/coq-elpi/tutorial_coq_elpi_HOAS.html]
+
+[38.2] Enrico Tassi, "Tutorial on Coq commands", [https://lpcic.github.io/coq-elpi/tutorial_coq_elpi_command.html]
+
+[38.3] Enrico Tassi, "Tutorial on Coq tactics", [https://lpcic.github.io/coq-elpi/tutorial_coq_elpi_tactic.html]
 
 [39] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
 
