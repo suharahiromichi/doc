@@ -21,9 +21,9 @@
 
 また、最近(2018年〜)、定理証明支援系 Coq[11] や Matita[12] の拡張用言語として採用され、処理系（EPLI : Embeddable Lambda Prolog Interpreter) [31] が実装され公開されています。そのため、これらの定理証明系が使い続けられる限り、処理系は保守されるのではないかと予想されます。
 
-本資料は、基本的なPrologプログラミングについての知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
+本資料は、基本的なPrologプログラミングについて少しの知識を前提にして、処理系EPLIをインストールして動かすまでの説明をします。
 λPrologの言語仕様については、とても解りやすいページ[2]と書籍[3]があるので、簡単な説明にとどめます。また、ELPI独自の拡張[32][33]についてもすこし触れます。
-CoqとELPIの連携については、文献を参照してください。
+CoqとELPIの連携については、文献[36]〜[36.3]を参照してください。
 
 なお、ELPIは現時点でも開発が進んでおり、記述が古くなってしまっている場合があります。ご注意願います。
 
@@ -85,7 +85,7 @@ Prologのプログラムの（``.``で終わる）一行（あるいはその部
 - 一階のHereditary Harrop Formula (FOHH) First Order Hereditary Harrop Formula
 - 高階のHereditary Harrop Formula (HOHH) Higher Order Hereditary Harrop Formula
 
-これは、図のようなスクエアをかたち作ります。
+これは、図のような（キューブならぬ）スクエアをつくります。
 
 $\require{AMScd}$
 
@@ -262,8 +262,6 @@ Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人
 kind    list    type -> type.
 type    cons    A -> list A -> list A.
 type    nil     list A.
-type	reverse list A -> list A -> o.
-
 pred reverse2  o:list A, o:list A.
 
 reverse2 L K :-
@@ -274,8 +272,8 @@ reverse2 L K :-
                 ) => rv L nil.
 ```
 
-これは、reverse述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
-reverseの定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
+これは、reverse2述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
+reverse2の定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
 ``pi x \ pi n \ pi m \ …`` の部分はFOHHでありFOHCでないので(注)、大文字から始まる変数に直すことはできません。
 また、再帰の基底にあたる ``rv nil K`` で ``K`` を参照しているため、単純な書き換えでISO Prologに書き直すことができません。
 
