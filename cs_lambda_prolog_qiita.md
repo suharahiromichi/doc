@@ -104,17 +104,19 @@ FOHC @>>> HOHC
 - ``kind <K> <kind expression>``
 - ``type <T> <type expression>``
 
-例1：リストとreverse 述語の定義
+例1：リストとreverse 述語の定義 (reverse0.elpi)
 
-```
+```prolog
 kind    list     type -> type.
-type    ons      A -> list A -> list A.
-type    reverse  list A -> list A -> o.
-type    rv       list A -> list A -> o.
+type    cons      A -> list A -> list A.
+type    nil       list A.
 
-reverse L K :- rv L nil.
-rv nil K :- !.
-rv (X :: N) M :- rv N (X :: M).
+pred reverse0  o:list A, o:list A.
+pred rev0      o:list A, o:list A, o:list A.
+
+reverse0 L K :- rev0 L K nil.
+rev0 nil L L :- !.
+rev0 (cons X L) K M :- rev0 L K (cons X M).
 ```
 
 ``->``は右結合です。
@@ -124,6 +126,7 @@ rv (X :: N) M :- rv N (X :: M).
 なお、型の扱いは実装依存の部分もあり、ELPIではプログラムを最初にロードしたときに型チェックが走りエラーまたはワーニングが出ますが、実行時には型チェックは省略されるようです。
 特にbinding operatorの型注釈（いわゆるラムダ変数の型指定）は無視されるようです。
 
+``!`` については後述します。
 
 ## mode
 
@@ -139,7 +142,7 @@ in (``i:``) を指定した引数に対して、
 
 out (``o:``) を指定した引数に対しては、制約がない（ディフォルト）ので、決められない場合は、outを指定して次のように書いておけばよいようです。
 
-```
+```prolog
 prod reverse  o:list A, o:list A.
 prod rv       o:list A, o:list A, o:list A.
 ```
@@ -253,19 +256,18 @@ Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人
 すなわち、尾部``G``に入れ子にして、``G :- D`` や ``D => G`` (D ⊃ G) を書くことができます。また、尾部``G``に``pi (x \ G)``（∀x.G x） が書けるようになります。
 これを応用すると、ローカル述語が定義できるようになります。これを Moduler Programming と呼ぶようです。
 
-前節の``reverse``の定義では、``reserve``の中からしか使わない述語``rv``が定義されていました。rvをreverseのローカルな述語とするには、以下のようにします。
+前節の``reverse0``の定義では、``reserve``の中からしか使わない述語``rv``が定義されていました。rvをreverseのローカルな述語とするには、以下のようにします。
 なお、この例は[3]を参考にしていますが、``reverse``の決定性を定義するためにカットオペレータを追加しています。
-これがないと``reverse2 X [1,2]``に対して ``X = [2,1]``を求めることはできても、バックトラックして別解を求めようとすると無限再帰に陥ってしまいます。
+これがないと``reverse X [1,2]``に対して ``X = [2,1]``を求めることはできても、バックトラックして別解を求めようとすると無限再帰に陥ってしまいます。
+
+また、この例では ELPI のlist型を使用することにして、型の定義を省略しています。
 
 例2: ``reverse.elpi``
 
-```
-kind    list    type -> type.
-type    cons    A -> list A -> list A.
-type    nil     list A.
-pred    reverse2  o:list A, o:list A.
+```prolog
+pred    reverse  o:list A, o:list A.
 
-reverse2 L K :-
+reverse L K :-
         pi rv \ (
                    (rv nil K :- !),
                    (pi x \ pi n \ pi m \
@@ -273,8 +275,8 @@ reverse2 L K :-
                 ) => rv L nil.
 ```
 
-これは、reverse2述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
-reverse2の定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
+これは、``reverse``述語の尾部に``=>``や``pi``があるため、Horn Clauseではないことが判ります。
+``reverse``の定義の一番外側の全体は、大文字から始まる変数名``L``と``K``を使って、pi（∀）が省略されているこにも注意してください。
 ``pi x \ pi n \ pi m \ …`` の部分はFOHHでありFOHCでないので(注)、大文字から始まる変数に直すことはできません。
 また、再帰の基底にあたる ``rv nil K`` で ``K`` を参照しているため、単純な書き換えでISO Prologに書き直すことができません。
 
@@ -283,16 +285,16 @@ reverse2の定義の一番外側の全体は、大文字から始まる変数名
 
 ## 高階述語
 
+高階述語の扱いについては、とくに難しいことはありません。ただし、高階述語を受け取る引数の型を指定するときには、predキーワードではなく ``A -> o`` の書き方になります。
+
 例3: ``sublist.elpi``
 
-高階述語の扱いについては、とくに難しいことはありません。ただし、高階述語を受け取る引数の型を指定するときには、pred の mode を含める書き方ではなく ``A -> o`` の書き方になります。
-
-```
+```prolog
 pred    sublist	        i:(A -> o), i:list A, o:list A.
 pred    flagged         i:A.
 type    v, w, x, y, z   A.
 
-sublist P (X :: L) (X :: K) :- P X, sublist P L K.
+sublist P (X :: L) (X :: K) :- P X, !, sublist P L K.
 sublist P (_ :: L) K :- sublist P L K.
 sublist _ nil nil.
 
@@ -329,22 +331,22 @@ ELPI固有の機能は[32]が解りやすいです。拡張機能のうち以下
 
 実行例は以下です。値を求めたい引数は、変数を示す大文字で指定します。ここでも末尾に``.``が要るので注意してください。
 
-- 例1
-
-```
-% elpi reverse.elpi
-goal> reverse [1, 2, 3] X.
-Success:
-  X = [3, 2, 1].
-```
-
 - 例2
 
 ```
 % elpi reverse.elpi
-goal> reverse2 X [1, 2, 3].
+goal> reverse [1, 2, 3] Y.
 Success:
-  X = [3, 2, 1].
+  Y = [3, 2, 1].
+```
+
+- 例2 (逆方向）
+
+```
+% elpi reverse.elpi
+goal> reverse X [3, 2, 1].
+Success:
+  X = [1, 2, 3].
 ```
 
 - 例3
