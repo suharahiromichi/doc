@@ -5,13 +5,12 @@
 
 2021/12/05
 
-
 # はじめに
 
-λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog[1]、以下ISO Prolog）は、第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
+λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog、以下ISO Prolog）は、第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
 
 1. 述語や関数に型が書ける。
-2. 高階の述語が書ける。ISO Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
+2. 高階の述語が書ける。ISO Prologではcall述語やbagof述語があるが、ad-hocで、計算原理に基づくものではない。
 3. Horn Clauseを拡張した、Hereditary Harrop Formulaが書ける。後者は前者の上位互換なので、Horn Clauseだけでも書ける。
 4. ``p(x,f(y))`` ではなく、``p x (f x)`` の関数型言語風の表記である。また、引数の数が違っても同じ述語としてみなされる。
 
@@ -25,6 +24,8 @@
 
 
 # λPrologについて
+
+公式ホームページは[1]です。
 
 ## 名前について
 
@@ -74,16 +75,16 @@ C言語のような、文の終わりが``;``な言語では、``;``で終わる
 （注2）Hereditary Harrop Formula は Horn Cluase のスーパーセットで、どの定義に照らしてもclauseではない。
 
 
-## ラムダ・スクエア
+## 扱える論理式
 
-λPrologでは、以下の formula を扱うことができます。
+λPrologは、以下の論理式を扱うことができます。
 
 - 一階のHorn Clause (FOHC : First Order Horn Clause)
 - 高階のHorn Clause (HOHC : Higher Order Horn Clause)
 - 一階のHereditary Harrop Formula (FOHH : First Order Hereditary Harrop Formula)
 - 高階のHereditary Harrop Formula (HOHH : Higher Order Hereditary Harrop Formula)
 
-これは、図のような（キューブならぬ）スクエアをつくります。
+これらサブ言語の関係は、図のような（キューブならぬ）スクエアをつくります。
 
 $\require{AMScd}$
 
@@ -388,18 +389,14 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 
 速習したい場合は、λProlog [2]、ELPI [32]、Coq-ELPI [38] を順番で読むとよいです。
 
-## Prolog
-
-[1] Prolog [https://ja.wikipedia.org/wiki/Prolog]
-
 ## λProlog
+
+[1] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
 [2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
 全般に解りやすい資料ですが、Logic Comparison のページの ``reverse L K`` の引用にミスがあります。本資料では修正してあります。
 
 [3] Dale Miller and Gopalan Nadathur, PwHOL "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol]
-
-[4] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
 ## 定理証明支援系
 
