@@ -3,16 +3,16 @@
 
 @suharahiromichi
 
-2021/11/06
+2021/12/05
 
 
 # はじめに
 
 λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。
-これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog[0]、以下ISO Prolog）は、
+これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog[1]、以下ISO Prolog）は、
 第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
 
-1. 述語や関数に型が書ける。省略してもよいが、推論されるわけではない。
+1. 述語や関数に型が書ける。
 2. 高階の述語が書ける。ISO Prologではcall述語やbagof述語があるが、計算原理に基づくものではない。
 3. Horn Clauseを拡張した、Hereditary Harrop Formulaが書ける。後者は前者の上位互換なので、Horn Clauseだけでも書ける。
 4. ``p(x,f(y))`` ではなく、``p x (f x)`` の関数型言語風の表記である。また、引数の数が違っても同じ述語としてみなされる。
@@ -54,7 +54,7 @@ Teyjusが一般的な実装とされていて、書籍[3]でも参照されて�
 
 # λProlog言語
 
-言語仕様については、解りやすい[2]と、より詳しく知りたい場合書籍[3]を参照してください。ここでは、ISO Prologを知っていることを前提に、間違いやすい点を説明します。
+言語仕様については、解りやすい[2]と、より詳しく知りたい場合は書籍[3]を参照してください。ここでは、ISO Prologを知っていることを前提に、間違いやすい点を説明します。
 大文字と小文字の使い方分けは ISO Prologと同じですが、次節でしめす binding operator で束縛する変数では区別ありません（binding の節を参照してください）。
 ISO Prolog同様に、改行やインデントの制限はありません（オフサイドルールではない）。
 ISO Prolog同様に、節（正しくは formula と呼ぶ。次節参照）の末尾は``.``で終わります。
@@ -71,7 +71,7 @@ Prologのプログラムの（``.``で終わる）一行（あるいはその部
 λPrologは、Horn Cluaseではなく、Hereditary Harrop Formulaなので、これは節とは呼べず（注2）"formula" と呼ぶことになります。
 これを「式」と呼ぶと紛らわしいので、困りますね。
 
-（注1）例えば[0]。Clauseの定義は「アトミックな命題``P``またはその否定``~ P``を選言(or)でつないだもの」なので、誤用です。
+（注1）例えば、文献[1]。Clauseの定義は「アトミックな命題``P``またはその否定``~ P``を選言(or)でつないだもの」なので、Horn Clauseの略称として使うのは誤用ですね。
 
 （注2）Hereditary Harrop Formula は Horn Cluase のスーパーセットで、どの定義に照らしてもclauseではない。
 
@@ -80,8 +80,8 @@ Prologのプログラムの（``.``で終わる）一行（あるいはその部
 
 λPrologでは、以下の formula を扱うことができます。
 
-- 一階のHorn Clause (FOHC) First Order Horn Clause
-- 高階のHorn Clause (HOHC) Higher Order Horn Clause
+- 一階のHorn Clause (FOHC)               First Order Horn Clause
+- 高階のHorn Clause (HOHC)               Higher Order Horn Clause
 - 一階のHereditary Harrop Formula (FOHH) First Order Hereditary Harrop Formula
 - 高階のHereditary Harrop Formula (HOHH) Higher Order Hereditary Harrop Formula
 
@@ -110,8 +110,8 @@ FOHC @>>> HOHC
 ```
 kind    list     type -> type.
 type    ons      A -> list A -> list A.
-type	reverse  list A -> list A -> o.
-type	rev	 list A -> list A -> o.
+type    reverse  list A -> list A -> o.
+type    rv       list A -> list A -> o.
 
 reverse L K :- rv L nil.
 rv nil K :- !.
@@ -121,6 +121,8 @@ rv (X :: N) M :- rv N (X :: M).
 ``->``は右結合です。
 
 述語式は命題型(pred)を返すことを意味する、``-> o`` で終わります。しかし、その左側の引数については、入出力(i/o)を示してはいません。
+
+なお、型の扱いは実装依存の部分もあり、ELPIではプログラムを最初にロードしたときに型チェックが走りエラーまたはワーニングが出ますが、実行時には型チェックは省略されるようです。
 
 
 ## mode
@@ -140,7 +142,7 @@ rv (X :: N) M :- rv N (X :: M).
 
 ```
 prod reverse  o:list A, o:list A.
-prod rev      o:list A, o:list A, o:list A.
+prod rv       o:list A, o:list A, o:list A.
 ```
 
 本節はあとで補足します。
@@ -164,7 +166,7 @@ FOHCの範囲でのλPrologのシンタックスは次のようになります�
 <D> ::= <A> | <G> ⊃ <A> | ∀<T> <X>.<D>
 ```
 
-<G>を Goal Clause または 「頭部」、<D>をDefine Clause または「尾部」と呼びます。<D>を「.」で区切って並べたものがPrologのプログラムとなります。
+``<G>``を Goal Clause または 「頭部」、``<D>``をDefine Clause または「尾部」と呼びます。<D>を「.」で区切って並べたものがPrologのプログラムとなります。
 ISO Prolog と同じく、``,`` と ``;`` は右結合で、``,``のほうが優先度が高いです。
 
 関数型言語に置ける``λx.F``にあたる表記や、全称・存在の表記、``:-``の逆の表記が導入されています。以下、順番に説明します。
@@ -175,7 +177,7 @@ ISO Prolog と同じく、``,`` と ``;`` は右結合で、``,``のほうが優
 binding operator の優先順位（結合度）は、``,``、``;``や``:-``、``=>`` のシグネチャより低く、次節にしめす``sigma``や``pi``より高いことに注意してください。
 ただじ、本資料では、誤解を咲けるために、冗長に括弧``()``をつける場合があります。
 
-ELPIの拡張機能として、複数の変数を並べて書くこともできます。また、ELPIは型注釈は省略でき、書いても無視されます。
+ELPIの拡張機能として、複数の変数を並べて書くこともできます。
 
 
 ### 全称(∀ ``pi``)と存在(∃ ``sigma``)
@@ -262,7 +264,7 @@ Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人
 kind    list    type -> type.
 type    cons    A -> list A -> list A.
 type    nil     list A.
-pred reverse2  o:list A, o:list A.
+pred    reverse2  o:list A, o:list A.
 
 reverse2 L K :-
         pi rv \ (
@@ -285,10 +287,11 @@ reverse2の定義の一番外側の全体は、大文字から始まる変数名
 例3: ``sublist.epli``
 
 高階述語の扱いについては、とくに難しいことはありません。
+高階述語を受け取る引数の型を指定するときには、pred ではなく ``A -> o`` の書き方になります。
 
 ```
-type    sublist	        (A -> o) -> list A -> list A -> o.
-type    flagged         A -> o.
+pred    sublist	        i:(A -> o), i:list A, o:list A.
+pred    flagged         i:A.
 type    v, w, x, y, z   A.
 
 sublist P (X :: L) (X :: K) :- P X, sublist P L K.
@@ -315,7 +318,7 @@ ELPIでは、formulaや式、定数の型を宣言しないとワーニングが
 
 これ以外にも、以下の機能がありますが、記事を改めたいとおもいます。
 
-- Constraint
+- Constraint    制約
 - Namespace
 
 
@@ -331,22 +334,24 @@ ELPIでは、formulaや式、定数の型を宣言しないとワーニングが
 
 引数にソースコードのファイル名を指定して実行すれば、それを読み込んだうえで対話モードになります。
 
-実行例は以下です。
+実行例は以下です。値を求めたい引数は、変数を示す大文字で指定します。
+
+- 例1
+
+```
+% elpi reverse.elpi
+goal> reverse [1, 2, 3] X.
+Success:
+  X = [3, 2, 1].
+```
 
 - 例2
 
 ```
 % elpi reverse.elpi
-goal> reverse [1, 2, 3] X.
-X = [3, 2, 1].
-```
-
-または
-
-```
-% elpi reverse.elpi
-goal> reverse X [1, 2, 3].
-X = [3, 2, 1].
+goal> reverse2 X [1, 2, 3].
+Success:
+  X = [3, 2, 1].
 ```
 
 - 例3
@@ -354,8 +359,22 @@ X = [3, 2, 1].
 ```
 % elpi sublist.elpi
 goal> sublist flagged [v,x,w,y,z] X.
-X = [x, y, z]
+Success:
+  X = [x, y, z]
 ```
+
+このように、「成功」の文字とともに変数の値、すなわち解が示されます。
+実行する内容によっては、別解があることを示す``More?``が表示される場合があります。
+ここで``Y``を指定すると、この場でfailしたとみなされバックトラックが発生します。別解がなければ、もう解がないことを示す「失敗」で終了します。
+
+```
+More? (Y/n)
+Y
+Failure
+```
+
+場合によっては無限ループや無限バックトラックになる場合があるのでその場合は``Ctrl-C``で止めることができます。
+
 
 ## 開発
 
@@ -379,17 +398,17 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 
 ## Prolog
 
-[0] https://ja.wikipedia.org/wiki/Prolog
+[1] https://ja.wikipedia.org/wiki/Prolog
 
 ## λProlog
-
-[1] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
 [2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
 全般に解りやすい資料ですが、Logic Comparison の
 ページの ``reverse L K`` の引用にミスがあります。
 
 [3] Dale Miller and Gopalan Nadathur, "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol] PwHOL
+
+[4] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
 # 定理証明支援系
 
