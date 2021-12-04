@@ -127,9 +127,9 @@ rv (X :: N) M :- rv N (X :: M).
 
 ## mode
 
-λPrologの範囲を越えたELPIの拡張機能ですが、predキーワードによって、述語の引数のmode（入出力 i/o)を指定できます。
+λPrologの範囲を越えたELPIの拡張機能ですが、predキーワードによって、述語の引数のmode（入出力 i/o のどちらか)を指定できます。
 
-inとoutの指定方法は、ISO Prologとも異なり（詳細は略）、次の規則になっているようです。
+inとoutの指定方法は、ISO Prologのmode指定とも異なり（詳細は略）、次の規則になっているようです。
 
 in (``i:``) を指定した引数に対して、
 
@@ -144,7 +144,7 @@ prod reverse  o:list A, o:list A.
 prod rv       o:list A, o:list A, o:list A.
 ```
 
-本節はあとで補足します。
+本項はあとで補足します。
 
 
 ## 文法の拡張
