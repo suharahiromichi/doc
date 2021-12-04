@@ -112,8 +112,8 @@ kind    list     type -> type.
 type    cons     A -> list A -> list A.
 type    nil      list A.
 
-type reverse0 list A -> list A -> o.
-type rev0     list A -> list A -> list A -> o.
+type    reverse0 list A -> list A -> o.
+type    rev0     list A -> list A -> list A -> o.
 
 reverse0 L K :- rev0 L K nil.
 rev0 nil L L :- !.
@@ -153,7 +153,7 @@ prod rv0      o:list A, o:list A, o:list A.
 
 ## 文法の拡張
 
-FOHCの範囲でのλPrologのシンタックスは次のようになります。``<A>``はアトミックな論理式、``<T>``は型システムで定義した型、``<X>``は変数名とします。
+Horn Clauseの範囲でのλPrologのシンタックスは次のようになります。``<A>``はアトミックな論理式、``<T>``は型システムで定義した型、``<X>``は変数名とします。
 
 ```
 <G> ::= true | <A> | <G1> , <G2> | <G1> ; <G2> | sigma <X> : <T> \ <G>
@@ -186,7 +186,7 @@ binding operator の優先順位（結合度）は、``,``、``;``や``:-``、``
 
 ### 全称(∀ ``pi``)と存在(∃ ``sigma``)
 
-全称をしめす``pi``と、存在をしめす``sigma``が導入されます。正確にいうとHone Clauseではこれらを省略するのですが、省略しない書き方もできる、というべきでしょうか。なので、これだけで、Hone Clauseの表現できる範囲を越えることはありません。
+全称をしめす``pi``と、存在をしめす``sigma``が導入されます。
 必ずbinding operatorと併用して使います。テキストに数学記号として書く場合は「∀」と「∃」を使いますが、その場合はbinding operatorを使わない普通の書き方をするようです。すなわち、``pi (<X> \ <G>)`` は ``∀x.G`` です。
 
 ちょっと面倒ですが、ISO PrologとλPrologで全称と存在記号を使った場合と使わない場合の表記の違いを説明します。
@@ -242,17 +242,17 @@ ISO Prolog でのの定義の式、これは当然FOHCですが、
 Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人名です。
 
 ```
-<G> ::= (FOHC)とおなじ | <G> :- <D> | <D> => <G> | pi <X> : <T> \ <D>
+<G> ::= (Hone Clauseとおなじ) | <G> :- <D> | <D> => <G> | pi <X> : <T> \ <D>
 
-<D> ::= (FOHC)とおなじ。
+<D> ::= (Hone Clauseとおなじ)
 ```
 
 数学記号では、
 
 ```
-<G> ::= (FOHC)とおなじ | <G> ⇐ <D> | <D> ⊃ <G> | ∀<T> <X>.<D>
+<G> ::= (Hone Clauseとおなじ) | <G> ⇐ <D> | <D> ⊃ <G> | ∀<T> <X>.<D>
 
-<D> ::= (FOHC)とおなじ。
+<D> ::= (Hone Clauseとおなじ)
 ```
 
 すなわち、尾部``G``に入れ子にして、``G :- D`` や ``D => G`` (D ⊃ G) を書くことができます。また、尾部``G``に``pi (x \ G)``（∀x.G x） が書けるようになります。
