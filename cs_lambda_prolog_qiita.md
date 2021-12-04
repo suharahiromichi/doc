@@ -65,23 +65,23 @@ Teyjusが一般的な実装とされていて、書籍[3]でも参照されて�
 
 ## Clause vs. Formula
 
-C言語風の文法のプログラミング言語では、文の終わりを``;``で示します。逆にいうと``;``で終わる文法単位（通常一行に書く）を「文」と呼ぶわけです。ISO Prologのプログラムは Horn Cluaseの終わりを``.``で示します。このため、``.``で終わる文法単位（通常一行に書く）を"clause"や「節」と呼びます。
+C言語のような、文の終わりが``;``な言語では、``;``で終わる文法単位（通常一行に書く）を「文」と呼ぶわけです。翻って、ISO Prologのプログラムは Horn Cluaseの終わりを``.``で示します。このため、``.``で終わる文法単位（通常一行に書く）を"clause"や「節」と呼びます（注1）。
 
-Prologのプログラムの（``.``で終わる）一行（あるいはその部分）のことを節と呼ぶのは、Prologプログラマの悪い習慣なのですが（注1）、λPrologは、Horn Cluaseではなく、Hereditary Harrop Formulaなので、これは節とは呼べず（注2）"formula" と呼ぶことになります。これを「式」と呼ぶと紛らわしいので、困りますね。
+λPrologは、Horn Cluaseではなく、Hereditary Harrop Formulaなので、これは節とは呼べず（注2）"formula" と呼ぶことになります。これを「式」と呼ぶと紛らわしいので、困りますね。
 
-（注1）例えば、文献[1]。Clauseの定義は「アトミックな命題``P``またはその否定``~ P``を選言(or)でつないだもの」なので、Horn Clauseの略称として使うのは誤用ですね。
+（注1）Hone Clauseを略してClauseと呼ぶ感覚です。Hone ClauseもClauseなので間違いではないのですが。
 
 （注2）Hereditary Harrop Formula は Horn Cluase のスーパーセットで、どの定義に照らしてもclauseではない。
 
 
-## λスクエア
+## ラムダ・スクエア
 
 λPrologでは、以下の formula を扱うことができます。
 
-- 一階のHorn Clause (FOHC)               First Order Horn Clause
-- 高階のHorn Clause (HOHC)               Higher Order Horn Clause
-- 一階のHereditary Harrop Formula (FOHH) First Order Hereditary Harrop Formula
-- 高階のHereditary Harrop Formula (HOHH) Higher Order Hereditary Harrop Formula
+- 一階のHorn Clause (FOHC : First Order Horn Clause)
+- 高階のHorn Clause (HOHC : Higher Order Horn Clause)
+- 一階のHereditary Harrop Formula (FOHH : First Order Hereditary Harrop Formula)
+- 高階のHereditary Harrop Formula (HOHH : Higher Order Hereditary Harrop Formula)
 
 これは、図のような（キューブならぬ）スクエアをつくります。
 
