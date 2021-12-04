@@ -327,7 +327,7 @@ ELPI固有の機能は[32]が解りやすいです。拡張機能のうち以下
 
 引数にソースコードのファイル名を指定して実行すれば、それを読み込んだうえで対話モードになります。
 
-実行例は以下です。値を求めたい引数は、変数を示す大文字で指定します。
+実行例は以下です。値を求めたい引数は、変数を示す大文字で指定します。ここでも末尾に``.``が要るので注意してください。
 
 - 例1
 
@@ -387,31 +387,30 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 
 ## Prolog
 
-[1] https://ja.wikipedia.org/wiki/Prolog
+[1] Prolog [https://ja.wikipedia.org/wiki/Prolog]
 
 ## λProlog
 
 [2] Chelsea Corvus, "Programming with Higher-Order Logic", [https://chelsea.lol/pwhol]
-全般に解りやすい資料ですが、Logic Comparison の
-ページの ``reverse L K`` の引用にミスがあります。
+全般に解りやすい資料ですが、Logic Comparison のページの ``reverse L K`` の引用にミスがあります。本資料では修正してあります。
 
 [3] Dale Miller and Gopalan Nadathur, PwHOL "Programming with Higher-Order Logic", [https://sites.google.com/site/proghol]
 
 [4] "λProlog: Logic programming in higher-order logic", [http://www.lix.polytechnique.fr/Labo/Dale.Miller/lProlog]
 
-# 定理証明支援系
+## 定理証明支援系
 
 [11] "The Coq Proof Assistant", [https://coq.inria.fr]
 
 [12] "Matita", [http://matita.cs.unibo.it/]
 
-# Teyjus
+## Teyjus
 
 [21] Teyjus, [https://github.com/teyjus/teyjus]
 
 [22] Teyjus Manual, [https://github.com/teyjus/teyjus/wiki/TeyjusManual]
 
-# ELPI
+## ELPI
 
 [31] ELPI, [https://github.com/LPCIC/elpi]
 
@@ -420,7 +419,7 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 [33] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
 
 
-# Coq-ELPI
+## Coq-ELPI
 
 [36] coq-elpi, [https://github.com/LPCIC/coq-elpi]
 
@@ -437,10 +436,12 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 [39] Algebra Tactics, [https://github.com/math-comp/algebra-tactics]
 
 
-# Markam
+## Markam
 
 [41] Markam, [http://astampoulis.github.io/makam]
 
-# そのほか
+## そのほか
 
 [51] Alimujiang Yasen, Kazunori Ueda, "Implementing a subset of Lambda Prolog in HyperLMNtal", [http://jssst.or.jp/files/user/taikai/2014/PPL/PPL6-4.pdf]
+
+以上
