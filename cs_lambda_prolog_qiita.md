@@ -102,15 +102,15 @@ FOHC @>>> HOHC
 定数の型をtypeキーワードで、型の型をkindキーワードで定義します。
 ``<type expression>`` には、型変数として大文字から始まる名前を使うことができ、その``<type expression>``の中がスコープになります。型変数に宣言は要りません。
 
-- ``kind <K> <kind expression>``
-- ``type <T> <type expression>``
+- ``kind <K> <kind expression>.``
+- ``type <T> <type expression>.``
 
 例1：リストとreverse述語の定義 (reverse0.elpi)
 
 ```prolog
 kind    list     type -> type.
-type    cons      A -> list A -> list A.
-type    nil       list A.
+type    cons     A -> list A -> list A.
+type    nil      list A.
 
 type reverse0 list A -> list A -> o.
 type rev0     list A -> list A -> list A -> o.
@@ -197,7 +197,7 @@ ISO Prolog でのの定義の式、これは当然FOHCですが、
 
 は、数学記号での表記は、
 
-``∀x.∀y.∀z.(p(x,z) ⊂ q(x, y) ∧ r(y, z)``
+``∀x.∀y.∀z.(p(x,z) ⊂ q(x, y) ∧ r(y, z))``
 
 となります。λPrologで、piとbinding operatorを使うと、
 
@@ -213,7 +213,7 @@ ISO Prolog でのの定義の式、これは当然FOHCですが、
 
 また、ISO Prologでゴールに書く式、
 
-``p(X, Z).``
+``p(42, A).``
 
 は、数学記号での表記は、
 
