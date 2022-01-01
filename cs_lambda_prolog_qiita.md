@@ -145,8 +145,8 @@ in (``i:``) を指定した引数に対して、
 out (``o:``) を指定した引数に対しては、制約がない（ディフォルト）ので、決められない場合は、outを指定して次のように書いておけばよいようです。
 
 ```prolog
-prod reverse0 o:list A, o:list A.
-prod rv0      o:list A, o:list A, o:list A.
+pred reverse0 o:list A, o:list A.
+pred rv0      o:list A, o:list A, o:list A.
 ```
 
 本項はあとで補足します。
