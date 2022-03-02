@@ -5,6 +5,8 @@
 
 2021/12/05
 
+2022/03/02 Emacsでの編集を追記した。
+
 # はじめに
 
 λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog、以下ISO Prolog）は、第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
@@ -375,9 +377,12 @@ Failure
 場合によっては無限ループや無限バックトラックになる場合があるのでその場合は``Ctrl-C``で止めることができます。
 
 
-## 開発
+## シンタックスハイライト
 
-VSCodeとVimのシンタックスハイライトに対応しているようです。[31]を参照してください。Emascへの言及はありませんが、とりあえず prolog-mode でなんとかならないこともありません。
+VSCodeとVimのシンタックスハイライトに対応しているようです。[31]を参照してください。
+
+Emacs の場合は、[23] の teyjus.el を使うことになりますが、対応するEmacsが古いため``full-copy-sparse-keymap`` を　``copy-keymap`` に修正してください（2ヶ所）。
+``~/.emacs`` の設定については [34] を参照してください。
 
 
 # Coq-ELPI
@@ -414,6 +419,8 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 
 [22] Teyjus Manual, [https://github.com/teyjus/teyjus/wiki/TeyjusManual]
 
+[23] Teyjus Mode for Emacs, https://kamal.aboulhosn.org/lp/tey-emacs.html
+
 ## ELPI
 
 [31] ELPI, [https://github.com/LPCIC/elpi]
@@ -422,6 +429,7 @@ Coq（Vernacular にというべきでしょうか) に、``Elpi`` コマンド�
 
 [33] "Known incompatibilities with Teyjus",[https://github.com/LPCIC/elpi/blob/master/INCOMPATIBILITIES.md]
 
+[34] "Emacs mode #128", https://github.com/LPCIC/elpi/issues/128
 
 ## Coq-ELPI
 
