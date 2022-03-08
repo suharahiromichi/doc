@@ -154,13 +154,13 @@ Elpi Query lp:{{
 
 ## Quotations and Aatiquotations
 
+```
 Elpi Query lp:{{
   ID = (fun `x` {{nat}} x\ x),
   B = {{O}},
   coq.say "(id b) is:" (app [ID, B])
 }}.
-
-
+```
 
 
 
