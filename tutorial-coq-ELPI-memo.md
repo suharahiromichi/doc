@@ -73,8 +73,39 @@ reads the type Ty and the body Bo of constant GR.<br>
 |　GR    | Bo         | Ty　                | 意味             |
 |--------|------------|---------------------|-----------------|
 | «x»    | some (†)  | global (indt «nat») | x := 2          |
+| «Nat.add»  | some (††)  | ††† | ††††          |
 
 †　``app [global (indc «S»), app [global (indc «S»), global (indc «O»)]]``
+
+††
+```coq
+fix `add` 0 
+ (prod `n` (global (indt «nat»)) c0 \
+   prod `m` (global (indt «nat»)) c1 \ global (indt «nat»)) c0 \
+ fun `n` (global (indt «nat»)) c1 \
+  fun `m` (global (indt «nat»)) c2 \
+   match c1 (fun `n` (global (indt «nat»)) c3 \ global (indt «nat»)) 
+	[c2, 
+     (fun `p` (global (indt «nat»)) c3 \
+       app [global (indc «S»), app [c0, c3, c2]])]
+```
+
+††† ``Π n : nat, Π m : nat, nat``  = ``nat -> nat -> nat``
+```
+prod `n` (global (indt «nat»))
+   c0 \ prod `m` (global (indt «nat»))
+    c1 \ global (indt «nat»)
+```
+
+††††
+```
+Nat.add = 
+Fix add (n m : nat) {struct n} : nat :=
+  match n with
+  | 0 => m
+  | S p => S (add p m)
+  end
+```
 
 - [coq.name-suffix Name Suffix NameSuffix] suffixes a Name with a string or an int or another name
 
@@ -86,10 +117,26 @@ reads the type Ty and the body Bo of constant GR.<br>
 
 ### bulitin述語（制約を課す　to impose constrains)
 
-- [coq.univ.sup U1 U2] constrains U2 = U1 + 1
-- [coq.univ.leq U1 U2] constrains U1 <= U2
+- ``coq.univ.sup U1 U2`` <br>
+``pred coq.univ.sup i:univ, i:univ.``<br>
+制約　constrains ``U2 = U1 + 1`` を与える。計算をするわけではない。
 
+- ``coq.univ.leq U1 U2``<br>
+``pred coq.univ.leq i:univ, i:univ.``<br>
+制約 constrains ``U1 <= U2`` を与える。
 
+--------------------------
+--------------------------
+いろいろな書き方で、λx.xを書いてみよう。
+
+```
+Elpi Query lp:{{
+  ID = (fun `x` (sort (typ U)) x\ x),
+  A = (sort (typ U)), % the same U as before
+  B = (sort (typ V)),
+  coq.say "(id b) is:" (app [ID, B])
+}}.
+```
 --------------------------
 --------------------------
 作成中
