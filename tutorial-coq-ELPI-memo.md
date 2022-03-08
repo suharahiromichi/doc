@@ -127,7 +127,21 @@ Fix add (n m : nat) {struct n} : nat :=
 
 --------------------------
 --------------------------
-いろいろな書き方で、λx.xを書いてみよう。
+# いろいろな書き方で、λx.xを書いてみよう。
+
+ ## Global Reference
+
+```
+Elpi Query lp:{{
+  coq.locate "nat" GR,
+  ID = (fun `m` (global GR) x\ x),
+  coq.locate "O" GRo,
+  B = global GRo,
+  coq.say "(id b) is:" (app [ID, B])
+}}.
+```
+
+## Sort
 
 ```
 Elpi Query lp:{{
@@ -137,6 +151,19 @@ Elpi Query lp:{{
   coq.say "(id b) is:" (app [ID, B])
 }}.
 ```
+
+## Quotations and Aatiquotations
+
+Elpi Query lp:{{
+  ID = (fun `x` {{nat}} x\ x),
+  B = {{O}},
+  coq.say "(id b) is:" (app [ID, B])
+}}.
+
+
+
+
+
 --------------------------
 --------------------------
 作成中
