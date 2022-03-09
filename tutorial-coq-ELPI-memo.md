@@ -77,20 +77,24 @@ reads the type Ty and the body Bo of constant GR.<br>
 
 †　``app [global (indc «S»), app [global (indc «S»), global (indc «O»)]]``
 
-††
+†† ``fix add n m := match n [m, λp. S (add p m)]``
 ```coq
 fix `add` 0 
- (prod `n` (global (indt «nat»)) c0 \
-   prod `m` (global (indt «nat»)) c1 \ global (indt «nat»)) c0 \
- fun `n` (global (indt «nat»)) c1 \
-  fun `m` (global (indt «nat»)) c2 \
-   match c1 (fun `n` (global (indt «nat»)) c3 \ global (indt «nat»)) 
-	[c2, 
-     (fun `p` (global (indt «nat»)) c3 \
-       app [global (indc «S»), app [c0, c3, c2]])]
+ 
+ (prod `n` (global (indt «nat»))
+   c0 \ prod `m` (global (indt «nat»))
+     c1 \ global (indt «nat»))
+ 
+ c0 \ fun `n` (global (indt «nat»))
+   c1 \ fun `m` (global (indt «nat»))
+     c2 \ match c1
+                (fun `n` (global (indt «nat»)) c3 \ global (indt «nat»))
+	              [c2,                               % 0 のとき m
+                 (fun `p` (global (indt «nat»))    % S p のとき λp . S (add p m)
+                   c3 \ app [global (indc «S»), app [c0, c3, c2]])]
 ```
 
-††† ``Π n : nat, Π m : nat, nat``  = ``nat -> nat -> nat``
+††† ``Π n : nat, Π m : nat, nat`` = ``nat -> nat -> nat``
 ```
 prod `n` (global (indt «nat»))
    c0 \ prod `m` (global (indt «nat»))
@@ -125,9 +129,20 @@ Fix add (n m : nat) {struct n} : nat :=
 ``pred coq.univ.leq i:univ, i:univ.``<br>
 制約 constrains ``U1 <= U2`` を与える。
 
---------------------------
---------------------------
-# いろいろな書き方で、λx.xを書いてみよう。
+
+# 作成中
+
+- [coq.univ.print] prints the set of universe constraints
+
+- [coq.typecheck T Ty Diagnostic]<br>
+typchecks a term T returning its type Ty.<br>
+pred coq.typecheck i:term, o:term, o:diagnostic.<br>
+diagonostice は ok または (error Msg) である。
+
+- [coq.sigma.print] Prints Coq's Evarmap and the mapping to/from Elpi's <br>
+
+
+# (補足) いろいろな書き方で、``ID = λx.x`` を書いてみよう。
 
  ## Global Reference
 
@@ -146,7 +161,6 @@ Elpi Query lp:{{
 ```
 Elpi Query lp:{{
   ID = (fun `x` (sort (typ U)) x\ x),
-  A = (sort (typ U)), % the same U as before
   B = (sort (typ V)),
   coq.say "(id b) is:" (app [ID, B])
 }}.
@@ -156,34 +170,18 @@ Elpi Query lp:{{
 
 ```
 Elpi Query lp:{{
-  ID = (fun `x` {{nat}} x\ x),
+  ID = (fun `x` {{nat}} x\ {{ lp:{{x}} }}),
   B = {{O}},
   coq.say "(id b) is:" (app [ID, B])
 }}.
 ```
 
 
-
---------------------------
---------------------------
-作成中
-
-- [coq.univ.print] prints the set of universe constraints
-
-- [coq.typecheck T Ty Diagnostic]<br>
-typchecks a term T returning its type Ty.<br>
-pred coq.typecheck i:term, o:term, o:diagnostic.<br>
-diagonostice は ok または (error Msg) である。
-
-- [coq.sigma.print] Prints Coq's Evarmap and the mapping to/from Elpi's <br>
-(略)
-
-
 # Tutorial on Coq commands
 
 ## 主なbuiltin述語
 
-- [std.assert! C M] takes the first success of C or fails with message M
+˚- [std.assert! C M] takes the first success of C or fails with message M
 - [std.assert-ok! C M] like assert! but the last argument of the predicate must be a diagnostic that is printed after M in case it is not ok
 
 - [std.lenght]
