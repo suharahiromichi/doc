@@ -381,7 +381,7 @@ Failure
 
 VSCodeとVimのシンタックスハイライトに対応しているようです。[31]を参照してください。
 
-Emacs の場合は、[23] の teyjus.el を使うことになりますが、対応するEmacsが古いため``full-copy-sparse-keymap`` を　``copy-keymap`` に修正してください（2ヶ所）。
+Emacs の場合は、[23] の teyjus.el を使うことになりますが、対応するEmacsが古いため``full-copy-sparse-keymap`` を ``copy-keymap`` に修正してください（2ヶ所）。
 ``~/.emacs`` の設定については [34] を参照してください。
 
 
