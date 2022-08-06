@@ -1,16 +1,44 @@
 #
 # .cshrc
-# $Id: .cshrc,v 1.10 2019/11/27 14:34:52 suhara Exp $
+# $Id: .cshrc,v 1.9 2022/08/06 08:15:52 suhara Exp suhara $
 #
 
-setenv LANG ja_JP.UTF-8
+#stty erase "^?" intr "^C" -ixon
+stty erase "^H" intr "^C" -ixon
+umask 000
+
+########
+# Homebrew
+########
+setenv HOMEBREW_PREFIX /opt/homebrew
+setenv HOMEBREW_CELLAR /opt/homebrew/Cellar
+setenv HOMEBREW_REPOSITORY /opt/homebrew
+setenv MANPATH /opt/homebrew/share/man:/opt/X11/share/man:/usr/share/man
+setenv INFOPATH /opt/homebrew/share/info:/opt/X11/share/info:/usr/share/info
+
+########
+# Cargo
+########
+setenv CARGO_HOME $HOME/.cargo
+
+set path = ( \
+	$HOME/.cargo/bin \
+	$HOME/.nodebrew/current/bin \
+	$HOME/bin \
+	/usr/local/{bin,sbin} \
+	/opt/homebrew/{bin,sbin} \
+	/opt/X11/bin/ \
+	/usr/bin/X11 \
+	/usr/{bin,sbin,games} \
+	/{bin,sbin} \
+)
 
 ########
 # pkg_add -r emacs
 ########
-setenv PACKAGEROOT ftp://ftp.jp.freebsd.org/
+#setenv PACKAGEROOT ftp://ftp.jp.freebsd.org/
 #setenv PACKAGESITE ftp://ftp.jp.freebsd.org/pub/FreeBSD/ports/amd64/packages-8.1-release/Latest/
-setenv FTP_PASSIVE_MODE yes
+#setenv FTP_PASSIVE_MODE yes
 #setenv HTTP_PROXY 192.168.6.8:1088    # for only MASC
 
 alias grep grep -i
@@ -21,19 +49,14 @@ alias dir  ls -F -lA
 alias grep grep -i
 alias rm   rm -i
 alias jobs jobs -l
-alias clean "/bin/rm -i err del* ika* tako* *~ .*~ #* *.dvi *.aux *.eps *.bak"
+alias clean "/bin/rm -i err* del* ika* tako* *~ .*~ #* *.dvi *.aux *.eps *.bak"
+alias more less -I -X                        # 画面クリアしない。
+alias e "(emacsclient --no-wait --alternate-editor=emacs \!*)"
 
-#alias emacs '(setenv XMODIFIERS @im=none; \emacs \!*)'
-alias emacs "(setenv XMODIFIERS @im=none; emacsclient --no-wait --alternate-editor=emacs \!*)"
-alias e emacs
-
-alias nautilus 'nautilus --no-desktop'
+#########
+# Coq
+#########
 alias coqdoc  coqdoc --utf8
-
-#########
-# KL1
-#########
-alias klic "klic -I/usr/local/include -L/usr/local/lib"
 
 #########
 # GitHub
@@ -44,71 +67,34 @@ alias git_push     git push -u origin master
 alias git_log      git log --follow
 alias git_key "eval `ssh-agent`; ssh-add"
 
+
 #########
 # cshell
 #########
 set notify
 
+setenv PAGER "\less -I -X"                  # 画面クリアしない。
 setenv DIFF_OPTIONS "-W160 -t"
 setenv BLOCKSIZE 1k
 setenv PRINTER ps
+#setenv EDITOR vi
 setenv EDITOR emacsclient
 setenv PERL_BADLANG 0
 
+set filec
+set history = 1000
+set ignoreeof
+set mch = `hostname -s`
+set prompt = "$mch{\!}% "
 
-setenv PRINTER HL-2040-series
-setenv SCRAMDIR /usr/scramnet/cfg/
-setenv F90_BOUNDS_CHECK_ABORT YES
-setenv CVSROOT /users/project/f2sim/cvsroot
+#########
+# opam
+#########
+if ( -f /Users/suhara/.opam/opam-init/init.csh ) source /Users/suhara/.opam/opam-init/init.csh >& /dev/null
 
-set path = ( \
-$HOME/bin \
-/usr/local/{bin,sbin} \
-/usr/freeware/{bin,sbin} \
-/usr/bin/X11 \
-/usr/X11R6/bin \
-/usr/{bin,sbin,games} \
-/{bin,sbin} \
-)
-
-### OPAM ##################
-eval `opam config env`
-###########################
-
-## CABAL ##################
+#########
+# CABAL
+#########
 set path = (~/.cabal/bin $path)
-###########################
-
-if ($?prompt) then
-    stty erase "^H" intr "^C" -ixon
-   
-    if ($?SSH_CONNECTION && ! $?SSH_TTY) then
-        setenv  LC_ALL C
-    else if ($TERM == kterm) then
-        setenv  LC_ALL ja_JP.eucJP
-        alias   more  "/usr/local/bin/jless -X"
-        setenv  PAGER "/usr/local/bin/jless -X"
-    else
-        setenv  LC_ALL ja_JP.UTF-8
-        alias   more  "/usr/bin/less -Xi"
-        setenv  PAGER "/usr/bin/less -Xi"
-    endif
-   
-    set filec
-    set history = 1000
-    set ignoreeof
-    set mail = (/var/mail/$USER)
-    set mch = `uname -n`
-    set prompt = "$mch{\!}% "
-    umask 000
-
-    if ($TERM == dumb) then
-        ;
-    else 
-        alias settitle	echo -n ']0\;${mch}:${PWD}'
-        alias cd   "cd \!*; settitle"
-        settitle
-    endif
-endif
 
 ### END OF FILE
