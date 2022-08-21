@@ -1,10 +1,10 @@
 #
 # .cshrc
-# $Id: .cshrc,v 1.9 2022/08/06 08:15:52 suhara Exp suhara $
+# $Id: .cshrc,v 1.11 2022/08/21 05:36:43 suhara Exp suhara $
 #
 
-#stty erase "^?" intr "^C" -ixon
-stty erase "^H" intr "^C" -ixon
+stty erase "^?" intr "^C" -ixon
+#stty erase "^H" intr "^C" -ixon
 umask 000
 
 ########
@@ -41,6 +41,7 @@ set path = ( \
 #setenv FTP_PASSIVE_MODE yes
 #setenv HTTP_PROXY 192.168.6.8:1088    # for only MASC
 
+alias cd   'cd \!*; printf "\033]0;$cwd\007"'
 alias grep grep -i
 alias l    ls -F -1
 alias ls   ls -F
@@ -51,7 +52,7 @@ alias rm   rm -i
 alias jobs jobs -l
 alias clean "/bin/rm -i err* del* ika* tako* *~ .*~ #* *.dvi *.aux *.eps *.bak"
 alias more less -I -X                        # 画面クリアしない。
-alias e "(emacsclient --no-wait --alternate-editor=emacs \!*)"
+alias e    "(emacsclient --no-wait --alternate-editor=emacs \!*)"
 
 #########
 # Coq
