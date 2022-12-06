@@ -7,6 +7,8 @@
 
 2022/03/02 Emacsでの編集を追記した。
 
+2022/12/06 Opam installを修正した。
+
 # はじめに
 
 λProlog[1]は高階のHereditary Harrop Formulaの自動証明を原理にするProlog言語です。これに対して、一般的なProlog言語（SWI-PrologなどのISO規格に準拠したProlog、以下ISO Prolog）は、第1階のHorn Clause（ホーン節）のかたちの論理式の自動証明を原理にしています。これに伴い、ISO Prologと比べて、以下の特長があります。
@@ -330,6 +332,7 @@ ELPI固有の機能は[32]が解りやすいです。拡張機能のうち以下
 インストールはOpamからおこなうのが簡単です。
 
 ```
+% opam repo add coq-released https://coq.inria.fr/opam/released
 % opam install elpi
 ```
 
