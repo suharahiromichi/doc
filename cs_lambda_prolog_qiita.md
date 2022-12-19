@@ -75,7 +75,7 @@ C言語のような、文の終わりが``;``な言語では、``;``で終わる
 
 λPrologは、Horn Cluaseではなく、Hereditary Harrop Formulaなので、これは節とは呼べず（注2）"formula" と呼ぶことになります。これを「式」と呼ぶと紛らわしいので、困りますね。
 
-（注1）Hone Clauseを略してClauseと呼ぶ感覚です。Hone ClauseもClauseなので間違いではないのですが。
+（注1）Horn Clauseを略してClauseと呼ぶ感覚です。Horn ClauseもClauseなので間違いではないのですが。
 
 （注2）Hereditary Harrop Formula は Horn Cluase のスーパーセットで、どの定義に照らしてもclauseではない。
 
@@ -250,17 +250,17 @@ ISO Prolog でのの定義の式、
 Hereditary Harrop Formula は、Horn Clauseの拡張です。HarropとHornは人名です。
 
 ```
-<G> ::= (Hone Clauseとおなじ) | <G> :- <D> | <D> => <G> | pi <X> : <T> \ <D>
+<G> ::= (Horn Clauseとおなじ) | <G> :- <D> | <D> => <G> | pi <X> : <T> \ <D>
 
-<D> ::= (Hone Clauseとおなじ)
+<D> ::= (Horn Clauseとおなじ)
 ```
 
 数学記号では、
 
 ```
-<G> ::= (Hone Clauseとおなじ) | <G> ⇐ <D> | <D> ⊃ <G> | ∀<T> <X>.<D>
+<G> ::= (Horn Clauseとおなじ) | <G> ⇐ <D> | <D> ⊃ <G> | ∀<T> <X>.<D>
 
-<D> ::= (Hone Clauseとおなじ)
+<D> ::= (Horn Clauseとおなじ)
 ```
 
 すなわち、尾部``G``に入れ子にして、``G :- D`` や ``D => G`` (D ⊃ G) を書くことができます。また、尾部``G``に``pi (x \ G)``（∀x.G x） が書けるようになります。
