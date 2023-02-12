@@ -4,6 +4,7 @@
 
 2023_02_08 @suharahiromichi
 
+2023_02_12 @suharahiromichi
 
 
 # 演算子と束縛子
@@ -20,21 +21,25 @@
 | ∃             | sigma                 | (A -> o) -> o | 
 
 
+``not`` と ``!`` (カット)は、通常の述語である。
+
+
 # 2項述語
 
-| 述語 | Concrete syntax font | type |
-|:----:|:--------:|:---------------------:|
+| 述語 | Concrete syntax font | type | 同じ定義 |
+|:----:|:--------:|:---------------------:|:---------:|
 |      |  =       | A -> A -> o  | 
-| gt_  |  <       | A -> A -> o  |
-| lt_  | >        | A -> A -> o  | 
-| ge_  | =<       | A -> A -> o  | 
-| le_  | >=       | A -> A -> o  | 
+| lt_  |  <       | A -> A -> o  | i<、r<、s<
+| gt_  | >        | A -> A -> o  | i>、r>、s>
+| le_  | =<       | A -> A -> o  | i=<、r=<、s=<
+| ge_  | >=       | A -> A -> o  | i>=、r>=、s>=
 | calc | is       | A -> A -> o  | 
 
 calc と (is) では、引数の順番が逆になる。
 
 
-# calc　(is) の演算子
+
+# calc (is) の演算子
 
 整数
 ```
@@ -44,8 +49,8 @@ type (i+) int -> int -> int.
 type (*) int -> int -> int.
 type (mod) int -> int -> int.
 type (div) int -> int -> int.
-type (~) int -> int.
-type (i~) int -> int.
+type (~) int -> int.              (* opposite *)
+type (i~) int -> int.             (* opposite *)
 type abs int -> int.
 type iabs int -> int.
 type max int -> int -> int.
@@ -59,8 +64,8 @@ type (+) float -> float -> float.
 type (r+) float -> float -> float.
 type (*) float -> float -> float.
 type (/) float -> float -> float.
-type (~) float -> float.
-type (r~) float -> float.
+type (~) float -> float.          (* opposite *)
+type (r~) float -> float.         (* opposite *)
 type abs float -> float.
 type rabs float -> float.
 type max float -> float -> float.
