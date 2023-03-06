@@ -128,14 +128,25 @@ std.set. のELPIの組込述語
 
 ## Coq-ELPI
 
-- coq-elpi/elpi/coq-HOAS.elpi
+- coq-elpi/elpi-builtin.elpi
 
-match や indt-decl などのHOASのコンストラクタ
+(elpi/src/builtin.elpi と同じ)
 
 
-- coq-elpi/elpi/coq-lib.elpi
+- coq-elpi/coq-builtin.elpi
 
-copy-indt-decl など
 
+- elpi/coq-lib.elpi
+
+- elpi/coq-HOAS.elpi
+
+- elpi/elpi-ltac.elpi
+- elpi/elpi_elaborator.elpi
+
+- elpi/elpi-tactic-template.elpi
+- elpi/elpi-command-template.elpi
+- elpi/coq-elaborator.elpi
+
+- elpi/coq-elpi-checker.elpi- elpi/elpi-reduction.elpi
 
 以上
