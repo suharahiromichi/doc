@@ -1,0 +1,51 @@
+Wolfram Language をEmacsから使用する
+
+@suharahiromichi
+
+2023/06/09
+
+
+1. 設置手順
+
+(1) Wolfram Engine と WolframScript を設置して、ライセンスを取得する。
+コマンドラインから wolframscript が実行できることを確認する。
+
+(2) ~/.emacs.d/lisp/wolfram-mode.el を設置する。
+https://github.com/kawabata/wolfram-mode/blob/master/wolfram-mode.el
+
+(3) .emacs に以下を設定する。
+
+(global-set-key [f5] 'run-wolfram)
+;;
+;; WolframScript
+;;
+(load-file "$HOME/.emacs.d/lisp/wolfram-mode.el")
+(setq wolfram-program "/usr/local/bin/wolframscript")
+(setq wolfram-path "./")
+(setq auto-mode-alist
+      (cons `("\\.wls$" . wolfram-mode)
+            (cons `("\\.m$" . wolfram-mode)
+                  auto-mode-alist)))
+
+2. 使い方
+
+(1) WolframScript の起動
+
+M-x run-wolfram
+
+
+(2) *.wls ファイルの実行
+
+C-cC-s    wolfram-send-last-mathexp     (last expression をwolframscriptに送る。)
+C-sC-e    wolfram-send-last-mathexp     (last expression をwolframscriptに送る。)
+C-cC-r    wolfram-send-region           (region をwolframscriptに送る。)
+
+
+3. 補足説明
+
+- EPrint 関数は使えない。
+
+- wolfram-run-script コマンドは使えない。
+
+
+以上
