@@ -41,11 +41,37 @@ C-sC-e    wolfram-send-last-mathexp     (last expression をwolframscriptに送�
 C-cC-r    wolfram-send-region           (region をwolframscriptに送る。)
 
 
-3. 補足説明
+3. 使い方
 
-- EPrint 関数は使えない。
+3.1 数式出力
+
+3.1.1 *wolfram* バッファに出力する。';' をつけないこと。
+
+- OutputForm    ディフォルト、キャラ文字
+- InputForm
+- CForm
+- FortranForm
+- TeXForm       Xは大文字
+
+
+3.1.2 ファイルに出力する。
+
+- Export["demo.tex", TexForm[式]]
+
+
+
+3.2 図出力
+
+3.2.1 ファイルに出力する。
+
+- Export["rule60.png", 式];
+
+
+4. 補足説明
 
 - wolfram-run-script コマンドは使えない。
+
+- EPrint.m はつくられ、読み込めるようだ。
 
 
 以上
