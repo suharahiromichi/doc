@@ -1,13 +1,14 @@
 ;;; -*- coding: utf-8 -*-
 ;;; .emacs for Emacs23
-;;; $Id: .emacs,v 1.13 2021/04/29 07:21:32 suhara Exp $
+;;; $Id: .emacs,v 1.20 2023/09/23 11:11:47 suhara Exp suhara $
 
 ;;; Function Keys
 (global-set-key [f1] 'delete-other-windows)
 (global-set-key [f2] 'split-window-vertically)
 (global-set-key [f3] 'shell)
-(global-set-key [f4] 'coq-windows)
-(global-set-key [f5] 'anthy-default-mode)
+;(global-set-key [f4] 'coq-windows)
+(global-set-key [f4] 'proof-three-window-toggle)
+(global-set-key [f5] 'run-wolfram)
 (global-set-key [f7] 'search-forward-regexp)
 (global-set-key [f8] 'replace-regexp)
 (global-set-key [f10] 'kill-buffer)
@@ -25,68 +26,86 @@
 (global-set-key "\^[s" 'shell)
 (global-set-key "\^[y" 'yank-rectangle)
 (global-set-key "\^[\^[" 'what-line)
-;;(global-set-key "\^[o" 'other-window)
-;; ^X-o と逆にする。
-(global-set-key "\^[o" 'previous-multiframe-window)
+
+(global-set-key [?\C-x?\C-o] 'next-multiframe-window) ;; C-xC-o
+(global-set-key "\^[o" 'previous-multiframe-window)   ;; M-o
 ;; PGで上書きされる。
 ;;(global-set-key "\^[p" 'previous-multiframe-window)
 ;;(global-set-key "\^[n" 'next-multiframe-window)
 
 ;;; GnuEmacs
-(setq menu-coding-system 'euc-jp)
 (server-start)
 (setq frame-title-format "%b")
-(tool-bar-mode 0)
-(menu-bar-mode 0)
+(tool-bar-mode 1)
+(menu-bar-mode 1)
 (blink-cursor-mode 0)
-;(setq x-select-enable-clipboard t)
-;(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 (column-number-mode t)
+;;(toggle-frame-fullscreen)
 
-;;; Mule-UNICODE
-(cond ((eq emacs-major-version 21)
-       (require 'un-define)
-       (require 'un-tools)
-       (require 'jisx0213)))
+;; Emacs Mac Port (EMP)
+;; ミニバッファに入力時、自動的に英語モード
+(mac-auto-ascii-mode 1)
+;;
+;; Font設定
+;;
+(create-fontset-from-ascii-font "Menlo-14:weight=normal:slant=normal" nil "menlomarugo")
+;;(create-fontset-from-ascii-font "Menlo-17:weight=normal:slant=normal" nil "menlomarugo")
+(set-fontset-font "fontset-menlomarugo" 'unicode (font-spec :family "Hiragino Maru Gothic ProN" ) nil 'append)
+(add-to-list 'default-frame-alist '(font . "fontset-menlomarugo"))
+(setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
+;; フォント幅設定確認用文字列 (半角:全角 = 1:2)
+;;||||||||||||||||||||||||||
+;;||||||||あいうえお||||||||  <-- ここ揃ってますか？
+;;||||||||||||||||||||||||||
 
+;; Whitespace
+(require 'whitespace)
+(set-face-foreground 'whitespace-space "DarkOliveGreen3")
+(set-face-background 'whitespace-space nil)
+(set-face-bold-p 'whitespace-space t)
+(set-face-foreground 'whitespace-tab "DarkOliveGreen3")
+(set-face-background 'whitespace-tab nil)
+(set-face-underline  'whitespace-tab t)
+(setq whitespace-style '(face tabs tab-mark spaces space-mark))
+(setq whitespace-space-regexp "\\(\x3000+\\)")
+(setq whitespace-display-mappings
+      '((space-mark ?\x3000 [?\□])
+        (tab-mark   ?\t   [?\xBB ?\t])))
+(global-whitespace-mode 1)              ; 全角スペースを常に表示
+(global-set-key (kbd "C-x w") 'global-whitespace-mode) ; 全角スペース表示の切替
 
-(set-language-environment "Japanese")
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-buffer-file-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-
-
-;;;; SHELL for Windows
-(add-hook 'shell-mode-hook
-          (lambda ()
-            (cond ((eq system-type 'windows-nt)
-                   (set-buffer-process-coding-system 'sjis-unix 'sjis-unix)
-                   (set-buffer-file-coding-system 'sjis-unix))
-                  (t
-                   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
-                   (set-buffer-file-coding-system 'utf-8-unix)))))
 ;;;;;;;;;;;;;;;;
-;;;; IM
+;; IM
 ;;;;;;;;;;;;;;;;
-(setq default-input-method "japanese-anthy")
-;;; nn -> n'
-(setq quail-japanese-use-double-n t)
-(setq anthy-wide-space " ")
-(setq anthy-accept-timeout 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; default sytle
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq-default indent-tabs-mode nil)
-;(setq-default fill-column 110)
+;;(setq-default fill-column 110)
 (setq-default comment-column 44)
 
 
-;;; OCaml
-(load "~/.opam/4.07.1/share/emacs/site-lisp/tuareg-site-file")
-(setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
-(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Package System
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+;;
+;; Rust
+;; MELPA rust-mode
+;;
+;;(add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
+;;(use-package rust-mode
+;;  :ensure t
+;;  :custom rust-format-on-save t)
+
+;;
+;; OCaml
+;; ELPA Tuareg Mode
+;;
 
 ;;; C
 (defun my-c-mode-common-hook ()
@@ -96,60 +115,42 @@
   )
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
-
-;;
-;; Spin/Promela
-;;
-;(load "$HOME/lisp/promela-mode.el")
-;(defun my-promela-mode-hook ()
-;  (setq comment-column 44)
-;  )
-;(add-hook 'promela-mode-hook 'my-promela-mode-hook)
-;(setq auto-mode-alist
-;      (append
-;       (list (cons "\\.promela$"  'promela-mode)
-;             (cons "\\.spin$"     'promela-mode)
-;             (cons "\\.pml$"      'promela-mode)
-;             )
-;       auto-mode-alist))
-
-
 ;;
 ;; Coq
 ;;
-(load-file "/usr/local/share/emacs/site-lisp/ProofGeneral/generic/proof-site.el")
-(load-file "/usr/local/share/emacs/site-lisp/pg-ssr.el")
-(setq coq-prog-args '("-emacs" "-impredicative-set"))
-;; 
-;; ProofGneral に適したウィンドウを開く。
+;; ELPA proof-general
 ;;
-(defun coq-windows-1 ()
-  "Setup Windows for Proof General"
-  (interactive)
-  (delete-other-windows)
-  (new-frame)
-  (other-frame 1)
-  (split-window-vertically)
-  (switch-to-buffer "*goals*")
-  (other-window 1)
-  (switch-to-buffer "*response*")
-  (other-window 1))
+;(setq coq-prog-args '("-emacs" "-impredicative-set"))
+(setq coq-prog-args
+      (cons "-R" (cons "/Users/suhara/Work/coq/common/" (cons "common" (cons "-emacs" nil)))))
 
-(defun coq-windows ()
-  "Setup Windows for Proof General"
-  (interactive)
-  (set-frame-parameter nil 'fullscreen 'fullboth) ; 恒久的
-;;(toggle-frame-fullscreen)
-  (delete-other-windows)
-  (split-window-horizontally)
-  (other-window 1)
-  (switch-to-buffer "*goals*")
-  (split-window-vertically)
-  (other-window 1)
-  (switch-to-buffer "*response*")
-  (other-window 1))
+;;
+;; Satysfi
+;;
+;;(require 'satysfi)
+(load-file "$HOME/.emacs.d/lisp/satysfi.el")
+(add-to-list 'auto-mode-alist '("\\.saty$" . satysfi-mode))
+(add-to-list 'auto-mode-alist '("\\.satyh$" . satysfi-mode))
+(setq satysfi-command "satysfi")
+;;; set the command for typesetting (default: "satysfi -b")
+(setq satysfi-pdf-viewer-command "sumatrapdf")
+;; set the command for opening PDF files (default: "open")
 
-;; end
+;;
+;; λProlog (Teyjus)
+;; 
+(load-file "$HOME/.emacs.d/lisp/teyjus.el")
+(setq auto-mode-alist
+   (cons '("\\.mod\\'" . teyjus-edit-mode) 
+    (cons '("\\.sig\\'" . teyjus-edit-mode)
+     (cons '("\\.hc\\'" .  teyjus-edit-mode)
+      (cons '("\\.def\\'" .  teyjus-edit-mode)
+       (cons '("\\.elpi\\'" .  teyjus-edit-mode)
+           auto-mode-alist))))))
+(autoload 'teyjus           "~/emacs/teyjus"
+          "Run an inferior Teyjus process." t)
+(autoload 'teyjus-edit-mode "~/emacs/teyjus" 
+  "Syntax Highlighting, etc. for Lambda Prolog" t)
 
 ;;
 ;; SWI-Prolog
@@ -189,65 +190,24 @@
 ;;
 ;; Egison
 ;;
-(load "$HOME/lisp/egison-mode.el")
+;;(load "$HOME/lisp/egison-mode.el")
 (setq auto-mode-alist
       (cons `("\\.egi$" . egison-mode) auto-mode-alist))
 
+;;
+;; WolframScript
+;;
+(load-file "$HOME/.emacs.d/lisp/wolfram-mode.el")
+(autoload 'wolfram-mode "wolfram-mode" nil t)
+(autoload 'run-wolfram "wolfram-mode" nil t)
+(setq wolfram-program "/usr/local/bin/wolframscript")
+(setq wolfram-path "./")
+(setq auto-mode-alist
+      (cons `("\\.wls$" . wolfram-mode)
+            (cons `("\\.m$" . wolfram-mode)
+                  auto-mode-alist)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; MacBook pro - internal display (default setting)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(cond
- (t
-  (progn
-    (setq initial-frame-alist
-          (append (list
-                   '(width . 90)
-                   '(height . 56)
-                   '(top . 0)
-                   '(left . 0)
-                   '(font . "梅ゴシック-13"))
-                  initial-frame-alist))
-    (setq default-frame-alist
-          (append (list
-                   '(width . 89)
-                   '(height . 56)
-                   '(font . "梅ゴシック-13"))
-                  default-frame-alist))))
- (t
-  (progn
-    (setq initial-frame-alist
-          (append (list
-                   '(width . 86)
-                   '(height . 48)
-                   '(top . 0)
-                   '(left . 0)
-                   '(font . "梅ゴシック-11"))
-                  initial-frame-alist))
-    (setq default-frame-alist
-          (append (list
-                  '(width . 65)
-                  '(height . 48)
-                  '(top . 0)
-                  '(left . 720)
-                  '(font . "梅ゴシック-11"))
-                  default-frame-alist))))
- (t
-  (setq initial-frame-alist
-        (append (list
-                 '(width . 86)
-                 '(height . 48)
-                 '(top . 0)
-                 '(left . 0)
-                 '(font . "IPA モナー 明朝-11"))
-                initial-frame-alist))
-  (setq default-frame-alist
-        (append (list
-                 '(width . 86)
-                 '(height . 48)
-                 '(top . 0)
-                 '(left . 640)
-                 '(font . "IPA モナー 明朝-11"))
-                default-frame-alist))))
 ;;;;;;;;;;;;;;;
 ;; END
 ;;;;;;;;;;;;;;;
@@ -256,15 +216,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(package-selected-packages '(rust-mode tuareg typescript-mode proof-general))
  '(safe-local-variable-values
-   (quote
-    ((coq-prog-args "-emacs-U" "-R" "/Users/suhara/WORK/coq3/cpdt-japanese/src" "Cpdt"))
-    )))
+   '((coq-prog-args "-emacs-U" "-R" "/Users/suhara/WORK/coq3/cpdt-japanese/src" "Cpdt"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Menlo" :foundry "nil" :slant normal :weight normal :height 120 :width normal)))))
 
-
+(put 'set-goal-column 'disabled nil)
