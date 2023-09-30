@@ -1,6 +1,7 @@
 ;;; -*- coding: utf-8 -*-
-;;; .emacs for Emacs23
-;;; $Id: .emacs,v 1.20 2023/09/23 11:11:47 suhara Exp suhara $
+;;; .emacs for Emacs
+;;; GNU Emacs 29.1
+;;; Development version e173249a143c on 29.1-mac-10.0 branch; build date 2023-08-08.
 
 ;;; Function Keys
 (global-set-key [f1] 'delete-other-windows)
@@ -48,10 +49,9 @@
 ;;
 ;; Font設定
 ;;
-(create-fontset-from-ascii-font "Menlo-14:weight=normal:slant=normal" nil "menlomarugo")
-;;(create-fontset-from-ascii-font "Menlo-17:weight=normal:slant=normal" nil "menlomarugo")
-(set-fontset-font "fontset-menlomarugo" 'unicode (font-spec :family "Hiragino Maru Gothic ProN" ) nil 'append)
-(add-to-list 'default-frame-alist '(font . "fontset-menlomarugo"))
+;; Options → Set Default Fonts...
+;; Menlo レギュラー 14
+;; Options → Save Options
 (setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
 ;; フォント幅設定確認用文字列 (半角:全角 = 1:2)
 ;;||||||||||||||||||||||||||
@@ -226,6 +226,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Menlo" :foundry "nil" :slant normal :weight normal :height 120 :width normal)))))
+ '(default ((t (:family "Menlo" :foundry "nil" :slant normal :weight medium :height 141 :width normal)))))
 
 (put 'set-goal-column 'disabled nil)
