@@ -13,6 +13,7 @@
 (global-set-key [f7] 'search-forward-regexp)
 (global-set-key [f8] 'replace-regexp)
 (global-set-key [f10] 'kill-buffer)
+(global-set-key [f12] 'idris-type-at-point)
 (global-set-key [down-mouse-3] 'mouse-buffer-menu)
 
 ;;; Key Bindings
@@ -122,7 +123,8 @@
 ;;
 ;(setq coq-prog-args '("-emacs" "-impredicative-set"))
 (setq coq-prog-args
-      (cons "-R" (cons "/Users/suhara/Work/coq/common/" (cons "common" (cons "-emacs" nil)))))
+      (cons "-R" (cons "/Users/suhara/Work/coq/common/" (cons "common"
+      (cons "-emacs" nil)))))
 
 ;;
 ;; Satysfi
@@ -207,6 +209,21 @@
             (cons `("\\.m$" . wolfram-mode)
                   auto-mode-alist)))
 
+;;
+;; Idris2
+;;
+;;(add-to-list 'load-path "~/.emacs.d/idris2-mode/")
+;;(require 'idris2-mode)
+
+;;
+;; Idris1
+;;
+;; MELPA
+;; M-x package-install idris-mode
+;;
+(require 'idris-mode)
+(setq idris-interpreter-path "idris2")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;
 ;; END
@@ -218,7 +235,8 @@
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
  '(column-number-mode t)
- '(package-selected-packages '(rust-mode tuareg typescript-mode proof-general))
+ '(package-selected-packages
+   '(idris-mode rust-mode tuareg typescript-mode proof-general))
  '(safe-local-variable-values
    '((coq-prog-args "-emacs-U" "-R" "/Users/suhara/WORK/coq3/cpdt-japanese/src" "Cpdt"))))
 (custom-set-faces

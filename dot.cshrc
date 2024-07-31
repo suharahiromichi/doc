@@ -1,6 +1,6 @@
 #
 # .cshrc
-# $Id: .cshrc,v 1.12 2023/03/18 00:07:56 suhara Exp suhara $
+# $Id: .cshrc,v 1.18 2024/07/29 13:42:07 suhara Exp suhara $
 #
 
 stty erase "^?" intr "^C" -ixon
@@ -59,10 +59,27 @@ alias more less -I -X                        # 画面クリアしない。
 alias e    "(emacsclient --no-wait --alternate-editor=emacs \!* &)"
 
 #########
+# Wolfram 
+#########
+# 以下は一回実行すればよい。
+#wolframscript -configre WOLFRAMSCRIPT_KERNELPATH "/Applications/Wolfram Engine.app/Contents/Resources/Wolfram Player.app/Contents/MacOS/WolframKernel"
+#setenv WOLFRAMSCRIPT_KERNELPATH "/Applications/Wolfram Engine.app/Contents/Resources/Wolfram Player.app/Contents/MacOS/WolframKernel"
+
+#########
+# opam
+#########
+if ( -f /Users/suhara/.opam/opam-init/init.csh ) source /Users/suhara/.opam/opam-init/init.csh >& /dev/null
+
+#########
 # Coq
 #########
 alias coqdoc  coqdoc --utf8
 
+##alias mc1  'opam switch 4.13.1 > /dev/null; eval `opam env`' 
+##alias mc2  'opam switch 4.14.1 > /dev/null; eval `opam env`' 
+##alias mc   'opam switch; coqc -v'
+###alias mc   grep "switch:" ~/.opam/config
+    
 #########
 # GitHub
 #########
@@ -93,13 +110,13 @@ set mch = `hostname -s`
 set prompt = "$mch{\!}% "
 
 #########
-# opam
-#########
-if ( -f /Users/suhara/.opam/opam-init/init.csh ) source /Users/suhara/.opam/opam-init/init.csh >& /dev/null
-
-#########
 # CABAL
 #########
 set path = (~/.cabal/bin $path)
+
+########
+# idris
+########
+setenv NO_COLOR
 
 ### END OF FILE
