@@ -1,0 +1,121 @@
+数学ガールと Lean の FLT(4) 4次のフェルマーの最終定理の証明
+
+2025_09_14
+
+# 数学ガールの証明
+
+## ピタゴラ・ジュース・メーカー、原始ピタゴラス数の生成式 (※)
+
+A^2 + B^2 = C^2 /\ A⊥B
+<->
+A = m^2 - n^2 /\ B = 2 m n /\ C = m^2 + n^2 /\ m > n /\ m⊥n /\ mとnの片方が奇数
+
+
+-> において、mとnは一意に決まる。
+
+
+## FLT の定義
+
+n を 3 以上の自然数とする。
+
+FLT(n) = forall x y z, x^n + y^n ≠ z^n
+
+
+## 互いに素条件
+
+x, y の公約数が d とする。
+x^n + y^n = z^n が成り立つことと、両辺を d^n で割った式が成り立つことは同値である。
+よって、x と y が互いに素 x⊥y である場合のみ考えればよい。
+
+全体にFLTの否定で考えるので、扱う論理式は
+
+P(n) = exists x y z, x^n + y^n = z^n /\ x⊥y
+
+また、等式が成り立つ場合 x⊥y ならば x⊥z かつ y⊥z である。
+
+
+## ピタゴラス三角形との関係
+
+三辺が自然数の直角三角形をピタゴラス三角形という。
+面積が平方数のピタゴラス三角形が存在することと、P(n) が成り立つことは同値である。
+
+証明：
+
+P(n) を同値変形（※）すると、以下を得る。
+
+exists A B C D, A^2 + B^2 = C^2 /\ 2*A*B = D^2 /\ A⊥B
+
+
+
+## 面積が平方数のピタゴラス三角形の不存在
+
+面積は平方数のピタゴラス三角形が存在すると仮定すると、以下が成り立つ。
+
+exists A B C D, A^2 + B^2 = C^2 /\ 2*A*B = D^2 /\ A⊥B
+
+を同値変形（※）すると、
+
+exists A1 B1 C1 D1, A1^2 + B1^2 = C1^2 /\ 2*A1*B1 = D1^2 /\ A1⊥B1 /\ C1 < C
+
+を得る。しかし、この無限降下は矛盾であるから、面積は平方数のピタゴラス三角形は存在しない。
+
+
+
+
+# Lean4 / MathLib4 の証明
+
+
+## NumberTheory/PythagoreanTriples.lean
+
+- 原始ピタゴラス数の生成式
+theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z)
+    (h_coprime : Int.gcd x y = 1) (h_parity : x % 2 = 1) (h_pos : 0 < z) :
+    ∃ m n,
+      x = m ^ 2 - n ^ 2 ∧
+        y = 2 * m * n ∧
+          z = m ^ 2 + n ^ 2 ∧
+            Int.gcd m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) ∧ 0 ≤ m 
+
+
+## NumberTheory/FLT/Four.lean
+
+- 無限降下法（ができるという仮定）
+def Minimal (a b c : ℤ) : Prop :=
+  (Fermat42 a b c) ∧ (∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1)
+
+
+
+- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd and `c` positive.
+  無限降下できるという補題
+theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
+    ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0
+
+
+
+- 無限降下から偽を導く補題
+theorem not_minimal {a b c : ℤ} (hm : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 < c) : False
+
+hm : Minimal a b c
+(前提のandなので、左右それぞれを前提として使う)
+(左)
+hm.left : Fermat42 a b c
+hm.left.right : b ≠ 0 ∧ a ^ 4 + b ^ 4 = c ^ 2
+hm.left.right.left : b ≠ 0
+hm.left.right.right : a ^ 4 + b ^ 4 = c ^ 2
+(右)
+hm.right : ∀ (a1 b1 c1 : ℤ), Fermat42 a1 b1 c1 → c.natAbs ≤ c1.natAbs
+
+
+- a^4 + b^4 = c^2 は成立しない。
+theorem not_fermat_42 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 2
+
+この False に not_minimal を適用する。
+
+
+- a^4 + b^4 = c^4 は成立しない。
+theorem fermatLastTheoremFour : FermatLastTheoremFor 4
+
+
+
+
+以上
