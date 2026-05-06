@@ -9,10 +9,12 @@
 (global-set-key [f3] 'shell)
 ;(global-set-key [f4] 'coq-windows)
 (global-set-key [f4] 'proof-three-window-toggle)
-(global-set-key [f5] 'run-wolfram)
+(global-set-key [f5] 'lean4-toggle-info)
+(global-set-key [f6] 'run-wolfram)
 (global-set-key [f7] 'search-forward-regexp)
 (global-set-key [f8] 'replace-regexp)
-(global-set-key [f10] 'kill-buffer)
+(global-set-key [f9] 'proof-goto-point)
+;;(global-set-key [f10] 'kill-buffer) ;; -nw で使用する。
 (global-set-key [f12] 'idris-type-at-point)
 (global-set-key [down-mouse-3] 'mouse-buffer-menu)
 
@@ -22,6 +24,9 @@
 (global-set-key "\^\\" 'set-mark-command)
 (global-set-key "\^h" 'delete-backward-char)
 (global-set-key "\^t" 'call-last-kbd-macro)
+(global-set-key "\^[v"  'scroll-up-line)
+(global-set-key "\^[z"  'scroll-down-line)
+(global-set-key "\^v"  'scroll-up)
 (global-set-key "\^z"  'scroll-down)
 (global-set-key "\^[g" 'goto-line)
 (global-set-key "\^[k" 'kill-rectangle)
@@ -38,7 +43,7 @@
 ;;; GnuEmacs
 (server-start)
 (setq frame-title-format "%b")
-(tool-bar-mode 1)
+(tool-bar-mode 0)
 (menu-bar-mode 1)
 (blink-cursor-mode 0)
 (column-number-mode t)
@@ -125,6 +130,7 @@
 (setq coq-prog-args
       (cons "-R" (cons "/Users/suhara/Work/coq/common/" (cons "common"
       (cons "-emacs" nil)))))
+(add-hook 'coq-mode-hook #'company-coq-mode)
 
 ;;
 ;; Satysfi
@@ -193,8 +199,8 @@
 ;; Egison
 ;;
 ;;(load "$HOME/lisp/egison-mode.el")
-(setq auto-mode-alist
-      (cons `("\\.egi$" . egison-mode) auto-mode-alist))
+;(setq auto-mode-alist
+;      (cons `("\\.egi$" . egison-mode) auto-mode-alist))
 
 ;;
 ;; WolframScript
@@ -224,6 +230,124 @@
 (require 'idris-mode)
 (setq idris-interpreter-path "idris2")
 
+;;
+;; Lean4
+;;
+;; git clone https://github.com/leanprover-community/lean4-mode/
+;;
+(add-to-list 'load-path "~/.emacs.d/lean4-mode")
+(setq lean4-mode-required-packages '(dash f flycheck lsp-mode magit-section s))
+(let ((need-to-refresh t))
+  (dolist (p lean4-mode-required-packages)
+    (when (not (package-installed-p p))
+      (when need-to-refresh
+        (package-refresh-contents)
+        (setq need-to-refresh nil))
+      (package-install p))))
+(require 'lean4-mode)
+
+;;
+;; Rocq-IRIS
+;;
+;; Input of unicode symbols
+(require 'math-symbol-lists)
+; Automatically use math input method for Coq files
+(add-hook 'coq-mode-hook (lambda () (set-input-method "math")))
+; Input method for the minibuffer
+(defun my-inherit-input-method ()
+  "Inherit input method from `minibuffer-selected-window'."
+  (let* ((win (minibuffer-selected-window))
+         (buf (and win (window-buffer win))))
+    (when buf
+      (activate-input-method (buffer-local-value 'current-input-method buf)))))
+(add-hook 'minibuffer-setup-hook #'my-inherit-input-method)
+; Define the actual input method
+(quail-define-package "math" "UTF-8" "Ω" t)
+(quail-define-rules ; add whatever extra rules you want to define here...
+ ("\\fun"    ?λ)
+ ("\\mult"   ?⋅)
+ ("\\ent"    ?⊢)
+ ("\\valid"  ?✓)
+ ("\\diamond" ?◇)
+ ("\\box"    ?□)
+ ("\\bbox"   ?■)
+ ("\\later"  ?▷)
+ ("\\pred"   ?φ)
+ ("\\and"    ?∧)
+ ("\\or"     ?∨)
+ ("\\comp"   ?∘)
+ ("\\ccomp"  ?◎)
+ ("\\all"    ?∀)
+ ("\\ex"     ?∃)
+ ("\\to"     ?→)
+ ("\\sep"    ?∗)
+ ("\\lc"     ?⌜)
+ ("\\rc"     ?⌝)
+ ("\\Lc"     ?⎡)
+ ("\\Rc"     ?⎤)
+ ("\\lam"    ?λ)
+ ("\\empty"  ?∅)
+ ("\\Lam"    ?Λ)
+ ("\\Sig"    ?Σ)
+ ("\\-"      ?∖)
+ ("\\aa"     ?●)
+ ("\\af"     ?◯)
+ ("\\auth"   ?●)
+ ("\\frag"   ?◯)
+ ("\\iff"    ?↔)
+ ("\\gname"  ?γ)
+ ("\\incl"   ?≼)
+ ("\\latert" ?▶)
+ ("\\update" ?⇝)
+
+ ;; accents (for iLöb)
+ ("\\\"o" ?ö)
+
+ ;; subscripts and superscripts
+ ("^^+" ?⁺) ("__+" ?₊) ("^^-" ?⁻)
+ ("__0" ?₀) ("__1" ?₁) ("__2" ?₂) ("__3" ?₃) ("__4" ?₄)
+ ("__5" ?₅) ("__6" ?₆) ("__7" ?₇) ("__8" ?₈) ("__9" ?₉)
+
+ ("__a" ?ₐ) ("__e" ?ₑ) ("__h" ?ₕ) ("__i" ?ᵢ) ("__k" ?ₖ)
+ ("__l" ?ₗ) ("__m" ?ₘ) ("__n" ?ₙ) ("__o" ?ₒ) ("__p" ?ₚ)
+ ("__r" ?ᵣ) ("__s" ?ₛ) ("__t" ?ₜ) ("__u" ?ᵤ) ("__v" ?ᵥ) ("__x" ?ₓ)
+)
+(mapc (lambda (x)
+        (if (cddr x)
+            (quail-defrule (cadr x) (car (cddr x)))))
+      ; need to reverse since different emacs packages disagree on whether
+      ; the first or last entry should take priority...
+      ; see <https://mattermost.mpi-sws.org/iris/pl/46onxnb3tb8ndg8b6h1z1f7tny> for discussion
+      (reverse (append math-symbol-list-basic math-symbol-list-extended)))
+;;
+;; Fonts
+;;
+;;  適用しない。
+;;
+;; auto indent
+;;
+(setq coq-smie-user-tokens
+   '(("," . ":=")
+	("∗" . "->")
+	("-∗" . "->")
+	("∗-∗" . "->")
+	("==∗" . "->")
+	("=∗" . "->") 			;; Hack to match ={E1,E2}=∗
+	("|==>" . ":=")
+	("⊢" . "->")
+	("⊣⊢" . "->")
+	("↔" . "->")
+	("←" . "<-")
+	("→" . "->")
+	("=" . "->")
+	("==" . "->")
+	("/\\" . "->")
+	("⋅" . "->")
+	(":>" . ":=")
+	("by" . "now")
+	("forall" . "now")              ;; NB: this breaks current ∀ indentation.
+   ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;
 ;; END
@@ -236,9 +360,10 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(package-selected-packages
-   '(idris-mode rust-mode tuareg typescript-mode proof-general))
+   '(math-symbols company-coq zotelo comment-tags ## magit-section lsp-mode flycheck dash idris-mode rust-mode tuareg typescript-mode proof-general))
  '(safe-local-variable-values
-   '((coq-prog-args "-emacs-U" "-R" "/Users/suhara/WORK/coq3/cpdt-japanese/src" "Cpdt"))))
+   '((coq-prog-args "-emacs-U" "-R" "/Users/suhara/WORK/coq3/cpdt-japanese/src" "Cpdt")))
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
